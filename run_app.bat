@@ -1,25 +1,38 @@
 @echo off
-cd /d "C:\Users\kkroe\Desktop\shopgen_web" || (echo [ERROR] Can't cd & pause & exit /b 1)
-set "PORT=5000"
+setlocal ENABLEDELAYEDEXPANSION
 
-where py >nul 2>&1 && set "PY=py -3"
-if not defined PY where python >nul 2>&1 && set "PY=python"
-if not defined PY (echo [ERROR] Python not found & pause & exit /b 1)
+REM ============================
+REM Item Generator
+REM ============================
 
-if not exist ".venv\Scripts\activate.bat" (
-  echo [Setup] Creating venv...
-  %PY% -m venv .venv || (echo venv creation failed & pause & exit /b 1)
+cd /d "%~dp0"
+
+if not exist .venv (
+  echo [*] Creating virtual environment...
+  py -3 -m venv .venv
 )
-call ".venv\Scripts\activate.bat" || (echo venv activation failed & pause & exit /b 1)
 
-if not exist requirements.txt (
-  >requirements.txt echo flask
-  >>requirements.txt echo pandas
+echo [*] Activating venv...
+call ".venv\Scripts\activate"
+
+echo [*] Python info:
+python -c "import sys,platform;print(sys.version);print(platform.platform())"
+
+echo [*] Upgrading pip...
+python -m pip install --upgrade pip
+
+echo [*] Installing requirements (prefer wheels)...
+python -m pip install --prefer-binary -r requirements.txt
+
+if "%LOOTGEN_DB_PATH%"=="" (
+  set "LOOTGEN_DB_PATH=C:\Users\kkroe\Desktop\PF2e_Item_Generator\data\PF2e_Treasure_Generator_Backend.db"
 )
-python -m pip install --upgrade pip >nul
-pip install -r requirements.txt || (echo pip install failed & pause & exit /b 1)
 
-echo [Info] starting server on http://127.0.0.1:%PORT% ...
-start "Shop Inventory Server" cmd /k "call .venv\Scripts\activate.bat && python app.py"
-REM open a tab immediately (the app will also open one itself)
-start "" "http://127.0.0.1:%PORT%"
+echo [*] Using DB: %LOOTGEN_DB_PATH%
+set FLASK_ENV=development
+
+REM Open the browser after a short delay, without blocking this window.
+start "" cmd /c "timeout /t 2 /nobreak >nul & start "" http://127.0.0.1:5000"
+
+echo [*] Starting app on http://localhost:5000
+python app.py
