@@ -26,24 +26,30 @@
 
   "counts_by_shop": {
     "adventuring": {
-      "small":  { "mundane": [8, 12], "armor": [3, 5], "weapons": [4, 6], "magic": [6, 8] },
-      "medium": { "mundane": [14,18], "armor": [6, 8], "weapons": [7, 9], "magic": [10,12] },
-      "large":  { "mundane": [20,26], "armor": [9,12], "weapons": [10,14], "magic": [15,18] },
-      "grand":  { "mundane": [28,36], "armor": [12,16], "weapons": [14,18], "magic": [20,26] }
+      "small":  { "mundane": [8, 12], "armor": [3, 5], "weapons": [4, 6], "magic": [6, 8], "scrolls": [1, 3] },
+      "medium": { "mundane": [14,18], "armor": [6, 8], "weapons": [7, 9], "magic": [10,12], "scrolls": [2, 4] },
+      "large":  { "mundane": [20,26], "armor": [9,12], "weapons": [10,14], "magic": [15,18], "scrolls": [3, 5] },
+      "grand":  { "mundane": [28,36], "armor": [12,16], "weapons": [14,18], "magic": [20,26], "scrolls": [4, 6] }
     },
     "arcane": {
-      "small":  { "mundane": [4, 6],  "armor": [2, 3], "weapons": [3, 4], "magic": [10,14] },
-      "medium": { "mundane": [6, 8],  "armor": [3, 4], "weapons": [4, 6], "magic": [16,20] },
-      "large":  { "mundane": [8,10],  "armor": [4, 6], "weapons": [6, 8], "magic": [22,28] },
-      "grand":  { "mundane": [10,12], "armor": [6, 8], "weapons": [8,10], "magic": [28,36] }
+      "small":  { "mundane": [4, 6],  "armor": [2, 3], "weapons": [3, 4], "magic": [10,14], "scrolls": [2, 4] },
+      "medium": { "mundane": [6, 8],  "armor": [3, 4], "weapons": [4, 6], "magic": [16,20], "scrolls": [4, 6] },
+      "large":  { "mundane": [8,10],  "armor": [4, 6], "weapons": [6, 8], "magic": [22,28], "scrolls": [7, 9] },
+      "grand":  { "mundane": [10,12], "armor": [6, 8], "weapons": [8,10], "magic": [28,36], "scrolls": [10, 12] }
+    },
+    "scribe": {
+      "small":  { "mundane": [4, 6],  "armor": [2, 3], "weapons": [3, 4], "magic": [10,14], "scrolls": [2, 4] },
+      "medium": { "mundane": [6, 8],  "armor": [3, 4], "weapons": [4, 6], "magic": [16,20], "scrolls": [4, 6] },
+      "large":  { "mundane": [8,10],  "armor": [4, 6], "weapons": [6, 8], "magic": [22,28], "scrolls": [7, 9] },
+      "grand":  { "mundane": [10,12], "armor": [6, 8], "weapons": [8,10], "magic": [28,36], "scrolls": [10, 12] }
     }
   },
 
   "counts": {
-    "small":  { "mundane": [4, 8], "armor": [1, 2], "weapons": [1, 2], "magic": [2, 4], "materials": [0, 2], "formulas": [1, 2] },
-    "medium": { "mundane": [6, 12], "armor": [2, 3], "weapons": [2, 3], "magic": [3, 5], "materials": [1, 3], "formulas": [1, 3] },
-    "large":  { "mundane": [8, 14], "armor": [3, 4], "weapons": [3, 4], "magic": [4, 6], "materials": [1, 4], "formulas": [2, 4] },
-    "grand":  { "mundane": [10, 18], "armor": [4, 6], "weapons": [4, 6], "magic": [6, 8], "materials": [2, 6], "formulas": [3, 6] }
+    "small":  { "mundane": [6, 10], "armor": [3, 5], "weapons": [3, 5], "magic": [4, 6], "materials": [0, 4], "formulas": [1, 2], "scrolls": [0, 2] },
+    "medium": { "mundane": [8, 14], "armor": [4, 6], "weapons": [4, 6], "magic": [5, 7], "materials": [1, 3], "formulas": [1, 3], "scrolls": [1, 3] },
+    "large":  { "mundane": [10, 16], "armor": [5, 7], "weapons": [5, 7], "magic": [6, 8], "materials": [1, 4], "formulas": [2, 4], "scrolls": [2, 4] },
+    "grand":  { "mundane": [12, 20], "armor": [6, 8], "weapons": [6, 8], "magic": [8, 10], "materials": [2, 6], "formulas": [3, 6], "scrolls": [3, 5] }
   },
 
   "specific_magic_counts_by_shop": {

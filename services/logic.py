@@ -837,24 +837,8 @@ def _is_shield(item: dict) -> bool:
     return ("shield" in sub) or ("shield" in cat)
 
 def _is_shield_property(row: dict) -> bool:
-    # Tolerant detection of shield property runes
-    t   = (row.get("Type") or row.get("type") or "").strip().lower()
-    st  = (row.get("Subtype") or row.get("subtype") or "").strip().lower()
-    n   = (row.get("name") or "").strip().lower()
-    cat = (row.get("category") or "").strip().lower()
-
-    # Exact-ish label seen in many datasets
-    if "shield property" in t and "rune" in t:
-        return True
-    if "shield property" in st and "rune" in st:
-        return True
-
-    # Fallback heuristics
-    if ("shield" in cat or "shield" in t or "shield" in st or "shield" in n) and "rune" in (t + n):
-        # exclude armor/weapon fundamentals by name
-        if not any(k in n for k in ("potency", "striking", "resilient")):
-            return True
-    return False
+    t = (row.get("Type") or row.get("type") or "").strip().lower()
+    return t == "shield property runes"
 
 _DAMAGE_TYPE_TOKENS = {
     "acid", "bludgeoning", "cold", "electricity", "fire", "force",
@@ -1034,22 +1018,8 @@ def _is_armor_fundamental_property(row: dict) -> bool:
     return "fundamental" in t and "property" in t and "armor" in t
 
 def _is_armor_property(row: dict) -> bool:
-    t   = (row.get("Type") or row.get("type") or "").strip().lower()
-    st  = (row.get("Subtype") or row.get("subtype") or "").strip().lower()
-    cat = (row.get("category") or "").strip().lower()
-    n   = (row.get("name") or "").strip().lower()
-    # explicit armor property
-    if ("property" in t and "armor" in t) or ("property" in st and "armor" in st):
-        return True
-    # category + rune-ish (exclude fundamentals)
-    if ("armor" in cat and ("rune" in t or "rune" in n)) and "fundamental" not in t:
-        return True
-    # heuristic fallback: rune-ish name/type, not weapon, not fundamentals
-    if (("rune" in t or "rune" in n)
-        and "weapon" not in t
-        and not any(k in n for k in ("potency", "striking"))):
-        return True
-    return False
+    t = (row.get("Type") or row.get("type") or "").strip().lower()
+    return t == "armor property runes"
 
 def _is_shield(item: dict) -> bool:
     sub = (item.get("subtype") or item.get("Subtype") or "").strip().lower()
@@ -1125,27 +1095,8 @@ def _is_fundamental(row: dict) -> bool:
             ("potency" in n and "weapon" in n))
 
 def _is_property(row: dict) -> bool:
-    # Be tolerant about schema/casing/fields
-    t   = (row.get("Type")    or row.get("type")    or "").strip().lower()
-    st  = (row.get("Subtype") or row.get("subtype") or "").strip().lower()
-    cat = (row.get("category") or "").strip().lower()
-    n   = (row.get("name")     or "").strip().lower()
-
-    # 1) Explicit weapon property labeling in Type/Subtype
-    if ("property" in t and "weapon" in t) or ("property" in st and "weapon" in st):
-        return True
-
-    # 2) Weapon category + rune-ish, but not fundamentals
-    if ("weapon" in cat and ("rune" in t or "rune" in n)) and "fundamental" not in t:
-        return True
-
-    # 3) Heuristic fallback: looks like a property rune by name/type; exclude common fundamentals/armor
-    if (("rune" in t or "rune" in n)
-        and not any(k in n for k in ("potency", "striking", "resilient"))
-        and "armor" not in t):
-        return True
-
-    return False
+    t = (row.get("Type") or row.get("type") or "").strip().lower()
+    return t == "weapon property runes"
 
 def _is_weapon_fundamental_property(row: dict) -> bool:
     t = (row.get("Type") or row.get("type") or "").strip().lower()
