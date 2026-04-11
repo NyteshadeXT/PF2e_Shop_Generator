@@ -44,7 +44,7 @@ def _mock_weapon_runes_df() -> pd.DataFrame:
                 "level": 2,
             },
             {
-                "Type": "Weapon Property Rune",
+                "Type": "Weapon Property Runes",
                 "name": "Flaming",
                 "rarity": "Common",
                 "price_text": "140 gp",
@@ -52,7 +52,7 @@ def _mock_weapon_runes_df() -> pd.DataFrame:
                 "level": 8,
             },
             {
-                "Type": "Weapon Property Rune",
+                "Type": "Weapon Property Runes",
                 "name": "Frost",
                 "rarity": "Uncommon",
                 "price_text": "140 gp",
@@ -60,7 +60,7 @@ def _mock_weapon_runes_df() -> pd.DataFrame:
                 "level": 8,
             },
             {
-                "Type": "Weapon Property Rune",
+                "Type": "Weapon Property Runes",
                 "name": "Vorpal",
                 "rarity": "Rare",
                 "price_text": "5000 gp",

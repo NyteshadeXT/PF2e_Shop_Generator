@@ -641,7 +641,10 @@ def _apply_adjustments_to_items(
 
 # ---------- NEW: Scroll enrichment ----------
 
-_SCROLL_RE = re.compile(r"^Spell scroll \((\d+)(?:st|nd|rd|th) level\)$", re.IGNORECASE)
+_SCROLL_RE = re.compile(
+    r"spell\s*scroll\s*\((\d+)(?:st|nd|rd|th)\s*level\)",
+    re.IGNORECASE,
+)
 _WAND_LEVEL_RX = re.compile(r"(\d+)(?:st|nd|rd|th)[-\s]*(?:level|rank) spell", re.IGNORECASE)
 
 _SPELLS_DF_CACHE: pd.DataFrame | None = None
@@ -657,7 +660,7 @@ def _ensure_spells_cache() -> tuple[pd.DataFrame, dict[int, pd.DataFrame]]:
     spells_df = pd.DataFrame()
     try:
         con = sqlite3.connect(CONFIG["sqlite_db_path"])
-        spells_df = pd.read_sql_query('SELECT Name, Rank, Rarity FROM Spells;', con)
+        spells_df = pd.read_sql_query('SELECT Name, Rank, Rarity, Source FROM Spells;', con)
     except Exception as e:
         print(">>> WARN: could not load Spells table:", e)
     finally:
@@ -681,6 +684,10 @@ def _ensure_spells_cache() -> tuple[pd.DataFrame, dict[int, pd.DataFrame]]:
         spells_df["Rarity"] = spells_df["Rarity"].astype(str).str.strip().str.title()
     else:
         spells_df["Rarity"] = "Common"
+    if "Source" in spells_df.columns:
+        spells_df["Source"] = spells_df["Source"].astype(str).str.strip()
+    else:
+        spells_df["Source"] = ""
 
     by_rank: dict[int, pd.DataFrame] = {}
     if "Rank" in spells_df.columns:
@@ -692,7 +699,10 @@ def _ensure_spells_cache() -> tuple[pd.DataFrame, dict[int, pd.DataFrame]]:
     return _SPELLS_DF_CACHE, _SPELLS_BY_RANK_CACHE
 
 def _parse_scroll_level(name: str) -> int | None:
-    m = _SCROLL_RE.match((name or "").strip())
+    raw = (name or "").strip()
+    # Avoid re-parsing already enriched names like "Spell scroll (...) - Fireball"
+    base = raw.split(" - ", 1)[0].strip()
+    m = _SCROLL_RE.search(base)
     return int(m.group(1)) if m else None
 
 def _rarity_multiplier_map() -> dict[str, float]:
@@ -718,20 +728,36 @@ def _enrich_spell_scrolls(items: list[dict]) -> list[dict]:
     mults = _rarity_multiplier_map()
 
     rng = random.Random()
-    out: list[dict] = []
+    expanded: list[dict] = []
     for it in items:
+        qty = max(1, int(it.get("quantity") or 1))
+        for _ in range(qty):
+            unit = dict(it)
+            unit["quantity"] = 1
+            expanded.append(unit)
+
+    out_units: list[dict] = []
+    for it in expanded:
         name = str(it.get("name", "")).strip()
+        if " - " in name:
+            maybe_base = name.split(" - ", 1)[0].strip()
+            if _SCROLL_RE.search(maybe_base):
+                out_units.append(it)
+                continue
         lvl = _parse_scroll_level(name)
         if lvl is None:
-            out.append(it); continue
+            out_units.append(it)
+            continue
 
         pool = spells_by_rank.get(int(lvl)) if spells_by_rank else None
         if pool is None or pool.empty:
-            out.append(it); continue
+            out_units.append(it)
+            continue
 
         pick = pool.sample(n=1, replace=True, random_state=rng.randint(0, 10**9)).iloc[0]
         spell_name = str(pick.get("Name", "")).strip()
         spell_rar  = str(pick.get("Rarity", "Common")).title()
+        spell_src  = str(pick.get("Source", "")).strip()
 
         # Bump price using rarity multiplier (applied to the already disposition-adjusted 'price' text)
         base_gp = to_gp(it.get("price", ""))
@@ -746,10 +772,26 @@ def _enrich_spell_scrolls(items: list[dict]) -> list[dict]:
         fused["name"]  = f"{name} - {spell_name}"
         fused["price"] = _format_price(new_gp)
         fused["spell"] = {"name": spell_name, "rarity": spell_rar, "rank": int(lvl)}
-        fused["aon_target"] = spell_name   # <-- add this line
-        out.append(fused)
+        fused["aon_target"] = spell_name
+        if spell_src:
+            fused["Source"] = spell_src
+        out_units.append(fused)
 
-    return out
+    merged: dict[tuple, dict] = {}
+    for it in out_units:
+        key = (
+            str(it.get("name", "")).strip(),
+            str(it.get("price", "")).strip(),
+            str(it.get("rarity", "")).strip(),
+            int(it.get("level") or 0),
+            bool(it.get("critical")),
+        )
+        if key not in merged:
+            merged[key] = dict(it)
+            merged[key]["quantity"] = 0
+        merged[key]["quantity"] += int(it.get("quantity") or 1)
+
+    return list(merged.values())
 
 def _parse_wand_rank(name: str, level: int | None = None) -> int | None:
     m = _WAND_LEVEL_RX.search((name or "").strip())
@@ -837,24 +879,8 @@ def _is_shield(item: dict) -> bool:
     return ("shield" in sub) or ("shield" in cat)
 
 def _is_shield_property(row: dict) -> bool:
-    # Tolerant detection of shield property runes
-    t   = (row.get("Type") or row.get("type") or "").strip().lower()
-    st  = (row.get("Subtype") or row.get("subtype") or "").strip().lower()
-    n   = (row.get("name") or "").strip().lower()
-    cat = (row.get("category") or "").strip().lower()
-
-    # Exact-ish label seen in many datasets
-    if "shield property" in t and "rune" in t:
-        return True
-    if "shield property" in st and "rune" in st:
-        return True
-
-    # Fallback heuristics
-    if ("shield" in cat or "shield" in t or "shield" in st or "shield" in n) and "rune" in (t + n):
-        # exclude armor/weapon fundamentals by name
-        if not any(k in n for k in ("potency", "striking", "resilient")):
-            return True
-    return False
+    t = (row.get("Type") or row.get("type") or "").strip().lower()
+    return t == "shield property runes"
 
 _DAMAGE_TYPE_TOKENS = {
     "acid", "bludgeoning", "cold", "electricity", "fire", "force",
@@ -1034,22 +1060,8 @@ def _is_armor_fundamental_property(row: dict) -> bool:
     return "fundamental" in t and "property" in t and "armor" in t
 
 def _is_armor_property(row: dict) -> bool:
-    t   = (row.get("Type") or row.get("type") or "").strip().lower()
-    st  = (row.get("Subtype") or row.get("subtype") or "").strip().lower()
-    cat = (row.get("category") or "").strip().lower()
-    n   = (row.get("name") or "").strip().lower()
-    # explicit armor property
-    if ("property" in t and "armor" in t) or ("property" in st and "armor" in st):
-        return True
-    # category + rune-ish (exclude fundamentals)
-    if ("armor" in cat and ("rune" in t or "rune" in n)) and "fundamental" not in t:
-        return True
-    # heuristic fallback: rune-ish name/type, not weapon, not fundamentals
-    if (("rune" in t or "rune" in n)
-        and "weapon" not in t
-        and not any(k in n for k in ("potency", "striking"))):
-        return True
-    return False
+    t = (row.get("Type") or row.get("type") or "").strip().lower()
+    return t == "armor property runes"
 
 def _is_shield(item: dict) -> bool:
     sub = (item.get("subtype") or item.get("Subtype") or "").strip().lower()
@@ -1125,27 +1137,8 @@ def _is_fundamental(row: dict) -> bool:
             ("potency" in n and "weapon" in n))
 
 def _is_property(row: dict) -> bool:
-    # Be tolerant about schema/casing/fields
-    t   = (row.get("Type")    or row.get("type")    or "").strip().lower()
-    st  = (row.get("Subtype") or row.get("subtype") or "").strip().lower()
-    cat = (row.get("category") or "").strip().lower()
-    n   = (row.get("name")     or "").strip().lower()
-
-    # 1) Explicit weapon property labeling in Type/Subtype
-    if ("property" in t and "weapon" in t) or ("property" in st and "weapon" in st):
-        return True
-
-    # 2) Weapon category + rune-ish, but not fundamentals
-    if ("weapon" in cat and ("rune" in t or "rune" in n)) and "fundamental" not in t:
-        return True
-
-    # 3) Heuristic fallback: looks like a property rune by name/type; exclude common fundamentals/armor
-    if (("rune" in t or "rune" in n)
-        and not any(k in n for k in ("potency", "striking", "resilient"))
-        and "armor" not in t):
-        return True
-
-    return False
+    t = (row.get("Type") or row.get("type") or "").strip().lower()
+    return t == "weapon property runes"
 
 def _is_weapon_fundamental_property(row: dict) -> bool:
     t = (row.get("Type") or row.get("type") or "").strip().lower()
@@ -1561,8 +1554,9 @@ def _select_items_core(
             it.setdefault("_base_name", (it.get("name", "") or "").strip())
 
     # ---------- Enrich spell scrolls ----------
-    if item_type.lower() == "magic":
+    if item_type.lower() in ("magic", "scrolls"):
         items_pre = _enrich_spell_scrolls(items_pre)
+    if item_type.lower() == "magic":
         items_pre = _enrich_magic_wands(items_pre)
         
     # --- adjustments for armor & weapons ---
@@ -2202,7 +2196,7 @@ def select_specific_magic_weapons(df, shop_type, party_level, shop_size, disposi
     )
 
 def select_magic_items(df, shop_type, party_level, shop_size, disposition):
-    return select_items_by_source(
+    base = select_items_by_source(
         df=df,
         source_tables=_group("magic", [
         "alchemical_items", "cc_structure", "consumables", "grimoire",
@@ -2212,6 +2206,30 @@ def select_magic_items(df, shop_type, party_level, shop_size, disposition):
         shop_type=shop_type, party_level=party_level,
         shop_size=shop_size, disposition=disposition, include_crit=True
     )
+
+    # Optional additive scroll picks: if counts[shop_size]["scrolls"] (or counts_by_shop)
+    # is configured, these are added on top of the base magic count.
+    scroll_extra_n = _counts_for_size_type(shop_type, shop_size, "scrolls")
+    if scroll_extra_n <= 0:
+        return base
+
+    extra = select_items_by_source(
+        df=df,
+        source_tables=_group("scrolls", ["scrolls"]),
+        item_type="magic",
+        shop_type=shop_type,
+        party_level=party_level,
+        shop_size=shop_size,
+        disposition=disposition,
+        include_crit=True,
+        count_override=scroll_extra_n,
+    )
+
+    out = dict(base or {})
+    out["items"] = (base.get("items") or []) + (extra.get("items") or [])
+    out["base_count"] = int(base.get("base_count") or 0) + int(extra.get("base_count") or 0)
+    out["critical_added"] = int(base.get("critical_added") or 0) + int(extra.get("critical_added") or 0)
+    return out
     
 def select_materials(df, shop_type, party_level, shop_size, disposition):
     return select_items_by_source(
