@@ -27,6 +27,12 @@ class ReferenceCacheTests(unittest.TestCase):
                     ('Heal', 1, 'Divine,Primal', 'Common', 1, 'HEALING', 'Player Core');
                 CREATE TABLE Formula (Level INTEGER, Price TEXT);
                 INSERT INTO Formula VALUES (1, '1 gp'), (2, '2 gp');
+                CREATE TABLE Adjustments (
+                    Name TEXT, ItemLevel INTEGER, Subtype TEXT, Cost TEXT,
+                    Traits TEXT, Rarity TEXT, Source TEXT
+                );
+                INSERT INTO Adjustments VALUES
+                    ('Fine', 4, 'Weapon', '12 gp', 'VERSATILE', 'Uncommon', 'Test');
                 """
             )
         db.clear_reference_caches()
@@ -85,6 +91,22 @@ class ReferenceCacheTests(unittest.TestCase):
             db.CONFIG["sqlite_db_path"] = original_path
         self.assertEqual(len(calls), 1)
         self.assertEqual(first.to_dict(orient="records"), second.to_dict(orient="records"))
+
+    def test_sqlite_adjustments_use_current_catalog_column_names(self):
+        original_path = db.CONFIG["sqlite_db_path"]
+        original_table = db.CONFIG.get("sqlite_adjustments_table")
+        db.CONFIG["sqlite_db_path"] = str(self.database)
+        db.CONFIG["sqlite_adjustments_table"] = "Adjustments"
+        try:
+            adjustments = db.load_adjustments()
+        finally:
+            db.CONFIG["sqlite_db_path"] = original_path
+            db.CONFIG["sqlite_adjustments_table"] = original_table
+
+        row = adjustments.iloc[0]
+        self.assertEqual(row["level"], 4)
+        self.assertEqual(row["price_text"], "12 gp")
+        self.assertEqual(row["tags"], "VERSATILE")
 
 
 if __name__ == "__main__":

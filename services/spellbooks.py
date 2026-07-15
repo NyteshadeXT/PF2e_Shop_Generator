@@ -7,6 +7,7 @@ from typing import Dict, List, Optional
 from markupsafe import escape
 from .randomness import get_rng
 from .db import CONFIG, load_spells
+from .catalog_order import canonicalize_records
 
 
 # Add this import (uses your existing helper in utils.py)
@@ -80,7 +81,7 @@ def _load_spell_pool(
     mask = spell_rows["traditions"].astype(str).str.contains(
         tradition_token, case=False, regex=False, na=False
     )
-    rows = spell_rows.loc[mask].to_dict(orient="records")
+    rows = canonicalize_records(spell_rows.loc[mask].to_dict(orient="records"))
     themes_norm = [str(theme).strip().upper() for theme in (themes or []) if str(theme).strip()]
     if themes_norm:
         rows = [

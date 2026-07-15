@@ -4,6 +4,8 @@
 .mib-col-12 { grid-column: 1 / -1; }
 .mib-output { margin-top: 12px; }
 .mib-card { border: 1px solid var(--pf-border, #2a2a2a); border-radius: 12px; padding: 12px; }
+.mib-card__title { margin: .5rem 0 0; }
+.mib-card__link { margin-top: 6px; }
 .mib-props { margin-top: 6px; font-size: .95rem; opacity: .9; }
 .mib-badges .badge { display:inline-block; padding: 2px 8px; border-radius: 999px; margin-right: 6px; background: #2f2f2f; }
 .mib-help { color: #9aa; font-size: .9rem; margin-top: 6px; }

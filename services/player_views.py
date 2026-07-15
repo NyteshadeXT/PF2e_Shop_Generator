@@ -8,6 +8,7 @@ import secrets
 import sqlite3
 import threading
 from contextlib import contextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -301,6 +302,157 @@ def backup_database(
         if temporary.exists():
             temporary.unlink()
     return destination
+
+
+def verify_player_view_database(
+    database_path: str | Path,
+) -> dict[str, int]:
+    """Validate a backup without modifying or migrating the supplied file."""
+    path = Path(database_path).expanduser().resolve()
+    if not path.is_file():
+        raise ValueError(f"Player View backup does not exist: {path}")
+    try:
+        connection = sqlite3.connect(path, timeout=2.0)
+        connection.row_factory = sqlite3.Row
+        connection.execute("PRAGMA query_only = ON")
+        integrity = connection.execute("PRAGMA integrity_check").fetchone()
+        if not integrity or str(integrity[0]).lower() != "ok":
+            raise sqlite3.DatabaseError("Player View backup failed its integrity check.")
+        tables = {
+            str(row["name"])
+            for row in connection.execute(
+                """
+                SELECT name FROM sqlite_master
+                WHERE type = 'table' AND name IN (
+                    'player_view_snapshots', 'player_view_channels'
+                )
+                """
+            ).fetchall()
+        }
+        required = {"player_view_snapshots", "player_view_channels"}
+        if tables != required:
+            raise sqlite3.DatabaseError(
+                "Player View backup is missing required snapshot or channel tables."
+            )
+        required_columns = {
+            "player_view_snapshots": {"token", "channel", "snapshot_json"},
+            "player_view_channels": {"channel", "current_token"},
+        }
+        for table, expected_columns in required_columns.items():
+            actual_columns = {
+                str(row["name"])
+                for row in connection.execute(f"PRAGMA table_info({table})").fetchall()
+            }
+            if not expected_columns.issubset(actual_columns):
+                raise sqlite3.DatabaseError(
+                    f"Player View backup has an incompatible {table} table."
+                )
+        foreign_key_errors = connection.execute("PRAGMA foreign_key_check").fetchall()
+        if foreign_key_errors:
+            raise sqlite3.DatabaseError(
+                "Player View backup contains invalid channel references."
+            )
+        snapshots = 0
+        for row in connection.execute(
+            "SELECT snapshot_json FROM player_view_snapshots"
+        ):
+            try:
+                payload = json.loads(row["snapshot_json"])
+            except (TypeError, ValueError, json.JSONDecodeError) as exc:
+                raise sqlite3.DatabaseError(
+                    "Player View backup contains invalid snapshot JSON."
+                ) from exc
+            if not isinstance(payload, dict):
+                raise sqlite3.DatabaseError(
+                    "Player View backup contains a non-object snapshot."
+                )
+            snapshots += 1
+        channels = int(
+            connection.execute("SELECT COUNT(*) FROM player_view_channels").fetchone()[0]
+        )
+    finally:
+        if "connection" in locals():
+            connection.close()
+    return {"snapshots": snapshots, "channels": channels}
+
+
+def restore_database(
+    input_path: str | Path,
+    *,
+    db_path: str | Path | None = None,
+    safety_backup_path: str | Path | None = None,
+    confirm_replace: bool = False,
+) -> dict[str, Any]:
+    """Atomically restore validated Player View storage while the app is stopped."""
+    if not confirm_replace:
+        raise ValueError(
+            "Restore requires explicit confirmation that the web service is stopped."
+        )
+    source = Path(input_path).expanduser().resolve()
+    destination = _resolved_db_path(db_path)
+    if source == destination:
+        raise ValueError("Restore input must differ from the active state database.")
+    source_stats = verify_player_view_database(source)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+
+    safety_backup: Path | None = None
+    if destination.exists():
+        if safety_backup_path is None:
+            stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+            safety_backup = destination.with_name(
+                f"{destination.stem}.pre-restore-{stamp}-{secrets.token_hex(4)}.db"
+            )
+        else:
+            safety_backup = Path(safety_backup_path).expanduser().resolve()
+        if safety_backup == source:
+            raise ValueError("Safety backup destination must differ from the restore input.")
+        safety_backup = backup_database(safety_backup, db_path=destination)
+
+    temporary = destination.with_name(
+        f".{destination.name}.restore-{secrets.token_hex(8)}.tmp"
+    )
+    try:
+        source_connection = sqlite3.connect(source, timeout=10.0)
+        restored_connection = sqlite3.connect(temporary)
+        try:
+            source_connection.execute("PRAGMA query_only = ON")
+            source_connection.backup(restored_connection)
+        finally:
+            restored_connection.close()
+            source_connection.close()
+        verify_player_view_database(temporary)
+
+        if destination.exists():
+            active = sqlite3.connect(destination, timeout=0.25)
+            try:
+                active.execute("PRAGMA busy_timeout = 250")
+                checkpoint = active.execute("PRAGMA wal_checkpoint(TRUNCATE)").fetchone()
+                if checkpoint and int(checkpoint[0]) != 0:
+                    raise sqlite3.OperationalError(
+                        "The active Player View database is busy. Stop the web service "
+                        "before restoring it."
+                    )
+            finally:
+                active.close()
+        for suffix in ("-wal", "-shm"):
+            sidecar = Path(str(destination) + suffix)
+            if sidecar.exists():
+                sidecar.unlink()
+        os.replace(temporary, destination)
+        with _INITIALIZE_LOCK:
+            _INITIALIZED_PATHS.discard(destination)
+        restored_stats = verify_player_view_database(destination)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+    return {
+        "database": str(destination),
+        "safety_backup": str(safety_backup) if safety_backup else None,
+        **restored_stats,
+        "source_snapshots": source_stats["snapshots"],
+        "source_channels": source_stats["channels"],
+    }
 
 
 def recent_snapshots(
@@ -695,15 +847,41 @@ def _main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(description="Maintain persistent Player View snapshots")
-    parser.add_argument("command", choices=("backup", "cleanup", "stats"))
+    parser.add_argument("command", choices=("backup", "cleanup", "restore", "stats"))
     parser.add_argument("--vacuum", action="store_true", help="Compact the database after cleanup")
     parser.add_argument("--output", help="Destination database path for the backup command")
+    parser.add_argument("--input", help="Validated database file for the restore command")
+    parser.add_argument(
+        "--safety-backup",
+        help="Optional destination for the automatic pre-restore safety backup",
+    )
+    parser.add_argument(
+        "--confirm-replace",
+        action="store_true",
+        help="Confirm the web service is stopped and replace active Player View storage",
+    )
     args = parser.parse_args()
     if args.command == "backup":
         if not args.output:
             parser.error("backup requires --output")
         destination = backup_database(args.output)
         print(f"Player View backup created: {destination}")
+    elif args.command == "restore":
+        if not args.input:
+            parser.error("restore requires --input")
+        if not args.confirm_replace:
+            parser.error(
+                "restore requires --confirm-replace after the web service has been stopped"
+            )
+        result = restore_database(
+            args.input,
+            safety_backup_path=args.safety_backup,
+            confirm_replace=True,
+        )
+        print(f"Player View database restored: {result['database']}")
+        print(f"Snapshots: {result['snapshots']}; channels: {result['channels']}")
+        if result["safety_backup"]:
+            print(f"Pre-restore safety backup: {result['safety_backup']}")
     elif args.command == "cleanup":
         removed = cleanup_snapshots(vacuum=args.vacuum)
         print(f"Removed {removed} Player View snapshot(s).")

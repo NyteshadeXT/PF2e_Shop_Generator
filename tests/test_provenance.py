@@ -7,6 +7,13 @@ from services import provenance
 
 
 class ProvenanceTests(unittest.TestCase):
+    def test_fingerprint_tracks_generation_service_instead_of_web_routes(self):
+        generation_path = provenance.PROJECT_ROOT / "services" / "generation.py"
+        app_path = provenance.PROJECT_ROOT / "app.py"
+
+        self.assertIn(generation_path, provenance._GENERATION_CODE)
+        self.assertNotIn(app_path, provenance._GENERATION_CODE)
+
     def test_fingerprint_is_stable_until_an_input_changes(self):
         with tempfile.TemporaryDirectory() as directory:
             source = Path(directory) / "catalog.db"

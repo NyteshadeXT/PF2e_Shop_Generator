@@ -24,11 +24,13 @@ from services.player_views import (
     live_channel,
     load_snapshot,
     recent_snapshots,
+    restore_database,
     rotate_live_token,
     save_snapshot,
     set_current_snapshot,
     snapshot_stats,
     snapshot_count,
+    verify_player_view_database,
 )
 from services.settings import CONFIG
 
@@ -85,6 +87,93 @@ class PlayerViewStorageTests(unittest.TestCase):
     def test_backup_refuses_to_replace_active_database(self):
         with self.assertRaises(ValueError):
             backup_database(self.db, db_path=self.db)
+
+    def test_restore_replaces_storage_and_preserves_a_safety_backup(self):
+        original = {"shop": {"shop_name": "Before Restore"}}
+        restored = {"shop": {"shop_name": "Recovered Campaign"}}
+        source = Path(self.tempdir.name) / "downloaded-player-views.db"
+        save_snapshot("a" * 32, "game-one", original, db_path=self.db)
+        save_snapshot("b" * 32, "game-two", restored, db_path=source)
+
+        result = restore_database(source, db_path=self.db, confirm_replace=True)
+
+        self.assertEqual(load_snapshot("b" * 32, "game-two", db_path=self.db), restored)
+        with self.assertRaises(SnapshotNotFound):
+            load_snapshot("a" * 32, db_path=self.db)
+        safety_backup = Path(result["safety_backup"])
+        self.assertTrue(safety_backup.is_file())
+        self.assertEqual(
+            load_snapshot("a" * 32, "game-one", db_path=safety_backup), original
+        )
+        self.assertEqual(result["snapshots"], 1)
+        self.assertEqual(result["channels"], 1)
+
+    def test_restore_requires_confirmation(self):
+        source = Path(self.tempdir.name) / "downloaded-player-views.db"
+        save_snapshot("a" * 32, "game-one", {"version": 1}, db_path=source)
+
+        with self.assertRaisesRegex(ValueError, "explicit confirmation"):
+            restore_database(source, db_path=self.db)
+
+        self.assertFalse(self.db.exists())
+
+    def test_restore_rejects_invalid_input_without_changing_active_storage(self):
+        original = {"shop": {"shop_name": "Still Active"}}
+        save_snapshot("a" * 32, "game-one", original, db_path=self.db)
+        invalid = Path(self.tempdir.name) / "not-a-player-view.db"
+        with closing(sqlite3.connect(invalid)) as connection:
+            connection.execute("CREATE TABLE unrelated (value TEXT)")
+            connection.commit()
+
+        with self.assertRaisesRegex(sqlite3.DatabaseError, "missing required"):
+            restore_database(invalid, db_path=self.db, confirm_replace=True)
+
+        self.assertEqual(load_snapshot("a" * 32, db_path=self.db), original)
+        self.assertEqual(list(Path(self.tempdir.name).glob("*.pre-restore-*.db")), [])
+
+    def test_restore_refuses_to_replace_a_database_with_an_active_reader(self):
+        original = {"shop": {"shop_name": "Still Being Read"}}
+        source = Path(self.tempdir.name) / "downloaded-player-views.db"
+        save_snapshot("a" * 32, "game-one", original, db_path=self.db)
+        save_snapshot("c" * 32, "game-two", {"version": 3}, db_path=source)
+        reader = sqlite3.connect(self.db)
+        try:
+            reader.execute("BEGIN")
+            reader.execute("SELECT * FROM player_view_snapshots").fetchall()
+            save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+
+            with self.assertRaisesRegex(sqlite3.OperationalError, "web service"):
+                restore_database(source, db_path=self.db, confirm_replace=True)
+        finally:
+            reader.close()
+
+        self.assertEqual(load_snapshot("a" * 32, db_path=self.db), original)
+
+    def test_backup_verification_rejects_invalid_snapshot_json(self):
+        invalid = Path(self.tempdir.name) / "invalid-json.db"
+        with closing(sqlite3.connect(invalid)) as connection:
+            connection.executescript(
+                """
+                CREATE TABLE player_view_snapshots (
+                    token TEXT PRIMARY KEY,
+                    channel TEXT NOT NULL,
+                    snapshot_json TEXT NOT NULL
+                );
+                CREATE TABLE player_view_channels (
+                    channel TEXT PRIMARY KEY,
+                    current_token TEXT NOT NULL,
+                    FOREIGN KEY(current_token) REFERENCES player_view_snapshots(token)
+                );
+                INSERT INTO player_view_snapshots(token, channel, snapshot_json)
+                VALUES ('aaaaaaaaaaaa', 'game-one', '{broken');
+                INSERT INTO player_view_channels(channel, current_token)
+                VALUES ('game-one', 'aaaaaaaaaaaa');
+                """
+            )
+            connection.commit()
+
+        with self.assertRaisesRegex(sqlite3.DatabaseError, "invalid snapshot JSON"):
+            verify_player_view_database(invalid)
 
     def test_shared_token_cannot_be_overwritten(self):
         token = "a" * 32

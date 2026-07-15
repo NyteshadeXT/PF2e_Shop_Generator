@@ -55,6 +55,18 @@ class SettingsTests(unittest.TestCase):
             with self.assertRaises(ConfigurationError):
                 load_settings(config_path, env={})
 
+    def test_csv_catalog_source_is_rejected(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            config_path = self._config_copy(root)
+            config = json.loads(config_path.read_text(encoding="utf-8"))
+            config["data_source"] = "csv"
+            config["csv_path"] = "catalog.csv"
+            config_path.write_text(json.dumps(config), encoding="utf-8")
+
+            with self.assertRaisesRegex(ConfigurationError, "must be 'sqlite'"):
+                load_settings(config_path, env={})
+
     def test_negative_player_view_retention_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)

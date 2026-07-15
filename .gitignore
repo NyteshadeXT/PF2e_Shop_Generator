@@ -1,6 +1,12 @@
 data/player_views.db
 data/player_views.db-shm
 data/player_views.db-wal
+.venv/
+.codex-browser-test/
+.env
+.lootgen-session-secret
+backups/
+*.log
 __pycache__/
 *.py[cod]
 .pytest_cache/

@@ -16,6 +16,7 @@ from services.utils import (
     within_range,
 )
 from services.db import load_formula_rows, load_items, load_spells
+from services.catalog_order import canonicalize_frame
 from services.settings import CONFIG
 from services.randomness import get_rng
 from services.money import cp_to_gp, format_gp, gp_to_cp, multiply_cp
@@ -527,6 +528,7 @@ def _apply_adjustments_to_items(
     lo_adj, hi_adj = _level_bounds_for("magic", party_level)
     if "level" in A.columns:
         A = A[(A["level"].astype(int) >= lo_adj) & (A["level"].astype(int) <= hi_adj)]
+    A = canonicalize_frame(A)
     if A.empty:
         return items
 
@@ -660,6 +662,7 @@ def _ensure_spells_cache() -> tuple[pd.DataFrame, dict[int, pd.DataFrame]]:
         spells_df["Source"] = spells_df["Source"].astype(str).str.strip()
     else:
         spells_df["Source"] = ""
+    spells_df = canonicalize_frame(spells_df)
 
     by_rank: dict[int, pd.DataFrame] = {}
     if "Rank" in spells_df.columns:
@@ -1036,12 +1039,6 @@ def _is_armor_property(row: dict) -> bool:
     t = (row.get("Type") or row.get("type") or "").strip().lower()
     return t == "armor property runes"
 
-def _is_shield(item: dict) -> bool:
-    sub = (item.get("subtype") or item.get("Subtype") or "").strip().lower()
-    cat = (item.get("category") or "").strip().lower()
-    # be tolerant of schema naming
-    return ("shield" in sub) or ("shield" in cat)
-
 def _potency_cap_for_armor_level(pl: int) -> int:
     pl = int(pl or 0)
     if pl < 5:    return 0
@@ -1379,7 +1376,7 @@ def _load_runes_df() -> pd.DataFrame:
             R[c] = R[c].astype(str).str.strip()
     if "level" in R.columns:
         R["level"] = pd.to_numeric(R["level"], errors="coerce").fillna(0).astype(int)
-    return R[R.get("source_table","").str.lower().eq("runes")]
+    return canonicalize_frame(R[R.get("source_table","").str.lower().eq("runes")])
 
 
 def _select_items_core(
@@ -1413,6 +1410,8 @@ def _select_items_core(
             d = d[(d["level"] <= hi)]
         else:
             d = d[(d["level"] >= lo) & (d["level"] <= hi)]
+
+    d = canonicalize_frame(d)
 
     if d.empty:
         return [], [], {"base_count": 0, "critical_added": 0, "window": (lo, hi)}
@@ -1653,7 +1652,7 @@ def apply_weapon_runes(
     fused.setdefault("_base_name", (weapon.get("name") or "").strip())
 
     # Early out if no runes table
-    R = pd.DataFrame(runes_df).copy() if runes_df is not None else pd.DataFrame()
+    R = canonicalize_frame(pd.DataFrame(runes_df))
     if R.empty:
         fused["runes"] = []
         return fused
@@ -1815,7 +1814,7 @@ def apply_armor_runes(
         fused["is_magic_countable"] = False
         return fused
 
-    R = pd.DataFrame(runes_df).copy() if runes_df is not None else pd.DataFrame()
+    R = canonicalize_frame(pd.DataFrame(runes_df))
     if R.empty:
         fused["runes"] = []
         fused["is_magic_countable"] = False
@@ -1963,7 +1962,7 @@ def apply_shield_runes(
         return fused
 
     # Load/normalize runes table
-    R = pd.DataFrame(runes_df).copy() if runes_df is not None else pd.DataFrame()
+    R = canonicalize_frame(pd.DataFrame(runes_df))
     if R.empty:
         fused["runes"] = []
         fused["is_magic_countable"] = False
@@ -2372,6 +2371,7 @@ def select_formulas(df: pd.DataFrame, shop_type: str, party_level: int, shop_siz
     if "level" in d.columns:
         d["level"] = pd.to_numeric(d["level"], errors="coerce").fillna(0).astype(int)
         d = d[(d["level"] >= 1) & (d["level"] <= hi)]
+    d = canonicalize_frame(d)
 
     # Count to pick
     base_n = _counts_for_formulas(shop_type, shop_size)

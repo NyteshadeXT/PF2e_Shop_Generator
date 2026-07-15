@@ -13,7 +13,6 @@ DEFAULT_CONFIG_PATH = PROJECT_ROOT / "config.json"
 _SQL_IDENTIFIER = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 _ENV_OVERRIDES = {
     "LOOTGEN_DB_PATH": "sqlite_db_path",
-    "LOOTGEN_CSV_PATH": "csv_path",
     "LOOTGEN_STATE_DB_PATH": "player_view_db_path",
 }
 
@@ -44,15 +43,13 @@ def _validate_band(value: Any, location: str) -> None:
 
 def validate_settings(config: dict[str, Any]) -> None:
     source = str(config.get("data_source", "sqlite")).strip().lower()
-    if source not in {"sqlite", "csv"}:
-        raise ConfigurationError("data_source must be either 'sqlite' or 'csv'")
-    if source == "sqlite" and not config.get("sqlite_db_path"):
+    if source != "sqlite":
+        raise ConfigurationError("data_source must be 'sqlite'")
+    if not config.get("sqlite_db_path"):
         raise ConfigurationError("sqlite_db_path is required for the sqlite data source")
-    if source == "csv" and not config.get("csv_path"):
-        raise ConfigurationError("csv_path is required for the csv data source")
 
     view = str(config.get("sqlite_view", "")).strip()
-    if source == "sqlite" and not _SQL_IDENTIFIER.fullmatch(view):
+    if not _SQL_IDENTIFIER.fullmatch(view):
         raise ConfigurationError("sqlite_view must be a simple SQL identifier")
 
     caps = config.get("level_caps", {})
@@ -133,7 +130,7 @@ def load_settings(
             config[key] = str(value).strip()
 
     root = path.parent
-    for key in ("sqlite_db_path", "csv_path", "csv_adjustments_path", "player_view_db_path"):
+    for key in ("sqlite_db_path", "player_view_db_path"):
         if key in config:
             config[key] = _resolve_path(config.get(key), root)
 

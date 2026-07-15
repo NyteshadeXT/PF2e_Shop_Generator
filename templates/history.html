@@ -17,13 +17,13 @@
         </div>
         <nav class="pf-page-actions" aria-label="Primary actions">
           <a href="{{ url_for('index') }}" class="pf-link-chip">Generator</a>
-          <form method="POST" action="{{ url_for('history_backup') }}" style="display:inline;">
+          <form method="POST" action="{{ url_for('history_backup') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="pf-link-chip"
                     data-confirm="Download a backup containing every stored Player View and secret Live Display link? Keep the file private.">Download Backup</button>
           </form>
           {% if gm_access_enabled() %}
-          <form method="POST" action="{{ url_for('gm_logout') }}" style="display:inline;">
+          <form method="POST" action="{{ url_for('gm_logout') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="pf-link-chip">Lock Generator</button>
           </form>
@@ -70,9 +70,9 @@
     {% endif %}
 
     <section class="pf-card mt-16">
-      <div class="pf-section__header"><h2 style="margin:0;">Stored Player Views</h2></div>
+      <div class="pf-section__header"><h2>Stored Player Views</h2></div>
       <div class="p-12">
-        <div class="pf-actions" style="justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div class="pf-actions pf-actions--between">
           <span class="pf-meta">
             {% if total_snapshots %}Showing {{ first_result }}–{{ last_result }} of {{ total_snapshots }}{% else %}No retained shops{% endif %}
             · Page {{ page }} of {{ page_count }}
@@ -112,14 +112,14 @@
                   {% if entry.is_current and entry.live_token %}
                   <a class="pf-link-chip" target="_blank" rel="noopener"
                      href="{{ url_for('live_view', live_token=entry.live_token) }}">Open Live Display</a>
-                  <form method="POST" action="{{ url_for('history_rotate_live') }}" style="display:inline;">
+                  <form method="POST" action="{{ url_for('history_rotate_live') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="channel" value="{{ entry.channel }}">
                     <button type="submit" class="pf-link-chip"
                             data-confirm="Replace this game’s secret Live Display link? All previously shared live links for this game will stop working.">Rotate Live Link</button>
                   </form>
                   {% else %}
-                  <form method="POST" action="{{ url_for('history_make_live') }}" style="display:inline;">
+                  <form method="POST" action="{{ url_for('history_make_live') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="channel" value="{{ entry.channel }}">
                     <input type="hidden" name="roll_id" value="{{ entry.token }}">
@@ -137,7 +137,7 @@
         <p>No stored shops match this game name.</p>
         {% endif %}
         {% if page_count > 1 %}
-        <div class="pf-actions" style="justify-content:flex-end;margin-top:12px;">
+        <div class="pf-actions pf-actions--end">
           {% if page > 1 %}
           <a class="pf-btn" href="{{ url_for('history', channel=selected_channel or None, page=page-1) }}">Newer Shops</a>
           {% endif %}

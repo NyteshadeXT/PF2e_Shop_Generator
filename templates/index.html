@@ -26,7 +26,7 @@
           <a href="{{ url_for('history') }}" class="pf-link-chip">Recent Shops</a>
           <a href="/health" class="pf-link-chip">Health</a>
           {% if gm_access_enabled() %}
-          <form method="POST" action="{{ url_for('gm_logout') }}" style="display:inline;">
+          <form method="POST" action="{{ url_for('gm_logout') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="pf-link-chip">Lock Generator</button>
           </form>
@@ -37,7 +37,7 @@
 
     <!-- Form Card -->
     <section class="pf-card mt-16">
-      <div class="pf-section__header"><h2 style="margin:0;">Generate Inventory</h2></div>
+      <div class="pf-section__header"><h2>Generate Inventory</h2></div>
       <div class="p-12">
 
         <form id="generatorForm" class="pf-form-grid" action="{{ url_for('query') }}" method="post">
@@ -140,7 +140,7 @@
 	
 	<section id="spellbook-generator" class="pf-card mt-16">
 	  <div class="pf-section__header">
-		<h2 style="margin:0;">Spellbook Generator</h2>
+		<h2>Spellbook Generator</h2>
 	  </div>
 	  <div class="p-12">
 		<div class="pf-form-grid">
@@ -159,7 +159,7 @@
 			<input id="sb-max-level" class="pf-input pf-select-lg" type="number" min="1" max="10" value="5">
 		  </div>
 
-		  <div class="pf-field" style="grid-column:1 / -1;">
+		  <div class="pf-field pf-field--full">
 			<label class="pf-label">Themes (traits)</label>
 			<input id="sb-themes" class="pf-input" type="text" placeholder="e.g., Cold, Fire, Healing">
 		  </div>
@@ -176,7 +176,7 @@
 
 	<section id="magic-item-builder" class="pf-card mt-16">
 	  <div class="pf-section__header">
-		<h2 style="margin:0;">Magic Item Builder</h2>
+		<h2>Magic Item Builder</h2>
 	  </div>
 	  <div class="p-12">
 		<div class="mib-grid">
@@ -200,7 +200,7 @@
 		  </div>
 
 		  <!-- Weapon-only -->
-		  <div id="mib-weapon-fields" class="mib-col-12" style="display:none;">
+		  <div id="mib-weapon-fields" class="mib-col-12" hidden>
 			<div class="mib-grid">
 			  <div class="pf-field mib-col-6">
 				<label class="pf-label">Weapon Type</label>
@@ -222,7 +222,7 @@
 		  </div>
 
 		  <!-- Armor-only -->
-		  <div id="mib-armor-fields" class="mib-col-12" style="display:none;">
+		  <div id="mib-armor-fields" class="mib-col-12" hidden>
 			<div class="mib-grid">
 			  <div class="pf-field mib-col-6">
 				<label class="pf-label">Armor Type</label>
@@ -240,7 +240,7 @@
 		  </div>
 
 		  <!-- Shield-only -->
-		  <div id="mib-shield-fields" class="mib-col-12" style="display:none;">
+		  <div id="mib-shield-fields" class="mib-col-12" hidden>
 			<div class="pf-field">
 			  <label class="pf-label">Shield</label>
 			  <select id="mib-shield-name" class="pf-select pf-select-lg"></select>
@@ -249,7 +249,7 @@
 
 		  <!-- Actions (single block) -->
 		  <div class="pf-actions mib-col-12">
-			<label class="pf-checkbox" style="margin-right:12px;">
+			<label class="pf-checkbox pf-checkbox--spaced">
 			  <input type="checkbox" id="mib-reroll"> Re-roll each click
 			</label>
 			<button id="mib-load" class="pf-btn" type="button">Load Base Options</button>
@@ -495,9 +495,9 @@
 
 	  function togglePanels() {
 		const t = $type.value;
-		$wf.style.display = (t === 'weapon') ? '' : 'none';
-		$af.style.display = (t === 'armor')  ? '' : 'none';
-		$sf.style.display = (t === 'shield') ? '' : 'none';
+		$wf.hidden = t !== 'weapon';
+		$af.hidden = t !== 'armor';
+		$sf.hidden = t !== 'shield';
 	  }
 
 	  function optFill(sel, items, desired) {
@@ -575,7 +575,7 @@
 		}
 		card.appendChild(badges);
 		const title = document.createElement('h3');
-		title.style.margin = '.5rem 0 0';
+		title.className = 'mib-card__title';
 		title.textContent = it.name;
 		card.appendChild(title);
 		const price = document.createElement('div');
@@ -598,8 +598,7 @@
 		}
 		if (aon) {
 		  const linkWrap = document.createElement('div');
-		  linkWrap.className = 'pf-meta';
-		  linkWrap.style.marginTop = '6px';
+		  linkWrap.className = 'pf-meta mib-card__link';
 		  const link = document.createElement('a');
 		  link.target = '_blank';
 		  link.rel = 'noopener';

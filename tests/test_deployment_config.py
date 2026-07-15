@@ -1,11 +1,12 @@
 import json
 import sqlite3
-import threading
 import unittest
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from contextlib import closing
+from email.message import Message
 from pathlib import Path
 
 from tests import production_smoke
+from services.catalog_validation import validate_catalog
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -26,7 +27,10 @@ class DeploymentConfigurationTests(unittest.TestCase):
 
         self.assertTrue(catalog_path.is_file(), "the SQLite catalog must be deployed")
         self.assertGreater(catalog_path.stat().st_size, 1_000_000)
-        with sqlite3.connect(catalog_path) as connection:
+        report = validate_catalog(catalog_path, config["sqlite_view"])
+        self.assertGreater(report["rows"], 8_000)
+        self.assertGreaterEqual(report["sources"], 20)
+        with closing(sqlite3.connect(catalog_path)) as connection:
             integrity = connection.execute("PRAGMA integrity_check").fetchone()[0]
             view = connection.execute(
                 """
@@ -46,69 +50,90 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertIn("gunicorn --bind 127.0.0.1:8765 --workers 2", workflow)
         self.assertIn("tests/production_smoke.py", workflow)
         self.assertIn("LOOTGEN_STATE_DB_PATH:", workflow)
+        self.assertIn('LOOTGEN_LOGIN_ATTEMPTS: "2"', workflow)
+        self.assertIn('LOOTGEN_LOGIN_WINDOW_SECONDS: "1"', workflow)
         self.assertIn('RENDER: "1"', workflow)
 
     def test_production_server_dependency_is_declared(self):
         requirements = (PROJECT_ROOT / "requirements.txt").read_text(encoding="utf-8")
-        self.assertIn("gunicorn", requirements.lower())
+        self.assertEqual(
+            requirements.splitlines(),
+            [
+                "Flask==3.1.2",
+                "gunicorn==23.0.0",
+                "pandas==2.3.3",
+                "numpy==2.3.4",
+            ],
+        )
 
-    def test_smoke_client_validates_the_expected_http_contract(self):
-        class SmokeHandler(BaseHTTPRequestHandler):
-            def do_GET(self):
-                if self.path == "/health":
-                    body = json.dumps(
-                        {
-                            "ok": True,
-                            "checks": {
-                                "catalog": True,
-                                "player_view_storage": True,
-                            },
-                        }
-                    ).encode()
-                    self.send_response(200)
-                    self.send_header("Content-Type", "application/json")
-                    self.send_header(
-                        "Strict-Transport-Security",
-                        "max-age=31536000; includeSubDomains",
-                    )
-                elif self.path == "/":
-                    body = b"redirect"
-                    self.send_response(302)
-                    self.send_header("Location", "/gm-login")
-                elif self.path == "/gm-login":
-                    body = b"<h1>GM Access</h1>"
-                    self.send_response(200)
-                    self.send_header(
-                        "Content-Security-Policy",
-                        "default-src 'self'; script-src 'self' 'nonce-test'; "
-                        "object-src 'none'",
-                    )
-                elif self.path == "/static/pf2e.css":
-                    body = b"body { color: black; }"
-                    self.send_response(200)
-                    self.send_header("Content-Type", "text/css")
-                elif self.path.startswith("/player-view?"):
-                    body = b"This Player View is no longer available."
-                    self.send_response(404)
-                else:
-                    body = b"not found"
-                    self.send_response(404)
-                self.send_header("Content-Length", str(len(body)))
-                self.end_headers()
-                self.wfile.write(body)
+    def test_render_and_ci_share_the_python_runtime_file(self):
+        runtime = (PROJECT_ROOT / ".python-version").read_text(encoding="utf-8").strip()
+        workflow = (
+            PROJECT_ROOT / ".github" / "workflows" / "tests.yml"
+        ).read_text(encoding="utf-8")
 
-            def log_message(self, format, *args):
-                return
+        self.assertEqual(runtime, "3.12")
+        self.assertIn('python-version-file: ".python-version"', workflow)
 
-        server = ThreadingHTTPServer(("127.0.0.1", 0), SmokeHandler)
-        thread = threading.Thread(target=server.serve_forever, daemon=True)
-        thread.start()
-        try:
-            production_smoke.run(f"http://127.0.0.1:{server.server_port}")
-        finally:
-            server.shutdown()
-            server.server_close()
-            thread.join(timeout=5)
+    def test_windows_launcher_repairs_partial_environment_and_checks_assets(self):
+        launcher = (PROJECT_ROOT / "run_app.bat").read_text(encoding="utf-8")
+
+        self.assertIn('if not exist "config.json"', launcher)
+        self.assertIn(
+            'if not exist "data\\PF2e_Treasure_Generator_Backend.db"',
+            launcher,
+        )
+        self.assertIn('if not exist "%VENV_PYTHON%"', launcher)
+        self.assertIn("py -3.12 -m venv --clear .venv", launcher)
+        self.assertIn("validate_catalog", launcher)
+        self.assertIn("python -m pip install --prefer-binary -r requirements.txt", launcher)
+
+    def test_local_runtime_files_are_ignored_but_deploy_assets_are_not(self):
+        ignore_rules = (PROJECT_ROOT / ".gitignore").read_text(encoding="utf-8")
+
+        self.assertIn(".venv/", ignore_rules)
+        self.assertIn("data/player_views.db", ignore_rules)
+        self.assertIn(".lootgen-session-secret", ignore_rules)
+        self.assertNotIn("config.json", ignore_rules)
+        self.assertNotIn("PF2e_Treasure_Generator_Backend.db", ignore_rules)
+
+    def test_csv_catalog_fallback_code_has_been_removed(self):
+        sources = "\n".join(
+            (PROJECT_ROOT / path).read_text(encoding="utf-8")
+            for path in (
+                "services/db.py",
+                "services/settings.py",
+                "services/provenance.py",
+            )
+        )
+
+        self.assertNotIn("read_csv", sources)
+        self.assertNotIn("LOOTGEN_CSV_PATH", sources)
+        self.assertNotIn("csv_adjustments_path", sources)
+
+    def test_smoke_client_parses_authenticated_workflow_contract(self):
+        body = (
+            b'<input type="hidden" name="csrf_token" value="csrf-123">'
+            b'<a href="/live/0123456789abcdef0123456789abcdef">Live</a>'
+        )
+        headers = Message()
+        headers["Location"] = (
+            "/results/abcdefabcdefabcdefabcdefabcdefab?channel=friday-game"
+        )
+
+        self.assertEqual(production_smoke._hidden_value(body, "csrf_token"), "csrf-123")
+        self.assertEqual(
+            production_smoke._result_location(headers),
+            (
+                "/results/abcdefabcdefabcdefabcdefabcdefab?channel=friday-game",
+                "abcdefabcdefabcdefabcdefabcdefab",
+                "friday-game",
+            ),
+        )
+        self.assertEqual(
+            production_smoke._live_token(body),
+            "0123456789abcdef0123456789abcdef",
+        )
 
 
 if __name__ == "__main__":

@@ -8,6 +8,7 @@ from urllib.parse import quote_plus
 
 
 from services.settings import CONFIG
+from services.catalog_order import canonicalize_frame
 logger = logging.getLogger(__name__)
 
 def _path_signature(raw_path: str | None) -> Tuple[str | None, float | None]:
@@ -30,10 +31,8 @@ def _signature_from_parts(parts: Iterable[Tuple[str, Any]]) -> Tuple[Tuple[str, 
 
 def _items_signature() -> Tuple[Tuple[str, Any], ...]:
     return _signature_from_parts([
-        ("source", CONFIG.get("data_source", "sqlite")),
         ("view", CONFIG.get("sqlite_view")),
         ("sqlite_db_path", _path_signature(CONFIG.get("sqlite_db_path"))),
-        ("csv_path", _path_signature(CONFIG.get("csv_path"))),
     ])
 
 
@@ -44,10 +43,8 @@ _ITEMS_LOCK = RLock()
 
 def _adjustments_signature() -> Tuple[Tuple[str, Any], ...]:
     return _signature_from_parts([
-        ("source", CONFIG.get("data_source", "sqlite")),
         ("table", CONFIG.get("sqlite_adjustments_table")),
         ("sqlite_db_path", _path_signature(CONFIG.get("sqlite_db_path"))),
-        ("csv_adjustments_path", _path_signature(CONFIG.get("csv_adjustments_path"))),
     ])
 
 
@@ -88,7 +85,7 @@ def _load_reference_query(
         if not force_refresh and cached and cached[1] == signature:
             return cached[0].copy(deep=False)
         with closing(sqlite3.connect(path)) as conn:
-            frame = pd.read_sql_query(query, conn)
+            frame = canonicalize_frame(pd.read_sql_query(query, conn))
         frame.attrs["reference_signature"] = signature
         _REFERENCE_CACHE[key] = (frame, signature)
         logger.info("Loaded %d %s reference rows", len(frame), name)
@@ -133,24 +130,20 @@ def clear_reference_caches() -> None:
 def _load_sqlite():
     con = sqlite3.connect(CONFIG["sqlite_db_path"])
     try:
-        df = pd.read_sql_query(f"SELECT * FROM {CONFIG['sqlite_view']};", con)
+        df = canonicalize_frame(
+            pd.read_sql_query(f"SELECT * FROM {CONFIG['sqlite_view']};", con)
+        )
         rows = len(df)
         logger.info(
             "Loaded %d catalog rows from SQLite view %s", rows, CONFIG["sqlite_view"]
         )
         if rows == 0:
-            logger.warning(
-                "SQLite view returned 0 rows (db=%s, view=%s). Falling back to CSV if configured.",
-                CONFIG["sqlite_db_path"], CONFIG["sqlite_view"]
+            raise RuntimeError(
+                f"SQLite catalog view {CONFIG['sqlite_view']} returned no rows"
             )
         return df
     finally:
         con.close()
-
-def _load_csv():
-    df = pd.read_csv(CONFIG["csv_path"])
-    logger.info("Loaded %d catalog rows from CSV", len(df))
-    return df
 
 def load_items(force_refresh: bool = False) -> pd.DataFrame:
     """Load the main item catalog with simple caching."""
@@ -160,22 +153,7 @@ def load_items(force_refresh: bool = False) -> pd.DataFrame:
     with _ITEMS_LOCK:
         if not force_refresh and _ITEMS_CACHE is not None and _ITEMS_SIGNATURE == signature:
             return _ITEMS_CACHE.copy(deep=False)
-    src = CONFIG.get("data_source", "sqlite")
-    df = pd.DataFrame()
-    if src == "sqlite":
-        try:
-            df = _load_sqlite()
-        except Exception:
-            logger.warning("SQLite catalog load failed; trying CSV fallback", exc_info=True)
-            df = pd.DataFrame()
-    if df.empty:
-        try:
-            df = _load_csv()
-        except Exception:
-            logger.exception("CSV catalog load failed")
-            df = pd.DataFrame(columns=[
-                "category", "source_table", "source_id", "name", "level", "rarity", "price_text", "tags", "Bulk", "Source", "shop_type", "stock_flag"
-            ])
+    df = _load_sqlite()
 
     with _ITEMS_LOCK:
         _ITEMS_CACHE = df
@@ -200,14 +178,6 @@ def _load_adjustments_sqlite() -> pd.DataFrame:
     finally:
         con.close()
 
-def _load_adjustments_csv() -> pd.DataFrame:
-    path = CONFIG.get("csv_adjustments_path")
-    if not path:
-        return _empty_adjustments_df()
-    df = pd.read_csv(path)
-    logger.info("Loaded %d adjustment rows from CSV", len(df))
-    return df
-
 def load_adjustments() -> pd.DataFrame:
     """
     Load the Adjustments table/view.
@@ -221,13 +191,8 @@ def load_adjustments() -> pd.DataFrame:
         if _ADJUSTMENTS_CACHE is not None and _ADJUSTMENTS_SIGNATURE == signature:
             return _ADJUSTMENTS_CACHE.copy(deep=False)
 
-    src = CONFIG.get("data_source", "sqlite")
-    df = pd.DataFrame()
     try:
-        if src == "sqlite":
-            df = _load_adjustments_sqlite()
-        if df.empty:
-            df = _load_adjustments_csv()
+        df = _load_adjustments_sqlite()
     except Exception:
         logger.warning("Adjustment data could not be loaded", exc_info=True)
         df = _empty_adjustments_df()
@@ -240,9 +205,12 @@ def load_adjustments() -> pd.DataFrame:
         "Name": "name",
         "Subtype": "subtype",
         "Rarity": "rarity",
+        "ItemLevel": "level",
         "Level": "level",
+        "Cost": "price_text",
         "PriceText": "price_text",
         "Price": "price_text",   # allow either Price or PriceText
+        "Traits": "tags",
         "Tags": "tags",
         "Source": "Source",
     }
@@ -258,6 +226,7 @@ def load_adjustments() -> pd.DataFrame:
     df["level"] = pd.to_numeric(df["level"], errors="coerce").fillna(0).astype(int)
     for c in ("name", "subtype", "rarity", "price_text", "tags", "Source"):
         df[c] = df[c].astype(str).str.strip()
+    df = canonicalize_frame(df)
 
     with _ADJUSTMENTS_LOCK:
         _ADJUSTMENTS_CACHE = df
@@ -272,6 +241,7 @@ def get_spells_by_rank(conn: sqlite3.Connection, rank: int):
         SELECT Name, Rarity
         FROM Spells
         WHERE Rank = ?
+        ORDER BY Name COLLATE NOCASE, Rarity COLLATE NOCASE
     """
     cur = conn.execute(q, (rank,))
     rows = cur.fetchall()
@@ -353,6 +323,7 @@ def load_materials(material_types: list[str]) -> pd.DataFrame:
     for c in ("name", "rarity", "prerequisite"):
         if c in df.columns:
             df[c] = df[c].astype(str).str.strip()
+    df = canonicalize_frame(df)
         
     with _MATERIALS_LOCK:
         _MATERIALS_CACHE[key] = (df, _materials_signature(key))

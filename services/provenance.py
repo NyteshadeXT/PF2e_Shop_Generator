@@ -11,8 +11,9 @@ from .settings import CONFIG, DEFAULT_CONFIG_PATH, PROJECT_ROOT
 
 
 _GENERATION_CODE = (
-    PROJECT_ROOT / "app.py",
     PROJECT_ROOT / "services" / "db.py",
+    PROJECT_ROOT / "services" / "catalog_order.py",
+    PROJECT_ROOT / "services" / "generation.py",
     PROJECT_ROOT / "services" / "logic.py",
     PROJECT_ROOT / "services" / "money.py",
     PROJECT_ROOT / "services" / "randomness.py",
@@ -22,10 +23,8 @@ _GENERATION_CODE = (
 
 
 def _source_paths() -> tuple[Path, ...]:
-    source = str(CONFIG.get("data_source", "sqlite")).lower()
-    catalog_key = "csv_path" if source == "csv" else "sqlite_db_path"
     paths = [DEFAULT_CONFIG_PATH, *_GENERATION_CODE]
-    catalog = CONFIG.get(catalog_key)
+    catalog = CONFIG.get("sqlite_db_path")
     if catalog:
         paths.append(Path(str(catalog)))
     return tuple(path.resolve() for path in paths)

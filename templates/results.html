@@ -36,7 +36,7 @@
           <a href="/" class="pf-link-chip">Back</a>
           <a href="{{ url_for('history', channel=channel) }}" class="pf-link-chip">Recent Shops</a>
           {% if gm_access_enabled() %}
-          <form method="POST" action="{{ url_for('gm_logout') }}" style="display:inline;">
+          <form method="POST" action="{{ url_for('gm_logout') }}">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="pf-link-chip">Lock Generator</button>
           </form>
@@ -44,7 +44,7 @@
           <button class="pf-link-chip" type="button" id="copy-reproduction-key">Copy Reproduction Key</button>
           <span id="copy-reproduction-status" class="pf-meta" aria-live="polite"></span>
 
-          <form method="POST" action="/query" style="display:inline;">
+          <form method="POST" action="/query">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="generation_request_key" value="{{ generation_request_key }}">
             <input type="hidden" name="shop_type" value="{{ shop_type }}">
@@ -62,8 +62,7 @@
                 method="GET"
                 action="/player-view"
                 target="_blank"
-                rel="noopener"
-                style="display:inline;">
+                rel="noopener">
             <input type="hidden" name="channel"  value='{{ channel or "default" }}'>
             <input type="hidden" name="roll_id"  value='{{ roll_id or "" }}'>
             <button type="submit" class="pf-link-chip" formtarget="_blank">Open Player View</button>
@@ -75,8 +74,7 @@
           <form method="POST"
                 action="{{ url_for('publish_player_view') }}"
                 target="_blank"
-                rel="noopener"
-                style="display:inline;">
+                rel="noopener">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <input type="hidden" name="channel" value="{{ channel }}">
             <input type="hidden" name="roll_id" value="{{ roll_id }}">
@@ -125,7 +123,7 @@
 
     <!-- Mundane -->
     <section id="Mundane" class="pf-card mt-16">
-      <div class="pf-section__header"><h2 style="margin:0;">Mundane Items</h2><a href="#top" class="pf-link-chip" style="float: right;">↑ Top</a></div>
+      <div class="pf-section__header"><h2>Mundane Items</h2><a href="#top" class="pf-link-chip">↑ Top</a></div>
       {% if mundane_items %}
         <div class="p-12">
           <div class="pf-table-wrap">
@@ -147,10 +145,10 @@
 				<td>
 				  <a href="{{ aon_url(it.aon_target or it.name) }}" target="_blank" rel="noopener">{{ it.name }}</a>
 				  {% if it.critical %}
-					<span class="badge critical" style="margin-left:6px;">Critical</span>
+					<span class="badge critical">Critical</span>
 				  {% endif %}
 				  {% if it.is_3pp %}
-					<span class="badge thirdparty" title="Third-Party Publisher" style="margin-left:6px;">3PP</span>
+					<span class="badge thirdparty" title="Third-Party Publisher">3PP</span>
 				  {% endif %}
 				</td>
 				<td>{{ it.level }}</td>
@@ -175,7 +173,7 @@
 
     <!-- Materials -->
     <section id="Materials" class="pf-card mt-16">
-      <div class="pf-section__header"><h2 style="margin:0;">Materials</h2><a href="#top" class="pf-link-chip" style="float: right;">↑ Top</a></div>
+      <div class="pf-section__header"><h2>Materials</h2><a href="#top" class="pf-link-chip">↑ Top</a></div>
       {% if material_items %}
         <div class="p-12">
           <div class="pf-table-wrap">
@@ -197,10 +195,10 @@
 					<td>
 					  <a href="{{ aon_url(it.aon_target or it.name) }}" target="_blank" rel="noopener">{{ it.name }}</a>
 					  {% if it.critical %}
-						<span class="badge critical" style="margin-left:6px;">Critical</span>
+						<span class="badge critical">Critical</span>
 					  {% endif %}
 					  {% if it.is_3pp %}
-						<span class="badge thirdparty" title="Third-Party Publisher" style="margin-left:6px;">3PP</span>
+						<span class="badge thirdparty" title="Third-Party Publisher">3PP</span>
 					  {% endif %}
 					</td>
 					<td>{{ it.level }}</td>
@@ -225,7 +223,7 @@
 
     <!-- Formulas -->
     <section id="Formulas" class="pf-card mt-16">
-      <div class="pf-section__header"><h2 style="margin:0;">Formulas</h2><a href="#top" class="pf-link-chip" style="float: right;">↑ Top</a></div>
+      <div class="pf-section__header"><h2>Formulas</h2><a href="#top" class="pf-link-chip">↑ Top</a></div>
       {% if formula_items %}
         <div class="p-12">
           <div class="pf-table-wrap">
@@ -247,10 +245,10 @@
 					<td>
 					  <a href="{{ aon_url(it.aon_target or it.name) }}" target="_blank" rel="noopener">{{ it.name }}</a>
 					  {% if it.critical %}
-						<span class="badge critical" style="margin-left:6px;">Critical</span>
+						<span class="badge critical">Critical</span>
 					  {% endif %}
 					  {% if it.is_3pp %}
-						<span class="badge thirdparty" title="Third-Party Publisher" style="margin-left:6px;">3PP</span>
+						<span class="badge thirdparty" title="Third-Party Publisher">3PP</span>
 					  {% endif %}
 					</td>
 					<td>{{ it.level }}</td>
@@ -275,7 +273,7 @@
 
     <!-- Armor (incl. Shields) -->
     <section id="Armor" class="pf-card mt-16">
-      <div class="pf-section__header"><h2 style="margin:0;">Armor (incl. Shields)</h2><a href="#top" class="pf-link-chip" style="float: right;">↑ Top</a></div>
+      <div class="pf-section__header"><h2>Armor (incl. Shields)</h2><a href="#top" class="pf-link-chip">↑ Top</a></div>
       {% if armor_items %}
         <div class="p-12">
           <div class="pf-table-wrap">
@@ -299,18 +297,18 @@
                         {{ it.name }}
                       </a>
                       {% if it.critical %}
-                        <span class="badge critical" style="margin-left:6px;">Critical</span>
+                        <span class="badge critical">Critical</span>
                       {% endif %}
 
                       {% if it.is_adjusted or ('adjustment:' in (it.tags or '')|lower) %}
-                        <span class="badge adjusted" style="margin-left:6px;">Adjusted</span>
+                        <span class="badge adjusted">Adjusted</span>
                       {% endif %}
                       
                       {% if it.is_material or ('material:' in (it.tags or '')|lower) %}
-                        <span class="badge material" style="margin-left:6px;">Material</span>
+                        <span class="badge material">Material</span>
                       {% endif %}
 					  {% if it.is_3pp %}
-						<span class="badge thirdparty" title="Third-Party Publisher" style="margin-left:6px;">3PP</span>
+						<span class="badge thirdparty" title="Third-Party Publisher">3PP</span>
 					  {% endif %}
 					</td>
                     <td>{{ it.level }}</td>
@@ -335,7 +333,7 @@
 
     <!-- Weapons -->
     <section id="Weapons" class="pf-card mt-16">
-      <div class="pf-section__header"><h2 style="margin:0;">Weapons</h2><a href="#top" class="pf-link-chip" style="float: right;">↑ Top</a></div>
+      <div class="pf-section__header"><h2>Weapons</h2><a href="#top" class="pf-link-chip">↑ Top</a></div>
       {% if weapon_items %}
         <div class="p-12">
           <div class="pf-table-wrap">
@@ -359,18 +357,18 @@
                         {{ it.name }}
                       </a>
                       {% if it.critical %}
-                        <span class="badge critical" style="margin-left:6px;">Critical</span>
+                        <span class="badge critical">Critical</span>
                       {% endif %}
 
                       {% if it.is_adjusted or ('adjustment:' in (it.tags or '')|lower) %}
-                        <span class="badge adjusted" style="margin-left:6px;">Adjusted</span>
+                        <span class="badge adjusted">Adjusted</span>
                       {% endif %}
                       
                       {% if it.is_material or ('material:' in (it.tags or '')|lower) %}
-                        <span class="badge material" style="margin-left:6px;">Material</span>
+                        <span class="badge material">Material</span>
                       {% endif %}
 					  {% if it.is_3pp %}
-						<span class="badge thirdparty" title="Third-Party Publisher" style="margin-left:6px;">3PP</span>
+						<span class="badge thirdparty" title="Third-Party Publisher">3PP</span>
 					  {% endif %}
 					</td>
                     <td>{{ it.level }}</td>
@@ -395,7 +393,7 @@
 
     <!-- Magic -->
     <section id="Magic" class="pf-card mt-16">
-		<div class="pf-section__header"><h2 style="margin:0;">Magic Items</h2><a href="#top" class="pf-link-chip" style="float: right;">↑ Top</a></div>
+		<div class="pf-section__header"><h2>Magic Items</h2><a href="#top" class="pf-link-chip">↑ Top</a></div>
       {% if magic_items %}
         <div class="p-12">
           <div class="pf-table-wrap">
@@ -424,10 +422,10 @@
 							<summary>
 							  <a href="{{ aon_url(it.aon_target or it.name) }}" target="_blank" rel="noopener">{{ it.name }}</a>
 							  {% if it.critical %}
-								<span class="badge critical" style="margin-left:6px;">Critical</span>
+								<span class="badge critical">Critical</span>
 							  {% endif %}
 							  {% if it.is_3pp %}
-								<span class="badge thirdparty" title="Third‑Party Publisher" style="margin-left:6px;">3PP</span>
+								<span class="badge thirdparty" title="Third‑Party Publisher">3PP</span>
 							  {% endif %}
 							</summary>
 							{{ it.details_html | safe }}
@@ -435,10 +433,10 @@
 						{% else %}
 						  <a href="{{ aon_url(it.aon_target or it.name) }}" target="_blank" rel="noopener">{{ it.name }}</a>
 						  {% if it.critical %}
-							<span class="badge critical" style="margin-left:6px;">Critical</span>
+							<span class="badge critical">Critical</span>
 						  {% endif %}
 						  {% if it.is_3pp %}
-							<span class="badge thirdparty" title="Third‑Party Publisher" style="margin-left:6px;">3PP</span>
+							<span class="badge thirdparty" title="Third‑Party Publisher">3PP</span>
 						  {% endif %}
 						{% endif %}
 					  </td>

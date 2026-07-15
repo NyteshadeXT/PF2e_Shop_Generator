@@ -2,6 +2,7 @@
 import pandas as pd
 import re, random
 from services.randomness import get_rng
+from services.catalog_order import canonicalize_frame
 from services.money import format_cp, format_gp, gp_to_cp, parse_price_to_cp
 
 from decimal import Decimal
@@ -159,6 +160,7 @@ def apply_adjustments_probabilistic(
         if level_window and all(v is not None for v in level_window):
             lo, hi = level_window
             A = A[(A["level"] >= int(lo)) & (A["level"] <= int(hi))]
+    A = canonicalize_frame(A)
 
     out: list[dict] = []
     for it in items:
@@ -284,6 +286,7 @@ def apply_materials_probabilistic(
     for c in ("price_add", "price_add_per_bulk"):
         if c in M.columns:
             M[c] = pd.to_numeric(M[c], errors="coerce").fillna(0.0)
+    M = canonicalize_frame(M)
 
     def _bulk_to_float(val) -> float:
         s = str(val or "").strip().lower()

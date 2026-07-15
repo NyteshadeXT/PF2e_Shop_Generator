@@ -92,6 +92,10 @@ class RenderSecurityTests(unittest.TestCase):
         self.assertIn("base-uri 'none'", policy)
         self.assertIn("form-action 'self'", policy)
         self.assertIn("frame-ancestors 'self'", policy)
+        self.assertIn("style-src 'self'", policy)
+        self.assertIn("style-src-attr 'none'", policy)
+        self.assertIn("script-src-attr 'none'", policy)
+        self.assertNotIn("'unsafe-inline'", policy)
         nonce = re.search(r"script-src 'self' 'nonce-([^']+)'", policy)
         self.assertIsNotNone(nonce)
         self.assertIn(f'nonce="{nonce.group(1)}"', response.get_data(as_text=True))
@@ -109,6 +113,14 @@ class RenderSecurityTests(unittest.TestCase):
                 self.assertIsNone(re.search(r"\son[a-z]+\s*=", template, re.IGNORECASE))
                 for script_tag in re.findall(r"<script\b[^>]*>", template, re.IGNORECASE):
                     self.assertIn("nonce=", script_tag)
+
+    def test_templates_do_not_require_inline_styles(self):
+        for template_path in (PROJECT_ROOT / "templates").glob("*.html"):
+            template = template_path.read_text(encoding="utf-8")
+            with self.subTest(template=template_path.name):
+                self.assertIsNone(re.search(r"\sstyle\s*=", template, re.IGNORECASE))
+                self.assertIsNone(re.search(r"<style\b", template, re.IGNORECASE))
+                self.assertNotIn(".style.", template)
 
 
 if __name__ == "__main__":

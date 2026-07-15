@@ -1,24 +1,30 @@
 # PF2e Shop Generator (Web)
 
-A modular Flask web app that modernizes your Access-based shop generator with a SQLite backend (view: `v_items_norm`), with a CSV fallback.
+A modular Flask web app that modernizes your Access-based shop generator with a validated SQLite catalog (view: `v_items_norm`).
 
 ## Run locally
 
-```bash
-pip install flask pandas
-python app.py
-# Open http://localhost:7860
+On Windows, double-click `run_app.bat`. It verifies the configuration and catalog, creates or repairs `.venv` when its Python executable is missing, installs the declared requirements, and opens `http://127.0.0.1:5000`.
+
+To run manually:
+
+```text
+python -m venv .venv
+.venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python app.py
+# Open http://127.0.0.1:5000
 ```
 
+On macOS or Linux, use `.venv/bin/python` in the last two commands instead. Python 3.12 is selected for both Render and GitHub Actions through `.python-version`, and the production dependencies in `requirements.txt` are pinned to the versions exercised by CI.
+
 ## Configure
-Edit `config.json` to switch between `sqlite` and `csv`, tweak counts, disposition multipliers, critical rates, and level spread.
+Edit `config.json` to tweak counts, disposition multipliers, critical rates, and level spread. SQLite is the only supported catalog source; catalog-load failures stop generation instead of silently falling back to a different file.
 
 Prices are calculated in whole copper pieces and displayed using standard PF2e denominations. Combined values such as `2 gp 5 sp 3 cp` are accepted. Merchant disposition has its ordinary meaning: **greedy** increases prices, **fair** leaves them unchanged, and **generous** reduces them. The default multipliers are 1.15, 1.00, and 0.90 respectively and can be changed in `config.json`.
 
 The application validates critical configuration values at startup. Paths in `config.json` are resolved relative to that file. These environment variables override configured paths:
 
 - `LOOTGEN_DB_PATH` — item catalog database
-- `LOOTGEN_CSV_PATH` — CSV catalog fallback
 - `LOOTGEN_STATE_DB_PATH` — persistent Player View database
 
 ## Persistent Player Views
@@ -41,19 +47,21 @@ Recent Shops provides a picker containing every known game and its retained shop
 
 Snapshots are retained for 365 days with a maximum of 250 snapshots per game by default. Current live snapshots are always protected. Change `player_views.retention_days` and `player_views.max_snapshots_per_channel` in `config.json`; set either value to `0` to disable that limit.
 
-Inspect or clean the state database manually with:
+Maintain the state database manually with:
 
 ```text
 python -m services.player_views stats
 python -m services.player_views cleanup --vacuum
 python -m services.player_views backup --output backups/player_views.db
+# Run only after stopping the web service:
+python -m services.player_views restore --input backups/player_views.db --confirm-replace
 ```
 
 The backup command uses SQLite’s online backup operation and checks the completed copy before replacing an older backup at that destination. It is safe to run while the web service is active. Keep backups outside an ephemeral service filesystem.
 
 The GM-facing **Recent Shops** page also provides **Download Backup**. It creates the same online, integrity-checked SQLite backup and sends it directly to the browser, which is more convenient for GitHub-to-Render deployments. The downloaded file contains all retained snapshots and secret Live Display links, so store it privately outside Render. When GM access is enabled, the download requires an authenticated GM session and a valid browser request token.
 
-To recover from a downloaded backup, stop the web service before replacing the persistent `player_views.db`, then restart it. Do not overwrite the active database while the application is running. Keep the original file until the restored service passes `/health` and the Recent Shops page has been checked.
+To recover from a downloaded backup, stop the web service and run the restore command above from the project directory, then restart the service. The command checks SQLite integrity, the expected Player View schema, channel references, and every stored snapshot before changing the active database. It also creates a timestamped `pre-restore` safety backup beside the active database. Use `--safety-backup PATH` to choose another private, persistent location. Restore refuses to continue when the confirmation flag is omitted or the active database is busy. Keep the safety backup until the restored service passes `/health` and the Recent Shops page has been checked.
 
 For Render, attach a persistent disk (for example at `/var/data`) and set:
 
@@ -65,13 +73,13 @@ Without a persistent disk, Render can discard shared Player Views during a deplo
 
 GitHub stores and deploys the application source and catalog, but it does not contain Render’s live `player_views.db` because that file is intentionally ignored by Git. A GitHub-triggered deployment therefore still requires a Render persistent disk and a separate backup destination for runtime Player Views.
 
-The repository must include both `config.json` and `data/PF2e_Treasure_Generator_Backend.db`. They are application assets, not Render secrets. CI verifies that both files exist, that the configuration points to the catalog, and that the catalog passes SQLite integrity and required-view checks. Only `data/player_views.db` and its WAL sidecars should remain ignored as runtime data.
+The repository must include both `config.json` and `data/PF2e_Treasure_Generator_Backend.db`. They are application assets, not Render secrets. CI verifies that both files exist, that the configuration points to the catalog, and that the catalog passes SQLite integrity, schema, minimum-size, required-source, reference-table, duplicate-identifier, rarity, level, and stock-flag checks. The Windows launcher performs the same semantic catalog validation before installing dependencies. Only `data/player_views.db` and its WAL sidecars should remain ignored as runtime data.
 
 Use `gunicorn app:app` as the Render start command. Flask debug mode is disabled unless `FLASK_DEBUG=1` is set explicitly.
 
 ### Optional GM access for a hosted generator
 
-To keep the generator controls private on Render, add these secret environment variables:
+Set a session secret for every hosted deployment. Add the optional access key when the generator controls should be private:
 
 ```text
 LOOTGEN_GM_ACCESS_KEY=<a long private passphrase>
@@ -80,7 +88,9 @@ LOOTGEN_SESSION_SECRET=<a different long random value>
 
 When `LOOTGEN_GM_ACCESS_KEY` is set, the generator and its GM tools require the access key. The **Lock Generator** button ends the 12-hour GM session early. Immutable Player View links, secret Live Display links, and `/health` remain public, so players can continue using shared links without the GM key and everyone opening the same link sees the same stored shop. If the access key is unset, the application behaves as before with no login screen.
 
-Failed GM logins are limited to eight attempts per client in five minutes by default. Adjust these only if necessary with `LOOTGEN_LOGIN_ATTEMPTS` and `LOOTGEN_LOGIN_WINDOW_SECONDS`. A successful login clears that client’s failures.
+`LOOTGEN_SESSION_SECRET` gives every Gunicorn worker the same cookie-signing key and is the recommended Render configuration even when GM access is disabled. If it is omitted, the application atomically creates `.lootgen-session-secret` beside `player_views.db`, allowing concurrent workers to share one fallback key. That fallback survives restarts when Player View storage is on the Render persistent disk and remains excluded from Git. `LOOTGEN_SESSION_SECRET_FILE` can select another private path when necessary.
+
+Failed GM logins are limited to eight attempts per client in five minutes by default. Attempts are stored in the shared Player View SQLite database, so every Gunicorn worker enforces one combined limit instead of keeping a separate allowance. Client identifiers are stored as hashes rather than raw addresses. Adjust the limit only if necessary with `LOOTGEN_LOGIN_ATTEMPTS` and `LOOTGEN_LOGIN_WINDOW_SECONDS`. A successful login clears that client’s failures.
 
 Render automatically receives secure session cookies. For another HTTPS host, set `LOOTGEN_SECURE_COOKIES=1`. Store all of these values as host environment secrets rather than putting them in `config.json` or source control.
 
@@ -98,13 +108,15 @@ Browser errors use a concise generator-styled page, while `/api/*` errors remain
 
 Database text is escaped before trusted spellbook markup is rendered, and the Magic Item Builder inserts API values through safe DOM text nodes. Responses also suppress referrer data so secret Live Display URLs are not disclosed when players follow external links.
 
-Browser responses use a restrictive Content Security Policy: executable scripts require a per-request nonce, resources and API connections default to the application’s own origin, objects and base-tag rewriting are disabled, and forms may submit only to the application. HTTPS responses also enable one-year Strict Transport Security. Existing inline layout styles remain allowed until the templates are fully moved to stylesheet classes.
+Browser responses use a restrictive Content Security Policy: executable scripts require a per-request nonce, scripts and styles load only from the application’s own origin, objects and base-tag rewriting are disabled, and forms may submit only to the application. Templates no longer require inline styles or event handlers. HTTPS responses also enable one-year Strict Transport Security.
 
 ## Reproducing a shop
 
-Every generated shop displays a generation seed, a build fingerprint, and **Copy Reproduction Key**. A seed reproduces inventory when used with the same shop type, size, disposition, and party level. A reproduction key carries those values plus the fingerprint of the generator code, configuration, catalog, Python, pandas, and NumPy versions. When an older or mismatched key is used, its settings are still restored but the results page warns that exact inventory may differ. Existing `pf2e1` keys remain supported. **Recreate Same Seed** remains the quickest one-click option from the results page. Leaving the field blank creates a new random seed. Random state is isolated per request, so concurrent hosted users do not affect one another's results.
+Every generated shop displays a generation seed, a build fingerprint, and **Copy Reproduction Key**. A seed reproduces inventory when used with the same shop type, size, disposition, and party level. Catalog, spell, formula, adjustment, material, and rune candidates are placed in a canonical content-derived order before seeded sampling, so SQLite row order does not change a result. A reproduction key carries the settings plus the fingerprint of the generator code, configuration, catalog, Python, pandas, and NumPy versions. When an older or mismatched key is used, its settings are still restored but the results page warns that exact inventory may differ. Existing `pf2e1` keys remain supported. **Recreate Same Seed** remains the quickest one-click option from the results page. Leaving the field blank creates a new random seed. Random state is isolated per request, so concurrent hosted users do not affect one another's results.
 
 CSV export has been removed in favor of reproducible shops and immutable Player View links.
+
+Generation validation, deterministic selection orchestration, and snapshot assembly live in `services/generation.py`. The Magic Item Builder API is registered from `services/magic_builder.py`. Keeping these workflows outside `app.py` leaves the application module focused on web sessions, stored Player Views, and page routing.
 
 Spellbook generation loads each required magical tradition once per request and performs rank, rarity, duplicate, and theme selection in memory. Multiple books of the same tradition reuse that pool instead of repeatedly querying SQLite.
 
@@ -120,7 +132,7 @@ python -m unittest discover -s tests -v
 
 GitHub Actions runs the same suite on every push and pull request using `.github/workflows/tests.yml`. In Render, enable the option to wait for CI checks before auto-deploying so a failed GitHub test run does not immediately replace the working service.
 
-After the regression suite, GitHub Actions now starts the application with the production two-worker Gunicorn configuration and a temporary Player View database. It performs real HTTP checks against `/health`, GM authentication routing, the primary stylesheet, a missing public Player View, Content Security Policy, and Render-mode HSTS. A deployment therefore cannot pass CI when the application imports successfully but fails to operate through the production server.
+After the regression suite, GitHub Actions starts the application with the production two-worker Gunicorn configuration and a temporary Player View database. Its real HTTP journey checks `/health`, shared GM-login throttling, successful authentication, complete shop generation, immutable Player Views, draft publishing, the stable Live Display, a successful Magic Item Builder request, the primary stylesheet, safe missing-view handling, Content Security Policy, and Render-mode HSTS. A deployment therefore cannot pass CI when the application imports successfully but its primary hosted workflow fails through the production server.
 
 ## Port plan
 We will port each VBA routine (`genMundane`, `gen_Weapon`, etc.) into focused Python pickers that filter the `v_items_norm` records precisely, replicate rerolls when no item is found, and honor shop types like Tattooist having tattoos only.
