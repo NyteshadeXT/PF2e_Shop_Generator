@@ -117,7 +117,10 @@ def load_settings(
     try:
         config = json.loads(path.read_text(encoding="utf-8"))
     except FileNotFoundError as exc:
-        raise ConfigurationError(f"Configuration file not found: {path}") from exc
+        raise ConfigurationError(
+            f"Configuration file not found: {path}. "
+            "Ensure config.json is committed to GitHub and deployed beside app.py."
+        ) from exc
     except json.JSONDecodeError as exc:
         raise ConfigurationError(f"Invalid JSON in {path}: {exc}") from exc
     if not isinstance(config, dict):

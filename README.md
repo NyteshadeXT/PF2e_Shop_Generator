@@ -65,6 +65,8 @@ Without a persistent disk, Render can discard shared Player Views during a deplo
 
 GitHub stores and deploys the application source and catalog, but it does not contain Render’s live `player_views.db` because that file is intentionally ignored by Git. A GitHub-triggered deployment therefore still requires a Render persistent disk and a separate backup destination for runtime Player Views.
 
+The repository must include both `config.json` and `data/PF2e_Treasure_Generator_Backend.db`. They are application assets, not Render secrets. CI verifies that both files exist, that the configuration points to the catalog, and that the catalog passes SQLite integrity and required-view checks. Only `data/player_views.db` and its WAL sidecars should remain ignored as runtime data.
+
 Use `gunicorn app:app` as the Render start command. Flask debug mode is disabled unless `FLASK_DEBUG=1` is set explicitly.
 
 ### Optional GM access for a hosted generator
@@ -117,6 +119,8 @@ python -m unittest discover -s tests -v
 ```
 
 GitHub Actions runs the same suite on every push and pull request using `.github/workflows/tests.yml`. In Render, enable the option to wait for CI checks before auto-deploying so a failed GitHub test run does not immediately replace the working service.
+
+After the regression suite, GitHub Actions now starts the application with the production two-worker Gunicorn configuration and a temporary Player View database. It performs real HTTP checks against `/health`, GM authentication routing, the primary stylesheet, a missing public Player View, Content Security Policy, and Render-mode HSTS. A deployment therefore cannot pass CI when the application imports successfully but fails to operate through the production server.
 
 ## Port plan
 We will port each VBA routine (`genMundane`, `gen_Weapon`, etc.) into focused Python pickers that filter the `v_items_norm` records precisely, replicate rerolls when no item is found, and honor shop types like Tattooist having tattoos only.
