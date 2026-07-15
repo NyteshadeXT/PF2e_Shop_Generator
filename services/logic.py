@@ -1,7 +1,7 @@
 # services/logic.py
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
-import logging, random, re, sqlite3
+import logging, random, re
 from typing import Callable
 
 import pandas as pd
@@ -15,13 +15,11 @@ from services.utils import (
     parse_potency_rank,
     within_range,
 )
-from services.db import load_items
+from services.db import load_formula_rows, load_items, load_spells
 from services.settings import CONFIG
 from services.randomness import get_rng
 from services.money import cp_to_gp, format_gp, gp_to_cp, multiply_cp
 
-
-print(">>> USING services.logic from", __file__)
 
 GROUPS = CONFIG.get("source_table_groups", {})
 logger = logging.getLogger(__name__)
@@ -619,29 +617,33 @@ _WAND_LEVEL_RX = re.compile(r"(\d+)(?:st|nd|rd|th)[-\s]*(?:level|rank) spell", r
 
 _SPELLS_DF_CACHE: pd.DataFrame | None = None
 _SPELLS_BY_RANK_CACHE: dict[int, pd.DataFrame] | None = None
+_SPELLS_CACHE_SIGNATURE = None
 
 
 def _ensure_spells_cache() -> tuple[pd.DataFrame, dict[int, pd.DataFrame]]:
-    global _SPELLS_DF_CACHE, _SPELLS_BY_RANK_CACHE
-
-    if _SPELLS_DF_CACHE is not None and _SPELLS_BY_RANK_CACHE is not None:
-        return _SPELLS_DF_CACHE, _SPELLS_BY_RANK_CACHE
+    global _SPELLS_DF_CACHE, _SPELLS_BY_RANK_CACHE, _SPELLS_CACHE_SIGNATURE
 
     spells_df = pd.DataFrame()
     try:
-        con = sqlite3.connect(CONFIG["sqlite_db_path"])
-        spells_df = pd.read_sql_query('SELECT Name, Rank, Rarity, Source FROM Spells;', con)
-    except Exception as e:
-        print(">>> WARN: could not load Spells table:", e)
-    finally:
-        try:
-            con.close()
-        except Exception:
-            pass
+        source = load_spells()
+        signature = source.attrs.get("reference_signature")
+        if (
+            _SPELLS_DF_CACHE is not None
+            and _SPELLS_BY_RANK_CACHE is not None
+            and _SPELLS_CACHE_SIGNATURE == signature
+        ):
+            return _SPELLS_DF_CACHE, _SPELLS_BY_RANK_CACHE
+        spells_df = source.rename(
+            columns={"name": "Name", "rank": "Rank", "rarity": "Rarity", "source": "Source"}
+        )[["Name", "Rank", "Rarity", "Source"]].copy()
+    except Exception:
+        logger.warning("Could not load the Spells table", exc_info=True)
+        signature = None
 
     if spells_df is None or spells_df.empty:
         _SPELLS_DF_CACHE = pd.DataFrame()
         _SPELLS_BY_RANK_CACHE = {}
+        _SPELLS_CACHE_SIGNATURE = signature
         return _SPELLS_DF_CACHE, _SPELLS_BY_RANK_CACHE
 
     if "Name" in spells_df.columns:
@@ -666,6 +668,7 @@ def _ensure_spells_cache() -> tuple[pd.DataFrame, dict[int, pd.DataFrame]]:
 
     _SPELLS_DF_CACHE = spells_df
     _SPELLS_BY_RANK_CACHE = by_rank
+    _SPELLS_CACHE_SIGNATURE = signature
     return _SPELLS_DF_CACHE, _SPELLS_BY_RANK_CACHE
 
 def _parse_scroll_level(name: str) -> int | None:
@@ -1575,10 +1578,14 @@ def _select_items_core(
             )
             for w in items_pre
         ]
-        # Authoritative debug AFTER runes applied (scoped to weapons only)
         fund_ct  = sum(1 for w in items_pre if w.get("_rune_fund_label"))
         props_ct = sum(1 for w in items_pre if w.get("_rune_prop_labels"))
-        print(f">>> DEBUG[weapons][after-runes] fundamentals={fund_ct}, with_props={props_ct}, items={len(items_pre)}")
+        logger.debug(
+            "Weapon runes applied: fundamentals=%d properties=%d items=%d",
+            fund_ct,
+            props_ct,
+            len(items_pre),
+        )
 
         # Compose final weapon names once all systems have annotated
         for it in items_pre:
@@ -2229,11 +2236,7 @@ def _load_formula_costs_from_sqlite() -> dict[int, int]:
     Falls back to the default table on any failure.
     """
     try:
-        con = sqlite3.connect(CONFIG["sqlite_db_path"])
-        try:
-            df = pd.read_sql_query('SELECT * FROM "Formula";', con)
-        finally:
-            con.close()
+        df = load_formula_rows()
         if df is None or df.empty:
             return _formula_cost_table_default()
 
@@ -2288,8 +2291,8 @@ def _load_formula_costs_from_sqlite() -> dict[int, int]:
         base = _formula_cost_table_default()
         base.update(out)   # prefer db values
         return base
-    except Exception as e:
-        print(">>> WARN: failed to load Formula table:", e)
+    except Exception:
+        logger.warning("Could not load Formula prices; using built-in defaults", exc_info=True)
         return _formula_cost_table_default()
 
 def _counts_for_formulas(shop_type: str, shop_size: str) -> int:
@@ -2317,8 +2320,7 @@ def _counts_for_formulas(shop_type: str, shop_size: str) -> int:
     lo, hi = _normalize_pair(band, default=(0, 0))
     n = get_rng().randint(lo, hi) if hi >= lo else 0
 
-    # Debug so you can verify which band it used
-    print(f'>>> DEBUG[formulas-counts] shop="{st}" size="{sz}" band={band} -> n={n}')
+    logger.debug('Formula count: shop="%s" size="%s" band=%s count=%d', st, sz, band, n)
     return n
 
 def select_formulas(df: pd.DataFrame, shop_type: str, party_level: int, shop_size: str, disposition: str):
@@ -2374,8 +2376,7 @@ def select_formulas(df: pd.DataFrame, shop_type: str, party_level: int, shop_siz
     # Count to pick
     base_n = _counts_for_formulas(shop_type, shop_size)
 
-    # Helpful debug
-    print(f">>> DEBUG[formulas] pool={len(d)}, base_n={base_n}, PL+1 max={hi}")
+    logger.debug("Formula selection: pool=%d count=%d max_level=%d", len(d), base_n, hi)
 
     if d.empty or base_n <= 0:
         return {"items": [], "base_count": 0, "critical_added": 0, "window": (1, hi)}

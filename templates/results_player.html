@@ -429,36 +429,12 @@
     </section>
 
     <script>
-      function exportToCSV() {
-        const csvHeaders = ["Section", "Name", "Level", "Rarity", "Price", "Quantity", "Category"];
-        let csvContent = "data:text/csv;charset=utf-8," + csvHeaders.join(",") + "\n";
-        const allTables = document.querySelectorAll('[id^="Rarity"]');
-        allTables.forEach(table => {
-          const sectionTitle = table.closest("section")?.querySelector(".pf-section__header h2")?.innerText?.trim()
-                              || table.id.replace(/^Rarity/, "");
-          const rows = table.querySelectorAll("tbody tr");
-          rows.forEach(row => {
-            const cells = Array.from(row.querySelectorAll("td")).map(cell =>
-              '"' + cell.innerText.replace(/"/g, '""') + '"'
-            );
-            csvContent += ['"'+sectionTitle.replace(/"/g,'""')+'"', ...cells].join(",") + "\n";
-          });
-        });
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "treasure_results.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-
       // Dynamic document title reflecting filters
       (function() {
-        const shop = "{{ (shop_type or 'Any') | replace('_',' ') | title }}";
-        const size = "{{ shop_size|title }}";
-        const disp = "{{ disposition|title }}";
-        const pl   = "{{ party_level }}";
+        const shop = {{ ((shop_type or 'Any') | replace('_',' ') | title)|tojson }};
+        const size = {{ (shop_size|title)|tojson }};
+        const disp = {{ (disposition|title)|tojson }};
+        const pl   = {{ (party_level|default(''))|tojson }};
         document.title = `Inventory – ${shop} / ${size} / ${disp} / PL ${pl}`;
       })();
     </script>

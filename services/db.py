@@ -1,5 +1,6 @@
 # services/db.py
 import sqlite3, pandas as pd, logging
+from contextlib import closing
 from pathlib import Path
 from threading import RLock
 from typing import Any, Iterable, Tuple
@@ -65,12 +66,78 @@ def _materials_signature(material_key: Tuple[str, ...]) -> Tuple[Tuple[str, Any]
 _MATERIALS_CACHE: dict[Tuple[str, ...], tuple[pd.DataFrame, Tuple[Tuple[str, Any], ...]]] = {}
 _MATERIALS_LOCK = RLock()
 
+_REFERENCE_CACHE: dict[
+    tuple[str, str], tuple[pd.DataFrame, Tuple[str | None, float | None]]
+] = {}
+_REFERENCE_LOCK = RLock()
+
+
+def _load_reference_query(
+    name: str,
+    query: str,
+    *,
+    sqlite_path: str | None = None,
+    force_refresh: bool = False,
+) -> pd.DataFrame:
+    """Load stable reference data once per database version and process."""
+    path = str(Path(sqlite_path or CONFIG["sqlite_db_path"]).resolve())
+    key = (name, path)
+    signature = _path_signature(path)
+    with _REFERENCE_LOCK:
+        cached = _REFERENCE_CACHE.get(key)
+        if not force_refresh and cached and cached[1] == signature:
+            return cached[0].copy(deep=False)
+        with closing(sqlite3.connect(path)) as conn:
+            frame = pd.read_sql_query(query, conn)
+        frame.attrs["reference_signature"] = signature
+        _REFERENCE_CACHE[key] = (frame, signature)
+        logger.info("Loaded %d %s reference rows", len(frame), name)
+        return frame.copy(deep=False)
+
+
+def load_spells(
+    *, sqlite_path: str | None = None, force_refresh: bool = False
+) -> pd.DataFrame:
+    return _load_reference_query(
+        "spells",
+        """
+        SELECT
+            Name AS name,
+            CAST(Rank AS INTEGER) AS rank,
+            Tradition AS traditions,
+            COALESCE(Rarity, 'Common') AS rarity,
+            COALESCE(Cost, 0) AS cost,
+            COALESCE(Traits, '') AS traits,
+            COALESCE(Source, '') AS source
+        FROM Spells
+        ORDER BY rowid
+        """,
+        sqlite_path=sqlite_path,
+        force_refresh=force_refresh,
+    )
+
+
+def load_formula_rows(*, force_refresh: bool = False) -> pd.DataFrame:
+    return _load_reference_query(
+        "formula prices",
+        'SELECT * FROM "Formula"',
+        force_refresh=force_refresh,
+    )
+
+
+def clear_reference_caches() -> None:
+    """Clear process-local reference caches, primarily for tests and maintenance."""
+    with _REFERENCE_LOCK:
+        _REFERENCE_CACHE.clear()
+
 def _load_sqlite():
     con = sqlite3.connect(CONFIG["sqlite_db_path"])
     try:
         df = pd.read_sql_query(f"SELECT * FROM {CONFIG['sqlite_view']};", con)
         rows = len(df)
-        print(f">>> SQLite loaded: {rows} rows from {CONFIG['sqlite_db_path']} view={CONFIG['sqlite_view']}")
+        logger.info(
+            "Loaded %d catalog rows from SQLite view %s", rows, CONFIG["sqlite_view"]
+        )
         if rows == 0:
             logger.warning(
                 "SQLite view returned 0 rows (db=%s, view=%s). Falling back to CSV if configured.",
@@ -82,7 +149,7 @@ def _load_sqlite():
 
 def _load_csv():
     df = pd.read_csv(CONFIG["csv_path"])
-    print(f">>> CSV loaded: {len(df)} rows from {CONFIG['csv_path']}")
+    logger.info("Loaded %d catalog rows from CSV", len(df))
     return df
 
 def load_items(force_refresh: bool = False) -> pd.DataFrame:
@@ -98,14 +165,14 @@ def load_items(force_refresh: bool = False) -> pd.DataFrame:
     if src == "sqlite":
         try:
             df = _load_sqlite()
-        except Exception as e:
-            print(">>> SQLite load FAILED:", e)
+        except Exception:
+            logger.warning("SQLite catalog load failed; trying CSV fallback", exc_info=True)
             df = pd.DataFrame()
     if df.empty:
         try:
             df = _load_csv()
-        except Exception as e:
-            print(">>> CSV load FAILED:", e)
+        except Exception:
+            logger.exception("CSV catalog load failed")
             df = pd.DataFrame(columns=[
                 "category", "source_table", "source_id", "name", "level", "rarity", "price_text", "tags", "Bulk", "Source", "shop_type", "stock_flag"
             ])
@@ -128,7 +195,7 @@ def _load_adjustments_sqlite() -> pd.DataFrame:
     try:
         df = pd.read_sql_query(f'SELECT * FROM "{table}";', con)
         rows = len(df)
-        print(f">>> SQLite adjustments loaded: {rows} rows from {CONFIG['sqlite_db_path']} table={table}")
+        logger.info("Loaded %d adjustment rows from SQLite table %s", rows, table)
         return df
     finally:
         con.close()
@@ -138,7 +205,7 @@ def _load_adjustments_csv() -> pd.DataFrame:
     if not path:
         return _empty_adjustments_df()
     df = pd.read_csv(path)
-    print(f">>> CSV adjustments loaded: {len(df)} rows from {path}")
+    logger.info("Loaded %d adjustment rows from CSV", len(df))
     return df
 
 def load_adjustments() -> pd.DataFrame:
@@ -161,8 +228,8 @@ def load_adjustments() -> pd.DataFrame:
             df = _load_adjustments_sqlite()
         if df.empty:
             df = _load_adjustments_csv()
-    except Exception as e:
-        print(">>> Adjustments load FAILED:", e)
+    except Exception:
+        logger.warning("Adjustment data could not be loaded", exc_info=True)
         df = _empty_adjustments_df()
 
     if df.empty:
@@ -246,12 +313,12 @@ def load_materials(material_types: list[str]) -> pd.DataFrame:
             table_name = f"{mtype}_material"
             try:
                 df = pd.read_sql_query(f'SELECT * FROM "{table_name}";', con)
-                print(f">>> Materials loaded: {len(df)} rows from table '{table_name}'")
+                logger.info("Loaded %d material rows from table %s", len(df), table_name)
                 all_dfs.append(df)
-            except Exception as e:
-                print(f">>> Material table load FAILED for '{table_name}': {e}")
-    except Exception as e:
-        print(f">>> FAILED to connect to SQLite for loading materials: {e}")
+            except Exception:
+                logger.warning("Material table %s could not be loaded", table_name, exc_info=True)
+    except Exception:
+        logger.exception("Could not connect to SQLite for material loading")
         return pd.DataFrame()
     finally:
         if con:

@@ -23,7 +23,13 @@
         </div>
 
         <nav class="pf-page-actions" aria-label="Primary actions">
+          <a href="{{ url_for('history') }}" class="pf-link-chip">Recent Shops</a>
           <a href="/health" class="pf-link-chip">Health</a>
+          {% if gm_access_enabled() %}
+          <form method="POST" action="{{ url_for('gm_logout') }}" style="display:inline;">
+            <button type="submit" class="pf-link-chip">Lock Generator</button>
+          </form>
+          {% endif %}
         </nav>
       </div>
     </header>
@@ -51,6 +57,7 @@
           <div class="pf-field">
             <label for="shop_name" class="pf-label">Shop Name</label>
             <input id="shop_name" name="shop_name" type="text"
+                   maxlength="100"
                    class="pf-input pf-select-lg" value="{{ shop_name or '' }}"
                    placeholder="e.g., The Golden Griffin" />
             <div class="pf-help">Optional: provide a custom name to display for the shop.</div>
@@ -86,7 +93,7 @@
           <!-- Party Level -->
           <div class="pf-field">
             <label for="party_level" class="pf-label">Party Level</label>
-            <input id="party_level" name="party_level" type="number" min="1" max="25" step="1"
+            <input id="party_level" name="party_level" type="number" min="{{ party_level_min or 1 }}" max="{{ party_level_max or 20 }}" step="1"
                    class="pf-input pf-select-lg" value="{{ party_level or 5 }}" />
             <div class="pf-help">Sets max item level window (e.g., ≤ PL+1 for basics).</div>
           </div>
@@ -103,11 +110,11 @@
 
           <!-- Reproducible generation seed -->
           <div class="pf-field">
-            <label for="seed" class="pf-label">Generation Seed</label>
-            <input id="seed" name="seed" type="text" maxlength="64"
+            <label for="seed" class="pf-label">Seed or Reproduction Key</label>
+            <input id="seed" name="seed" type="text" maxlength="512"
                    class="pf-input pf-select-lg" value="{{ seed or '' }}"
                    placeholder="Leave blank for a new shop" />
-            <div class="pf-help">Enter a previous seed with the same settings to reproduce that inventory.</div>
+            <div class="pf-help">A seed needs matching settings. A reproduction key restores the settings automatically.</div>
           </div>
 
           <!-- Actions -->
@@ -124,8 +131,7 @@
     <!-- Tips Card (optional) -->
     <section class="pf-card mt-12">
       <div class="pf-meta">
-        Tip: You can jump straight to a section in results with the quick nav,
-        and use the CSV export to save a copy for your session notes.
+        Tip: Copy the reproduction key from a generated shop when you want one value that restores both its seed and settings.
       </div>
     </section>
 	
@@ -542,28 +548,64 @@
 	  }
 
 	  function renderItem(it) {
-		if (!it || !it.name) { $out.innerHTML = '<p class="pf-meta">No result.</p>'; return; }
-		const runes = (it._rune_fund_label || (it._rune_prop_labels && it._rune_prop_labels.length)) ? `
-		  <div class="mib-props">
-			${it._rune_fund_label ? `<span class="badge">Fundamental: ${it._rune_fund_label}</span>` : ''}
-			${(it._rune_prop_labels || []).map(r => `<span class="badge">${r}</span>`).join(' ')}
-		  </div>` : '';
+		$out.replaceChildren();
+		if (!it || !it.name) {
+		  const empty = document.createElement('p');
+		  empty.className = 'pf-meta';
+		  empty.textContent = 'No result.';
+		  $out.appendChild(empty);
+		  return;
+		}
 		const aon = it.aon_target
 		  ? `https://2e.aonprd.com/Search.aspx?q=${encodeURIComponent(it.aon_target)}`
 		  : null;
 
-		$out.innerHTML = `
-		  <div class="mib-card">
-			<div class="mib-badges">
-			  <span class="badge">${(it.category || 'Item')}</span>
-			  <span class="badge">Level ${it.level ?? 0}</span>
-			  <span class="badge">${(it.rarity || 'Common')}</span>
-			</div>
-			<h3 style="margin:.5rem 0 0;">${it.name}</h3>
-			<div class="pf-meta">${it.price || it.price_text || ''}</div>
-			${runes}
-			${aon ? `<div class="pf-meta" style="margin-top:6px;"><a target="_blank" rel="noopener" href="${aon}">Archives of Nethys</a></div>` : ''}
-		  </div>`;
+		const card = document.createElement('div');
+		card.className = 'mib-card';
+		const badges = document.createElement('div');
+		badges.className = 'mib-badges';
+		for (const text of [it.category || 'Item', `Level ${it.level ?? 0}`, it.rarity || 'Common']) {
+		  const badge = document.createElement('span');
+		  badge.className = 'badge';
+		  badge.textContent = text;
+		  badges.appendChild(badge);
+		}
+		card.appendChild(badges);
+		const title = document.createElement('h3');
+		title.style.margin = '.5rem 0 0';
+		title.textContent = it.name;
+		card.appendChild(title);
+		const price = document.createElement('div');
+		price.className = 'pf-meta';
+		price.textContent = it.price || it.price_text || '';
+		card.appendChild(price);
+		const runeLabels = [];
+		if (it._rune_fund_label) runeLabels.push(`Fundamental: ${it._rune_fund_label}`);
+		runeLabels.push(...(it._rune_prop_labels || []));
+		if (runeLabels.length) {
+		  const props = document.createElement('div');
+		  props.className = 'mib-props';
+		  for (const text of runeLabels) {
+			const badge = document.createElement('span');
+			badge.className = 'badge';
+			badge.textContent = text;
+			props.appendChild(badge);
+		  }
+		  card.appendChild(props);
+		}
+		if (aon) {
+		  const linkWrap = document.createElement('div');
+		  linkWrap.className = 'pf-meta';
+		  linkWrap.style.marginTop = '6px';
+		  const link = document.createElement('a');
+		  link.target = '_blank';
+		  link.rel = 'noopener';
+		  link.href = aon;
+		  link.textContent = 'Archives of Nethys';
+		  linkWrap.appendChild(link);
+		  card.appendChild(linkWrap);
+		}
+		$out.appendChild(card);
 	  }
 
 	  // reset nonce whenever inputs change so deterministic mode stays stable
@@ -587,7 +629,11 @@
 			});
 			const j = await r.json();
 			if (!j.ok) {
-			  $out.innerHTML = `<p class="pf-meta">Error: ${j.error||'Unknown'}</p>`;
+			  $out.replaceChildren();
+			  const error = document.createElement('p');
+			  error.className = 'pf-meta';
+			  error.textContent = `Error: ${j.error || 'Unknown'}`;
+			  $out.appendChild(error);
 			  return;
 			}
 			renderItem(j.item);

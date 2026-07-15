@@ -27,6 +27,10 @@ class LiveChannelNotFound(LookupError):
     """Raised when a live-display capability token does not exist."""
 
 
+class SnapshotConflict(ValueError):
+    """Raised when a token is reused for different immutable snapshot data."""
+
+
 def normalize_channel(value: str | None) -> str:
     channel = (value or "default").strip().lower()
     if not _CHANNEL_RE.fullmatch(channel):
@@ -217,6 +221,139 @@ def snapshot_stats(*, db_path: str | Path | None = None) -> dict[str, int | str 
     }
 
 
+def backup_database(
+    output_path: str | Path,
+    *,
+    db_path: str | Path | None = None,
+) -> Path:
+    """Create an atomic, integrity-checked backup using SQLite's online backup API."""
+    source = (Path(db_path) if db_path is not None else state_db_path()).resolve()
+    destination = Path(output_path).expanduser().resolve()
+    if source == destination:
+        raise ValueError("Backup destination must differ from the active state database.")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temporary = destination.with_name(
+        f".{destination.name}.{secrets.token_hex(8)}.tmp"
+    )
+    initialize(source)
+    try:
+        with _connection(source) as source_connection:
+            backup_connection = sqlite3.connect(temporary)
+            try:
+                source_connection.backup(backup_connection)
+                result = backup_connection.execute("PRAGMA integrity_check").fetchone()
+                if not result or str(result[0]).lower() != "ok":
+                    raise sqlite3.DatabaseError("Player View backup failed its integrity check.")
+            finally:
+                backup_connection.close()
+        os.replace(temporary, destination)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+    return destination
+
+
+def recent_snapshots(
+    *,
+    channel: str | None = None,
+    limit: int = 50,
+    db_path: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    """Return recent snapshots with enough metadata for a GM recovery screen."""
+    normalized_channel = normalize_channel(channel) if channel else None
+    safe_limit = max(1, min(int(limit), 200))
+    initialize(db_path)
+    sql = """
+        SELECT
+            s.token,
+            s.channel,
+            s.snapshot_json,
+            s.created_at,
+            CASE WHEN c.current_token = s.token THEN 1 ELSE 0 END AS is_current,
+            c.live_token
+        FROM player_view_snapshots AS s
+        LEFT JOIN player_view_channels AS c ON c.channel = s.channel
+    """
+    parameters: list[Any] = []
+    if normalized_channel:
+        sql += " WHERE s.channel = ?"
+        parameters.append(normalized_channel)
+    sql += " ORDER BY s.created_at DESC, s.rowid DESC LIMIT ?"
+    parameters.append(safe_limit)
+
+    with _connection(db_path) as conn:
+        rows = conn.execute(sql, parameters).fetchall()
+
+    results: list[dict[str, Any]] = []
+    for row in rows:
+        try:
+            payload = json.loads(row["snapshot_json"])
+        except (TypeError, ValueError, json.JSONDecodeError):
+            payload = {}
+        shop = payload.get("shop") if isinstance(payload, dict) else {}
+        if not isinstance(shop, dict):
+            shop = {}
+        results.append(
+            {
+                "token": str(row["token"]),
+                "channel": str(row["channel"]),
+                "created_at": str(row["created_at"]),
+                "is_current": bool(row["is_current"]),
+                "live_token": str(row["live_token"] or ""),
+                "shop_name": str(shop.get("shop_name") or shop.get("name") or ""),
+                "shop_type": str(shop.get("shop_type") or ""),
+                "shop_size": str(shop.get("shop_size") or ""),
+                "party_level": shop.get("party_level"),
+                "seed": str(shop.get("seed") or ""),
+            }
+        )
+    return results
+
+
+def set_current_snapshot(
+    token: str,
+    channel: str,
+    *,
+    db_path: str | Path | None = None,
+) -> str:
+    """Point a channel's stable Live Display at an existing immutable snapshot."""
+    token = normalize_token(token)
+    channel = normalize_channel(channel)
+    proposed_live_token = secrets.token_hex(16)
+    initialize(db_path)
+    with _connection(db_path) as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        exists = conn.execute(
+            "SELECT 1 FROM player_view_snapshots WHERE token = ? AND channel = ?",
+            (token, channel),
+        ).fetchone()
+        if exists is None:
+            raise SnapshotNotFound(token)
+        conn.execute(
+            """
+            INSERT INTO player_view_channels(channel, current_token, live_token, updated_at)
+            VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(channel) DO UPDATE SET
+                current_token = excluded.current_token,
+                updated_at = CURRENT_TIMESTAMP
+            """,
+            (channel, token, proposed_live_token),
+        )
+        conn.execute(
+            """
+            UPDATE player_view_channels
+            SET live_token = ?
+            WHERE channel = ? AND (live_token IS NULL OR live_token = '')
+            """,
+            (proposed_live_token, channel),
+        )
+        row = conn.execute(
+            "SELECT live_token FROM player_view_channels WHERE channel = ?", (channel,)
+        ).fetchone()
+        conn.commit()
+    return str(row["live_token"])
+
+
 def save_snapshot(
     token: str,
     channel: str,
@@ -230,23 +367,27 @@ def save_snapshot(
     channel = normalize_channel(channel)
     if not isinstance(snapshot, dict) or not snapshot:
         raise ValueError("Snapshot must be a non-empty object.")
-    payload = json.dumps(snapshot, ensure_ascii=False, separators=(",", ":"))
+    payload = json.dumps(snapshot, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
     proposed_live_token = secrets.token_hex(16)
     retention_days, max_snapshots = _retention_values()
 
     initialize(db_path)
     with _connection(db_path) as conn:
         conn.execute("BEGIN IMMEDIATE")
-        conn.execute(
-            """
-            INSERT INTO player_view_snapshots(token, channel, snapshot_json)
-            VALUES (?, ?, ?)
-            ON CONFLICT(token) DO UPDATE SET
-                channel = excluded.channel,
-                snapshot_json = excluded.snapshot_json
-            """,
-            (token, channel, payload),
-        )
+        existing = conn.execute(
+            "SELECT channel, snapshot_json FROM player_view_snapshots WHERE token = ?",
+            (token,),
+        ).fetchone()
+        if existing is None:
+            conn.execute(
+                """
+                INSERT INTO player_view_snapshots(token, channel, snapshot_json)
+                VALUES (?, ?, ?)
+                """,
+                (token, channel, payload),
+            )
+        elif existing["channel"] != channel or existing["snapshot_json"] != payload:
+            raise SnapshotConflict("Player View tokens cannot be reused for different snapshots.")
         if advance_channel:
             conn.execute(
                 """
@@ -357,10 +498,16 @@ def _main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(description="Maintain persistent Player View snapshots")
-    parser.add_argument("command", choices=("cleanup", "stats"))
+    parser.add_argument("command", choices=("backup", "cleanup", "stats"))
     parser.add_argument("--vacuum", action="store_true", help="Compact the database after cleanup")
+    parser.add_argument("--output", help="Destination database path for the backup command")
     args = parser.parse_args()
-    if args.command == "cleanup":
+    if args.command == "backup":
+        if not args.output:
+            parser.error("backup requires --output")
+        destination = backup_database(args.output)
+        print(f"Player View backup created: {destination}")
+    elif args.command == "cleanup":
         removed = cleanup_snapshots(vacuum=args.vacuum)
         print(f"Removed {removed} Player View snapshot(s).")
     else:

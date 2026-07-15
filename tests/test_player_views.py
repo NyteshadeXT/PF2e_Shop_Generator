@@ -6,13 +6,17 @@ from contextlib import closing
 from pathlib import Path
 
 from services.player_views import (
+    SnapshotConflict,
     SnapshotNotFound,
+    backup_database,
     cleanup_snapshots,
     current_token,
     initialize,
     live_channel,
     load_snapshot,
+    recent_snapshots,
     save_snapshot,
+    set_current_snapshot,
     snapshot_stats,
 )
 from services.settings import CONFIG
@@ -32,6 +36,45 @@ class PlayerViewStorageTests(unittest.TestCase):
         save_snapshot(token, "game-one", snapshot, db_path=self.db)
 
         self.assertEqual(load_snapshot(token, "game-one", db_path=self.db), snapshot)
+        self.assertEqual(load_snapshot(token, "game-one", db_path=self.db), snapshot)
+
+    def test_online_backup_is_complete_and_readable(self):
+        snapshot = {"shop": {"shop_name": "Backed Up"}, "lists": {"magic_items": []}}
+        save_snapshot("a" * 32, "game-one", snapshot, db_path=self.db)
+        destination = Path(self.tempdir.name) / "backups" / "player-views.db"
+
+        created = backup_database(destination, db_path=self.db)
+
+        self.assertEqual(created, destination.resolve())
+        self.assertEqual(load_snapshot("a" * 32, "game-one", db_path=created), snapshot)
+        self.assertEqual(snapshot_stats(db_path=created)["snapshots"], 1)
+        with closing(sqlite3.connect(created)) as connection:
+            self.assertEqual(connection.execute("PRAGMA integrity_check").fetchone()[0], "ok")
+
+    def test_backup_refuses_to_replace_active_database(self):
+        with self.assertRaises(ValueError):
+            backup_database(self.db, db_path=self.db)
+
+    def test_shared_token_cannot_be_overwritten(self):
+        token = "a" * 32
+        original = {"shop": {"shop_name": "Original"}, "lists": {"magic_items": []}}
+        save_snapshot(token, "game-one", original, db_path=self.db)
+
+        with self.assertRaises(SnapshotConflict):
+            save_snapshot(
+                token,
+                "game-one",
+                {"shop": {"shop_name": "Changed"}, "lists": {"magic_items": []}},
+                db_path=self.db,
+            )
+
+        self.assertEqual(load_snapshot(token, "game-one", db_path=self.db), original)
+
+    def test_saving_identical_snapshot_is_idempotent(self):
+        token = "a" * 32
+        snapshot = {"lists": {"magic_items": []}, "shop": {"shop_name": "Same"}}
+        save_snapshot(token, "game-one", snapshot, db_path=self.db)
+        save_snapshot(token, "game-one", snapshot, db_path=self.db, advance_channel=False)
         self.assertEqual(load_snapshot(token, "game-one", db_path=self.db), snapshot)
 
     def test_channels_are_isolated(self):
@@ -59,6 +102,72 @@ class PlayerViewStorageTests(unittest.TestCase):
             live_channel(live_token, db_path=self.db),
             {"channel": "game-one", "roll_id": "b" * 32},
         )
+
+    def test_recent_snapshots_expose_metadata_and_current_status(self):
+        save_snapshot(
+            "a" * 32,
+            "game-one",
+            {"shop": {"shop_name": "First Shop", "party_level": 4}, "lists": {}},
+            db_path=self.db,
+        )
+        save_snapshot(
+            "b" * 32,
+            "game-one",
+            {"shop": {"shop_name": "Second Shop", "seed": "repeat-me"}, "lists": {}},
+            db_path=self.db,
+        )
+        save_snapshot("c" * 32, "game-two", {"version": 1}, db_path=self.db)
+
+        rows = recent_snapshots(channel="game-one", db_path=self.db)
+        self.assertEqual([row["token"] for row in rows], ["b" * 32, "a" * 32])
+        self.assertTrue(rows[0]["is_current"])
+        self.assertFalse(rows[1]["is_current"])
+        self.assertEqual(rows[0]["shop_name"], "Second Shop")
+        self.assertEqual(rows[0]["seed"], "repeat-me")
+
+    def test_older_snapshot_can_be_restored_to_stable_live_link(self):
+        live_token = save_snapshot("a" * 32, "game-one", {"version": 1}, db_path=self.db)
+        save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+
+        restored_live_token = set_current_snapshot("a" * 32, "game-one", db_path=self.db)
+
+        self.assertEqual(restored_live_token, live_token)
+        self.assertEqual(current_token("game-one", db_path=self.db), "a" * 32)
+        self.assertEqual(live_channel(live_token, db_path=self.db)["roll_id"], "a" * 32)
+        with self.assertRaises(SnapshotNotFound):
+            set_current_snapshot("a" * 32, "game-two", db_path=self.db)
+
+    def test_history_page_reopens_and_restores_stored_shop(self):
+        previous = os.environ.get("LOOTGEN_STATE_DB_PATH")
+        os.environ["LOOTGEN_STATE_DB_PATH"] = str(self.db)
+        try:
+            import app
+
+            save_snapshot(
+                "a" * 32,
+                "game-one",
+                {"shop": {"shop_name": "Recover Me"}, "lists": {"magic_items": []}},
+                db_path=self.db,
+            )
+            save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+            client = app.app.test_client()
+
+            page = client.get("/history", query_string={"channel": "game-one"})
+            self.assertEqual(page.status_code, 200)
+            self.assertIn(b"Recover Me", page.data)
+            self.assertIn(b"Open Player View", page.data)
+
+            restored = client.post(
+                "/history/make-live",
+                data={"channel": "game-one", "roll_id": "a" * 32},
+            )
+            self.assertEqual(restored.status_code, 302)
+            self.assertEqual(current_token("game-one", db_path=self.db), "a" * 32)
+        finally:
+            if previous is None:
+                os.environ.pop("LOOTGEN_STATE_DB_PATH", None)
+            else:
+                os.environ["LOOTGEN_STATE_DB_PATH"] = previous
 
     def test_opening_old_player_view_does_not_roll_live_channel_back(self):
         save_snapshot("a" * 32, "game-one", {"version": 1}, db_path=self.db)

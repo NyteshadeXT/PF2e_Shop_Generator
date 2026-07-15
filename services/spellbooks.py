@@ -3,10 +3,10 @@
 # Spellbook generator for the PF2e Item Generator (Remaster rules)
 from __future__ import annotations
 
-import sqlite3
-from contextlib import closing
 from typing import Dict, List, Optional
+from markupsafe import escape
 from .randomness import get_rng
+from .db import CONFIG, load_spells
 
 
 # Add this import (uses your existing helper in utils.py)
@@ -18,13 +18,6 @@ except Exception:
     def aon_spell_url(name: str) -> str:
         q = quote_plus((name or "").strip())
         return f"https://2e.aonprd.com/Search.aspx?query={q}&type=spell&display=all"
-
-try:
-    # Local package import path in user's project
-    from .db import CONFIG
-except Exception:
-    # Fallback for standalone execution during development
-    CONFIG = {"sqlite_db_path": "data/items.sqlite"}
 
 TRADITIONS = ("Arcane", "Occult", "Divine", "Primal")
 SPELLBOOK_SHOP_TYPES = {"Adventuring", "Arcane", "Scribe", "Temple"}
@@ -75,30 +68,19 @@ def _roll_rarity() -> str:
     return "Rare"
 
 def _load_spell_pool(
-    conn: sqlite3.Connection,
+    spell_rows,
     *,
     tradition: str,
     themes: Optional[List[str]] = None,
 ) -> tuple[dict[tuple[int, str], list[dict]], dict[int, list[dict]]]:
-    """Load one tradition with a single query and index it for in-memory picks."""
-    cur = conn.execute(
-        """
-        SELECT
-            Name AS name,
-            CAST(Rank AS INTEGER) AS rank,
-            Tradition AS traditions,
-            COALESCE(Rarity, 'Common') AS rarity,
-            COALESCE(Cost, 0) AS cost,
-            COALESCE(Traits, '') AS traits,
-            COALESCE(Source, '') AS source
-        FROM Spells
-        WHERE UPPER(Tradition) LIKE '%' || UPPER(?) || '%'
-        ORDER BY rowid
-        """,
-        (tradition,),
+    """Index one tradition from the shared in-memory spell reference table."""
+    if spell_rows is None or spell_rows.empty:
+        return {}, {rank: [] for rank in range(1, 11)}
+    tradition_token = str(tradition or "").strip()
+    mask = spell_rows["traditions"].astype(str).str.contains(
+        tradition_token, case=False, regex=False, na=False
     )
-    columns = [column[0] for column in cur.description]
-    rows = [dict(zip(columns, row)) for row in cur.fetchall()]
+    rows = spell_rows.loc[mask].to_dict(orient="records")
     themes_norm = [str(theme).strip().upper() for theme in (themes or []) if str(theme).strip()]
     if themes_norm:
         rows = [
@@ -165,10 +147,16 @@ def _render_contents_html(spells_by_rank: Dict[int, List[dict]]) -> str:
         for e in entries:
             n = e.get("name", "").strip()
             src = (e.get("source") or "").strip()
+            safe_name = escape(n)
             if not src or "paizo" in src.lower():
-                row_bits.append(f'<a href="{aon_spell_url(n)}" target="_blank" rel="noopener">{n}</a>')
+                safe_url = escape(aon_spell_url(n))
+                row_bits.append(
+                    f'<a href="{safe_url}" target="_blank" rel="noopener">{safe_name}</a>'
+                )
             else:
-                row_bits.append(f'{n} <span class="badge adjusted">3rd-Party: {src}</span>')
+                row_bits.append(
+                    f'{safe_name} <span class="badge adjusted">3rd-Party: {escape(src)}</span>'
+                )
         parts.append(f'<div class="sb-rank"><strong>{r}{_rank_suffix(r)} Rank</strong>: {", ".join(row_bits)}</div>')
     parts.append("</div></details>")
     return "".join(parts)
@@ -205,10 +193,9 @@ def select_spellbooks(
     if st_norm not in SPELLBOOK_SHOP_TYPES:
         return {"items": [], "base_count": 0, "critical_added": 0}
 
-    path = sqlite_path or CONFIG.get("sqlite_db_path")
     try:
-        conn = sqlite3.connect(path)
-    except sqlite3.Error:
+        spell_rows = load_spells(sqlite_path=sqlite_path or CONFIG.get("sqlite_db_path"))
+    except Exception:
         return {"items": [], "base_count": 0, "critical_added": 0}
 
     items: List[Dict] = []
@@ -240,7 +227,7 @@ def select_spellbooks(
         # ✅ counts MUST be defined here (per book)
         counts = _counts_for_book_level(book_level)
         if tradition not in pool_cache:
-            pool_cache[tradition] = _load_spell_pool(conn, tradition=tradition)
+            pool_cache[tradition] = _load_spell_pool(spell_rows, tradition=tradition)
         chosen_rows = _pick_spell_rows(counts, *pool_cache[tradition])
 
         # fill ALL ranks per count table (no per-rank drop gate)
@@ -267,8 +254,6 @@ def select_spellbooks(
         }
         items.append(_make_spellbook_item(tradition, book_level, display_rows, total_cost))
 
-    if conn:
-        conn.close()
     return {"items": items, "base_count": len(items), "critical_added": 0}
 
 
@@ -300,16 +285,14 @@ def build_spellbook(
     if themes:
         themes_norm = [t.strip().upper() for t in themes if str(t).strip()]
 
-    path = sqlite_path or CONFIG.get("sqlite_db_path")
     try:
-        conn = sqlite3.connect(path)
-    except sqlite3.Error:
+        spell_rows = load_spells(sqlite_path=sqlite_path or CONFIG.get("sqlite_db_path"))
+    except Exception:
         return []
 
     counts = _counts_for_book_level(L)
-    with closing(conn):
-        by_key, by_rank = _load_spell_pool(conn, tradition=tradition, themes=themes_norm)
-        chosen_rows = _pick_spell_rows(counts, by_key, by_rank)
+    by_key, by_rank = _load_spell_pool(spell_rows, tradition=tradition, themes=themes_norm)
+    chosen_rows = _pick_spell_rows(counts, by_key, by_rank)
 
     picked: List[Dict] = []
     for rows in chosen_rows.values():

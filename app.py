@@ -1,19 +1,19 @@
-# app.py — cleaned and production-ready (Render + SSE + Player View)
+# app.py — production-ready Flask application (Render + Player View)
 
 from flask import (
-    Flask, render_template, request, send_file, redirect, abort,
-    Response, stream_with_context, current_app, jsonify, url_for
+    Flask, render_template, request, redirect, abort, session,
+    current_app, jsonify, url_for
 )
 
-import io, csv, json, os, queue, time, uuid, sqlite3, re, random
-from collections import OrderedDict
+import hashlib, json, os, secrets, uuid, sqlite3, re, random
+from datetime import timedelta
 
 # Third-party
 import pandas as pd
+from werkzeug.exceptions import HTTPException
 
 # Core project imports from the services package
 from services.db import load_items
-from pathlib import Path
 from services.logic import (
     select_mundane_items, select_weapons_items, select_armor_items,
     select_specific_magic_armor, select_specific_magic_weapons,
@@ -27,13 +27,17 @@ from services.spellbooks import build_spellbook
 from services.player_views import (
     LiveChannelNotFound,
     SnapshotNotFound,
-    current_token as persistent_current_token,
     live_channel as persistent_live_channel,
     load_snapshot as load_persistent_snapshot,
     normalize_channel,
+    recent_snapshots,
+    initialize as initialize_player_views,
     save_snapshot as save_persistent_snapshot,
+    set_current_snapshot,
 )
 from services.randomness import generation_rng, normalize_seed
+from services.reproduction import create_reproduction_key, parse_reproduction_key
+from services.provenance import generation_fingerprint
     
 from copy import deepcopy
 
@@ -43,9 +47,153 @@ try:
 except Exception:
     debug_bp = None
 
+def _environment_flag(name: str) -> bool:
+    return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
 app = Flask(__name__)
-if debug_bp is not None:
+configured_access_key = os.environ.get("LOOTGEN_GM_ACCESS_KEY", "").strip()
+app.config.update(
+    SECRET_KEY=(
+        os.environ.get("LOOTGEN_SESSION_SECRET", "").strip()
+        or (
+            hashlib.sha256(f"pf2e-session:{configured_access_key}".encode("utf-8")).hexdigest()
+            if configured_access_key
+            else secrets.token_hex(32)
+        )
+    ),
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=_environment_flag("RENDER") or _environment_flag("LOOTGEN_SECURE_COOKIES"),
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=12),
+)
+try:
+    app.config["MAX_CONTENT_LENGTH"] = max(
+        64 * 1024, int(os.environ.get("LOOTGEN_MAX_REQUEST_BYTES", 2 * 1024 * 1024))
+    )
+except (TypeError, ValueError):
+    app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024
+if debug_bp is not None and _environment_flag("LOOTGEN_ENABLE_DEBUG_ROUTES"):
     app.register_blueprint(debug_bp, url_prefix="/debug")
+
+
+def _gm_access_key() -> str:
+    return os.environ.get("LOOTGEN_GM_ACCESS_KEY", "").strip()
+
+
+def _access_fingerprint(access_key: str) -> str:
+    return hashlib.sha256(access_key.encode("utf-8")).hexdigest()
+
+
+def _gm_is_authenticated() -> bool:
+    access_key = _gm_access_key()
+    if not access_key:
+        return True
+    saved = str(session.get("gm_access") or "")
+    return secrets.compare_digest(saved, _access_fingerprint(access_key))
+
+
+_PUBLIC_ENDPOINTS = {
+    "static",
+    "favicon",
+    "health",
+    "gm_login",
+    "player_view",
+    "live_view",
+    "live_version",
+}
+
+
+@app.before_request
+def require_gm_access():
+    if not _gm_access_key() or request.endpoint in _PUBLIC_ENDPOINTS or _gm_is_authenticated():
+        return None
+    if request.path.startswith("/api/"):
+        return _json_error_response(401, "GM access is required.")
+    next_path = request.full_path.rstrip("?") if request.method == "GET" else url_for("index")
+    return redirect(url_for("gm_login", next=next_path))
+
+
+@app.route("/gm-login", methods=["GET", "POST"])
+def gm_login():
+    if not _gm_access_key():
+        return redirect(url_for("index"))
+    error = None
+    next_path = str(request.values.get("next") or url_for("index"))
+    if not next_path.startswith("/") or next_path.startswith("//"):
+        next_path = url_for("index")
+    if request.method == "POST":
+        submitted = str(request.form.get("access_key") or "")
+        if secrets.compare_digest(submitted, _gm_access_key()):
+            session.clear()
+            session["gm_access"] = _access_fingerprint(_gm_access_key())
+            session.permanent = True
+            return redirect(next_path)
+        error = "That access key was not accepted."
+    return render_template("gm_login.html", error=error, next_path=next_path), 401 if error else 200
+
+
+@app.post("/gm-logout")
+def gm_logout():
+    session.clear()
+    return redirect(url_for("gm_login"))
+
+
+app.jinja_env.globals["gm_access_enabled"] = lambda: bool(_gm_access_key())
+
+
+@app.after_request
+def add_security_headers(response):
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("Referrer-Policy", "no-referrer")
+    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+    response.headers.setdefault(
+        "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
+    )
+    return response
+
+_ERROR_TITLES = {
+    400: "Check the submitted information",
+    404: "Page not found",
+    405: "Action not available",
+    413: "Submission too large",
+    500: "Something went wrong",
+    503: "Service temporarily unavailable",
+}
+
+
+def _json_error_response(status_code: int, message: str):
+    response = jsonify(ok=False, error=message)
+    response.headers["Cache-Control"] = "no-store"
+    return response, status_code
+
+
+@app.errorhandler(HTTPException)
+def handle_http_error(error: HTTPException):
+    status_code = int(error.code or 500)
+    message = str(error.description or _ERROR_TITLES.get(status_code, "Request failed."))
+    if request.path.startswith("/api/"):
+        return _json_error_response(status_code, message)
+    return render_template(
+        "error.html",
+        status_code=status_code,
+        error_title=_ERROR_TITLES.get(status_code, "Request failed"),
+        error_message=message,
+    ), status_code
+
+
+@app.errorhandler(Exception)
+def handle_unexpected_error(error: Exception):
+    current_app.logger.exception("Unhandled request failure")
+    message = "The generator encountered an unexpected problem. Please try again."
+    if request.path.startswith("/api/"):
+        return _json_error_response(500, message)
+    return render_template(
+        "error.html",
+        status_code=500,
+        error_title=_ERROR_TITLES[500],
+        error_message=message,
+    ), 500
 
 # Make AoN helper available in Jinja
 app.jinja_env.globals["aon_url"] = aon_url
@@ -84,15 +232,42 @@ def get_shop_types(df: pd.DataFrame):
     return LOGIC_CONFIG.get("default_shop_types", [])
 
 
-def _common_inputs():
-    shop_type = (request.form.get("shop_type") or "General").strip()
-    shop_size = (request.form.get("shop_size") or "medium").strip()
-    disposition = (request.form.get("disposition") or "fair").strip()
+def _canonical_choice(value, choices, label: str, default: str) -> str:
+    requested = str(value or default).strip()
+    canonical = {str(choice).casefold(): str(choice) for choice in choices}
+    selected = canonical.get(requested.casefold())
+    if selected is None:
+        abort(400, f"Invalid {label}.")
+    return selected
+
+
+def _validated_query_inputs(data, df: pd.DataFrame):
+    shop_type = _canonical_choice(
+        data.get("shop_type"), get_shop_types(df), "shop type", "General"
+    )
+    shop_size = _canonical_choice(
+        data.get("shop_size"), (LOGIC_CONFIG.get("counts") or {}).keys(), "shop size", "medium"
+    ).lower()
+    disposition = _canonical_choice(
+        data.get("disposition"),
+        (LOGIC_CONFIG.get("disposition_multipliers") or {}).keys(),
+        "disposition",
+        "fair",
+    ).lower()
+
+    caps = LOGIC_CONFIG.get("level_caps", {"min": 1, "max": 20})
+    minimum, maximum = int(caps.get("min", 1)), int(caps.get("max", 20))
     try:
-        party_level = int(request.form.get("party_level") or 5)
-    except Exception:
-        party_level = 5
-    return shop_type, shop_size, disposition, party_level
+        party_level = int(str(data.get("party_level") or 5).strip())
+    except (TypeError, ValueError):
+        abort(400, "Party level must be a whole number.")
+    if not minimum <= party_level <= maximum:
+        abort(400, f"Party level must be between {minimum} and {maximum}.")
+
+    shop_name = str(data.get("shop_name") or "").strip()
+    if len(shop_name) > 100 or any(ord(char) < 32 for char in shop_name):
+        abort(400, "Shop name must be 100 characters or fewer and cannot contain control characters.")
+    return shop_type, shop_size, disposition, shop_name, party_level
 
 def _open_db():
     conn = sqlite3.connect(DB_PATH)
@@ -129,9 +304,6 @@ def _build_payload(df, shop_type, shop_size, disposition, party_level):
     }
 
 # --- Magic Item Builder: ONLY override fundamental apply_rate ---------------
-from copy import deepcopy
-from flask import request
-
 _FUND_KEYS   = {"fundamental", "fundamentals", "baseline"}  # common container keys
 _PROP_KEYS   = {"property", "properties", "property_runes", "weapon_properties", "armor_properties"}
 _FUND_LABELS = {"fundamental"}  # for fields like group/category/type/rune_type
@@ -217,113 +389,6 @@ def _runes_cfg_for_request(item_type: str) -> dict:
         _force_fundamental_apply_rate_only(base, 1.0)
     return base
 
-# ----------------------------
-# Real-time broadcaster (SSE)
-# ----------------------------
-_subscribers: dict[str, list[queue.Queue]] = {}   # channel -> queues
-_latest_roll_id: dict[str, str] = {}              # channel -> last id
-
-_SNAPSHOT_CACHE_MAX = 100
-_snapshot_cache: OrderedDict[tuple[str, str], dict] = OrderedDict()
-
-
-def _cache_snapshot(channel: str, roll_id: str, snapshot: dict | None) -> None:
-    """Store a snapshot for later retrieval by late joiners."""
-    if not channel or not roll_id or not snapshot:
-        return
-
-    key = (channel, roll_id)
-    _snapshot_cache[key] = deepcopy(snapshot)
-    _snapshot_cache.move_to_end(key)
-
-    while len(_snapshot_cache) > _SNAPSHOT_CACHE_MAX:
-        _snapshot_cache.popitem(last=False)
-
-
-def _get_snapshot(channel: str, roll_id: str) -> dict | None:
-    snap = _snapshot_cache.get((channel, roll_id))
-    if snap is None:
-        return None
-    return deepcopy(snap)
-
-def _subscribe(channel: str) -> queue.Queue:
-    q = queue.Queue(maxsize=10)
-    _subscribers.setdefault(channel, []).append(q)
-    return q
-
-
-def _publish(channel: str, roll_id: str) -> None:
-    """Publish a new roll id to all subscribers of a channel."""
-    _latest_roll_id[channel] = roll_id
-    for q in _subscribers.get(channel, [])[:]:
-        try:
-            q.put_nowait(roll_id)
-        except Exception:
-            try:
-                _subscribers[channel].remove(q)
-            except ValueError:
-                pass
-
-
-def _current_roll_id(channel: str) -> str:
-    try:
-        return persistent_current_token(channel)
-    except (OSError, sqlite3.Error, ValueError):
-        current_app.logger.exception("Unable to read the current Player View token")
-        return _latest_roll_id.get(channel, "")
-
-
-@app.route("/events")
-def sse_events():
-    """Server-Sent Events endpoint for live updates on new rolls."""
-    try:
-        channel = normalize_channel(request.args.get("channel"))
-    except ValueError as exc:
-        abort(400, str(exc))
-    q = _subscribe(channel)
-
-    @stream_with_context
-    def event_stream():
-        # Send last known id immediately for late joiners
-        last = _current_roll_id(channel)
-        if last:
-            yield f"event: init\\ndata: {last}\\n\\n"
-
-        heartbeat_every = 25
-        last_beat = time.time()
-        try:
-            while True:
-                try:
-                    timeout = max(1, heartbeat_every - int(time.time() - last_beat))
-                    rid = q.get(timeout=timeout)
-                    yield f"data: {rid}\\n\\n"
-                except queue.Empty:
-                    # heartbeat comment to keep proxies from buffering
-                    yield ": keep-alive\\n\\n"
-                    last_beat = time.time()
-        finally:
-            # remove this subscriber
-            try:
-                _subscribers[channel].remove(q)
-            except ValueError:
-                pass
-
-    return Response(event_stream(), mimetype="text/event-stream", headers={
-        "Cache-Control": "no-cache",
-        "X-Accel-Buffering": "no",
-    })
-
-
-@app.route("/version")
-def version():
-    """Lightweight polling fallback: returns the current roll id for a channel."""
-    try:
-        channel = normalize_channel(request.args.get("channel"))
-    except ValueError as exc:
-        abort(400, str(exc))
-    return {"roll_id": _current_roll_id(channel)}
-
-
 @app.get("/live/<live_token>")
 def live_view(live_token: str):
     """Stable player-facing URL that follows a campaign's newest snapshot."""
@@ -359,10 +424,23 @@ def live_version(live_token: str):
     return response
 
 
-# Optional: preserve the existing /health link in index.html
 @app.get("/health")
 def health():
-    return {"ok": True}
+    checks = {"catalog": False, "player_view_storage": False}
+    try:
+        df = load_items()
+        checks["catalog"] = df is not None and not df.empty
+    except Exception as exc:
+        current_app.logger.warning("Catalog readiness check failed: %s", exc)
+    try:
+        initialize_player_views()
+        checks["player_view_storage"] = True
+    except (OSError, sqlite3.Error) as exc:
+        current_app.logger.warning("Player View storage readiness check failed: %s", exc)
+    ready = all(checks.values())
+    response = jsonify(ok=ready, checks=checks)
+    response.headers["Cache-Control"] = "no-store"
+    return response, 200 if ready else 503
 
 
 
@@ -376,7 +454,6 @@ def favicon():
 @app.route("/player-view", methods=["GET", "POST"])
 def player_view():
     data = request.values
-    raw = data.get("snapshot")
     try:
         channel = normalize_channel(data.get("channel"))
     except ValueError as exc:
@@ -393,30 +470,22 @@ def player_view():
         if live_state["channel"] != channel:
             abort(404)
 
-    if request.method == "GET" and not raw and not roll_id:
-        return redirect("/")
+    if not roll_id:
+        return redirect("/") if request.method == "GET" else abort(400, "Missing Player View token.")
 
     lists: dict = {}
     meta: dict = {}
     snapshot_payload: dict | None = None
 
-    # 1) Prefer exact GM snapshot if present
-    if raw:
-        try:
-            snapshot_payload = json.loads(raw) or {}
-        except Exception as e:
-            current_app.logger.exception("Invalid snapshot JSON posted to /player-view: %s", e)
-            lists, meta = {}, {}
-    elif request.method == "GET" and roll_id:
-        try:
-            snapshot_payload = load_persistent_snapshot(roll_id, channel)
-        except SnapshotNotFound:
-            return render_template(
-                "player_view_missing.html", channel=channel, roll_id=roll_id
-            ), 404
-        except (OSError, sqlite3.Error, ValueError, json.JSONDecodeError):
-            current_app.logger.exception("Unable to load Player View snapshot")
-            abort(503, "Player View storage is temporarily unavailable.")
+    try:
+        snapshot_payload = load_persistent_snapshot(roll_id, channel)
+    except SnapshotNotFound:
+        return render_template(
+            "player_view_missing.html", channel=channel, roll_id=roll_id
+        ), 404
+    except (OSError, sqlite3.Error, ValueError, json.JSONDecodeError):
+        current_app.logger.exception("Unable to load Player View snapshot")
+        abort(503, "Player View storage is temporarily unavailable.")
 
     if isinstance(snapshot_payload, dict) and snapshot_payload:
         if "lists" in snapshot_payload or "shop" in snapshot_payload:
@@ -443,17 +512,6 @@ def player_view():
 
     if not lists:
         abort(400, "Player View snapshot is missing or invalid.")
-
-    # A POST carries the exact snapshot. Persist it before returning a shareable URL.
-    if request.method == "POST" and snapshot_payload and roll_id:
-        try:
-            save_persistent_snapshot(
-                roll_id, channel, snapshot_payload, advance_channel=False
-            )
-            _cache_snapshot(channel, roll_id, snapshot_payload)
-        except (OSError, sqlite3.Error, ValueError, TypeError):
-            current_app.logger.exception("Unable to persist posted Player View snapshot")
-            abort(503, "Player View storage is temporarily unavailable.")
 
     shop_name = _norm_str(meta.get("shop_name") or meta.get("name"))
     if not shop_name:
@@ -484,6 +542,7 @@ def index():
     df = load_items()
     shop_types = get_shop_types(df)
     dispositions = list(LOGIC_CONFIG.get("disposition_multipliers", {}).keys()) or ["fair"]
+    level_caps = LOGIC_CONFIG.get("level_caps", {"min": 1, "max": 20})
     return render_template(
         "index.html",
         shop_types=shop_types,
@@ -492,27 +551,49 @@ def index():
         disposition="fair",
         dispositions=dispositions,
         party_level=5,
+        party_level_min=int(level_caps.get("min", 1)),
+        party_level_max=int(level_caps.get("max", 20)),
         seed="",
     )
 
-@app.route("/query", methods=["GET", "POST"])
+@app.post("/query")
 def query():
     data = request.values  # supports both .args (GET) and .form (POST)
     df = load_items()
 
-    # Inputs from the form
-    shop_type   = (data.get("shop_type") or "").strip()
-    shop_size   = (data.get("shop_size") or "medium").strip().lower()
-    disposition = (data.get("disposition") or "fair").strip().lower()
-    shop_name   = (data.get("shop_name") or "").strip()
     try:
-        party_level = int(data.get("party_level") or 5)
-    except Exception:
-        party_level = 5
-    try:
-        generation_seed = normalize_seed(data.get("seed"))
+        restored = parse_reproduction_key(data.get("seed"))
+        effective_data = data.to_dict(flat=True)
+        source_fingerprint = ""
+        if restored:
+            source_fingerprint = str(restored.pop("_generation_fingerprint", ""))
+            effective_data.update(restored)
+        shop_type, shop_size, disposition, shop_name, party_level = _validated_query_inputs(
+            effective_data, df
+        )
+        generation_seed = normalize_seed(effective_data.get("seed"))
     except ValueError as exc:
         abort(400, str(exc))
+    current_fingerprint = generation_fingerprint()
+    reproduction_warning = ""
+    if restored and not source_fingerprint:
+        reproduction_warning = (
+            "This older reproduction key does not identify its catalog and generator build. "
+            "The settings were restored, but exact inventory cannot be guaranteed."
+        )
+    elif source_fingerprint and source_fingerprint != current_fingerprint:
+        reproduction_warning = (
+            "This reproduction key was created with a different catalog or generator build. "
+            "The settings were restored, but the inventory may differ from the original."
+        )
+    reproduction_key = create_reproduction_key(
+        seed=generation_seed,
+        shop_type=shop_type,
+        shop_size=shop_size,
+        disposition=disposition,
+        party_level=party_level,
+        fingerprint=current_fingerprint,
+    )
 
     # Run selections
     with generation_rng(generation_seed):
@@ -622,6 +703,8 @@ def query():
             "disposition": disposition,
             "party_level": party_level,
             "seed": generation_seed,
+            "reproduction_key": reproduction_key,
+            "generation_fingerprint": current_fingerprint,
             "window": magic_window,
         },
         "lists": {
@@ -645,8 +728,6 @@ def query():
     except (OSError, sqlite3.Error, ValueError, TypeError):
         current_app.logger.exception("Unable to persist generated Player View snapshot")
         abort(503, "Player View storage is temporarily unavailable.")
-    _cache_snapshot(channel, roll_id, snapshot)
-    _publish(channel, roll_id)
 
     return render_template(
         "results.html",
@@ -656,6 +737,9 @@ def query():
         shop_name=shop_name,
         party_level=party_level,
         seed=generation_seed,
+        reproduction_key=reproduction_key,
+        generation_fingerprint=current_fingerprint,
+        reproduction_warning=reproduction_warning,
         picked=picked,
         counts=counts,
         mundane_items=mundane_items,
@@ -665,12 +749,44 @@ def query():
         magic_items=magic_items,
         formula_items=result_formulas.get("items", []),
         aon_url=aon_url,
-        snapshot=snapshot,
         window=magic_window,
         roll_id=roll_id,
         channel=channel,
         live_token=live_token,
     )
+
+
+@app.get("/history")
+def history():
+    channel = str(request.args.get("channel") or "").strip()
+    try:
+        snapshots = recent_snapshots(channel=channel or None, limit=100)
+    except ValueError as exc:
+        abort(400, str(exc))
+    except (OSError, sqlite3.Error):
+        current_app.logger.exception("Unable to load recent Player Views")
+        abort(503, "Player View storage is temporarily unavailable.")
+    return render_template(
+        "history.html",
+        snapshots=snapshots,
+        selected_channel=channel.lower(),
+    )
+
+
+@app.post("/history/make-live")
+def history_make_live():
+    try:
+        channel = normalize_channel(request.form.get("channel"))
+        token = str(request.form.get("roll_id") or "").strip()
+        set_current_snapshot(token, channel)
+    except ValueError as exc:
+        abort(400, str(exc))
+    except SnapshotNotFound:
+        abort(404, "That stored Player View no longer exists.")
+    except (OSError, sqlite3.Error):
+        current_app.logger.exception("Unable to restore live Player View")
+        abort(503, "Player View storage is temporarily unavailable.")
+    return redirect(url_for("history", channel=channel, restored=token))
 
 # Standalone Spellbook page
 @app.get("/spellbooks")
@@ -684,7 +800,9 @@ def spellbooks_page():
 # JSON → fragment API for both the page and the mini-tool on index.html
 @app.post("/api/spellbooks/generate")
 def api_generate_spellbook():
-    data = request.get_json(force=True) or {}
+    data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict):
+        return jsonify(ok=False, error="JSON body must be an object"), 400
 
     tradition = (data.get("tradition") or "").strip().title()
     if tradition not in ("Arcane", "Divine", "Occult", "Primal"):
@@ -710,10 +828,14 @@ def api_generate_spellbook():
 @app.get("/spellbooks/view")
 def spellbooks_view():
     tradition = (request.args.get("tradition") or "").strip().title()
+    if tradition not in ("Arcane", "Divine", "Occult", "Primal"):
+        abort(400, "Invalid or missing tradition.")
     try:
         max_level = int(request.args.get("max_level") or 1)
-    except Exception:
-        max_level = 1
+    except (TypeError, ValueError):
+        abort(400, "Maximum spell rank must be a whole number.")
+    if not 1 <= max_level <= 10:
+        abort(400, "Maximum spell rank must be between 1 and 10.")
 
     themes_raw = request.args.get("themes") or ""
     themes = [t.strip() for t in themes_raw.split(",") if t.strip()]
@@ -767,12 +889,17 @@ def _filter_by_sources(d: pd.DataFrame, prefer: list[str], fallback_group: str|N
 def api_mib_bases():
     try:
         t          = _lc(request.args.get("type"))
-        max_level  = int(request.args.get("max_level") or 1)
         subtype_in = _lc(request.args.get("subtype"))
         armor_in   = _lc(request.args.get("armor_type"))
 
         if t not in ("weapon","armor","shield"):
             return jsonify(ok=False, error="Invalid type"), 400
+        try:
+            max_level = int(request.args.get("max_level") or 1)
+        except (TypeError, ValueError):
+            return jsonify(ok=False, error="max_level must be a whole number"), 400
+        if not 1 <= max_level <= 20:
+            return jsonify(ok=False, error="max_level must be between 1 and 20"), 400
 
         df = load_items()
         if df is None or df.empty:
@@ -838,25 +965,31 @@ def api_mib_bases():
                                     t, subtype_in, armor_in, max_level, len(names))
         return jsonify(ok=True, names=names)
 
-    except Exception as e:
+    except Exception:
         current_app.logger.exception("mib_bases error")
-        return jsonify(ok=False, error=str(e)), 500
+        return jsonify(ok=False, error="Unable to load magic item bases"), 500
 
         
 @app.post("/api/magic-builder/build")
 def api_mib_build():
-    data = request.get_json(force=True) or {}
+    data = request.get_json(silent=True) or {}
+    if not isinstance(data, dict):
+        return jsonify(ok=False, error="JSON body must be an object"), 400
     t = (data.get("item_type") or "").strip().lower()
     try:
         L = int(data.get("max_level") or 1)
-    except Exception:
-        L = 1
+    except (TypeError, ValueError):
+        return jsonify(ok=False, error="max_level must be a whole number"), 400
     base_name = (data.get("base_name") or "").strip()
 
     if t not in ("weapon","armor","shield"):
         return jsonify(ok=False, error="Invalid item_type"), 400
     if not base_name:
         return jsonify(ok=False, error="Missing base_name"), 400
+    if not 1 <= L <= 20:
+        return jsonify(ok=False, error="max_level must be between 1 and 20"), 400
+    if len(base_name) > 200 or any(ord(char) < 32 for char in base_name):
+        return jsonify(ok=False, error="Invalid base_name"), 400
 
     df = load_items()
     if df is None or df.empty:
@@ -918,7 +1051,12 @@ def api_mib_build():
     }
 
     # Apply runes (pipeline)
-    nonce = int(data.get("reroll") or 0)
+    try:
+        nonce = int(data.get("reroll") or 0)
+    except (TypeError, ValueError):
+        return jsonify(ok=False, error="reroll must be a whole number"), 400
+    if not 0 <= nonce <= 1_000_000:
+        return jsonify(ok=False, error="reroll is outside the allowed range"), 400
     seed = f"{t}|{base['name']}|{L}|{nonce}" if nonce else f"{t}|{base['name']}|{L}"
     rng = random.Random(seed)
 

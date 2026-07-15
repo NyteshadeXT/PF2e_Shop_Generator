@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from services.randomness import generation_rng
 from services.settings import CONFIG
-from services import spellbooks
+from services import db, spellbooks
 
 
 class _FixedD4:
@@ -12,6 +12,9 @@ class _FixedD4:
 
 
 class SpellbookTests(unittest.TestCase):
+    def setUp(self):
+        db.clear_reference_caches()
+
     def test_algorithm_matches_legacy_count_pattern_for_all_levels(self):
         with patch("services.spellbooks.get_rng", return_value=_FixedD4()):
             for level in range(1, 19):
@@ -37,7 +40,7 @@ class SpellbookTests(unittest.TestCase):
 
     def _tracked_connect(self):
         statements = []
-        original = spellbooks.sqlite3.connect
+        original = db.sqlite3.connect
 
         def connect(*args, **kwargs):
             connection = original(*args, **kwargs)
@@ -48,9 +51,14 @@ class SpellbookTests(unittest.TestCase):
 
     def test_standalone_builder_uses_one_spell_query(self):
         statements, connect = self._tracked_connect()
-        with patch("services.spellbooks.sqlite3.connect", side_effect=connect):
+        with patch("services.db.sqlite3.connect", side_effect=connect):
             with generation_rng("one-query-builder"):
                 result = spellbooks.build_spellbook(
+                    tradition="Arcane",
+                    book_level=12,
+                    sqlite_path=CONFIG["sqlite_db_path"],
+                )
+                spellbooks.build_spellbook(
                     tradition="Arcane",
                     book_level=12,
                     sqlite_path=CONFIG["sqlite_db_path"],
@@ -65,7 +73,7 @@ class SpellbookTests(unittest.TestCase):
         original_cfg = dict(CONFIG.get("spellbooks", {}))
         CONFIG["spellbooks"] = {"drop_rate": 1.0, "max_books": 3}
         try:
-            with patch("services.spellbooks.sqlite3.connect", side_effect=connect):
+            with patch("services.db.sqlite3.connect", side_effect=connect):
                 with generation_rng("one-query-shop-books"):
                     result = spellbooks.select_spellbooks(
                         df=None,

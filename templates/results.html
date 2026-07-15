@@ -25,33 +25,23 @@
             <span class="pf-chip">Disposition: {{ disposition|title }}</span>
             <span class="pf-chip">Party Level: {{ party_level }}</span>
             <span class="pf-chip">Seed: {{ seed }}</span>
+            <span class="pf-chip">Build: {{ generation_fingerprint }}</span>
           </p>
+          {% if reproduction_warning %}
+          <p class="pf-subtitle" role="alert">{{ reproduction_warning }}</p>
+          {% endif %}
         </div>
-
-        <!-- Build the exact snapshot Player View expects (lists + shop) -->
-        {% set player_snap = {
-          "lists": {
-            "mundane_items":  mundane_items or [],
-            "material_items": material_items or [],
-            "armor_items":    armor_items or [],
-            "weapon_items":   weapon_items or [],
-            "magic_items":    magic_items or [],
-            "formula_items":  formula_items or []
-          },
-          "shop": {
-            "shop_name":  shop_name,
-            "shop_type":   shop_type,
-            "shop_size":   shop_size,
-            "disposition": disposition,
-            "party_level": party_level,
-            "seed":        seed,
-            "window":      window
-          }
-        } %}
 
         <nav class="pf-page-actions" aria-label="Section navigation">
           <a href="/" class="pf-link-chip">Back</a>
-          <button class="pf-link-chip" type="button" onclick="exportToCSV()">Export All to CSV</button>
+          <a href="{{ url_for('history', channel=channel) }}" class="pf-link-chip">Recent Shops</a>
+          {% if gm_access_enabled() %}
+          <form method="POST" action="{{ url_for('gm_logout') }}" style="display:inline;">
+            <button type="submit" class="pf-link-chip">Lock Generator</button>
+          </form>
+          {% endif %}
+          <button class="pf-link-chip" type="button" id="copy-reproduction-key">Copy Reproduction Key</button>
+          <span id="copy-reproduction-status" class="pf-meta" aria-live="polite"></span>
 
           <form method="POST" action="/query" style="display:inline;">
             <input type="hidden" name="shop_type" value="{{ shop_type }}">
@@ -64,14 +54,13 @@
             <button type="submit" class="pf-link-chip">Recreate Same Seed</button>
           </form>
 
-          <!-- Open Player View (posts the snapshot + channel/roll) -->
+          <!-- Open the immutable snapshot already saved during generation. -->
           <form id="playerViewForm"
-                method="POST"
+                method="GET"
                 action="/player-view"
                 target="_blank"
                 rel="noopener"
                 style="display:inline;">
-            <input type="hidden" name="snapshot" value='{{ player_snap | tojson }}'>
             <input type="hidden" name="channel"  value='{{ channel or "default" }}'>
             <input type="hidden" name="roll_id"  value='{{ roll_id or "" }}'>
             <button type="submit" class="pf-link-chip" formtarget="_blank">Open Player View</button>
@@ -455,82 +444,31 @@
     </section>
 
     <script>
-      function exportToCSV() {
-        const csvHeaders = ["Section", "Name", "Level", "Rarity", "Price", "Quantity", "Category"];
-        let csvContent = "data:text/csv;charset=utf-8," + csvHeaders.join(",") + "\\n";
-        const allTables = document.querySelectorAll('[id^="Rarity"]');
-        allTables.forEach(table => {
-          const sectionTitle = table.closest("section")?.querySelector(".pf-section__header h2")?.innerText?.trim()
-                              || table.id.replace(/^Rarity/, "");
-          const rows = table.querySelectorAll("tbody tr");
-          rows.forEach(row => {
-            const cells = Array.from(row.querySelectorAll("td")).map(cell =>
-              '"' + cell.innerText.replace(/"/g, '""') + '"'
-            );
-            csvContent += ['"'+sectionTitle.replace(/"/g,'""')+'"', ...cells].join(",") + "\\n";
-          });
-        });
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "treasure_results.csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-
       // Dynamic document title reflecting filters
       (function() {
-        const shopName = "{{ shop_display_name }}";
-        const size = "{{ shop_size|title }}";
-        const disp = "{{ disposition|title }}";
-        const pl   = "{{ party_level }}";
+        const shopName = {{ shop_display_name|tojson }};
+        const size = {{ (shop_size|title)|tojson }};
+        const disp = {{ (disposition|title)|tojson }};
+        const pl   = {{ (party_level|default(''))|tojson }};
         document.title = `Item Generator – ${shopName} / ${size} / ${disp} / PL ${pl}`;
+      })();
+
+      (function() {
+        const key = {{ (reproduction_key|default(''))|tojson }};
+        const button = document.getElementById("copy-reproduction-key");
+        const status = document.getElementById("copy-reproduction-status");
+        button?.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(key);
+            if (status) status.textContent = "Key copied!";
+          } catch (_) {
+            window.prompt("Copy this reproduction key:", key);
+            if (status) status.textContent = "Key ready to copy.";
+          }
+        });
       })();
     </script>
 
   </div><!-- .pf-app -->
-  <!-- Auto-refresh: SSE first, fallback to polling -->
-  <script>
-    (function () {
-      const channel = "{{ channel or 'default' }}";
-      const currentRoll = "{{ roll_id or '' }}";
-      function hardReload() { window.location.reload(); }
-
-      function startPolling() {
-        const url = new URL(window.location.origin + "/version");
-        url.searchParams.set("channel", channel);
-        async function poll() {
-          try {
-            const r = await fetch(url, { cache: "no-store" });
-            if (r.ok) {
-              const j = await r.json();
-              if (j && j.roll_id && j.roll_id !== currentRoll) {
-                hardReload();
-                return;
-              }
-            }
-          } catch (e) {}
-          setTimeout(poll, 10000);
-        }
-        poll();
-      }
-
-      try {
-        const url = new URL(window.location.origin + "/events");
-        url.searchParams.set("channel", channel);
-        const es = new EventSource(url.toString());
-        es.addEventListener("init", (ev) => {
-          if (ev && ev.data && ev.data !== currentRoll) hardReload();
-        });
-        es.onmessage = (ev) => {
-          if (ev && ev.data && ev.data !== currentRoll) hardReload();
-        };
-        es.onerror = () => { es.close(); startPolling(); };
-      } catch (e) {
-        startPolling();
-      }
-    })();
-  </script>
 </body>
 </html>

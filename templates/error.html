@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ status_code }} — {{ error_title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='pf2e.css') }}">
+</head>
+<body>
+  <main class="pf-app">
+    <section class="pf-card mt-16">
+      <p class="pf-kicker">Error {{ status_code }}</p>
+      <h1>{{ error_title }}</h1>
+      <p>{{ error_message }}</p>
+      <p><a class="pf-link-chip" href="{{ url_for('index') }}">Return to the generator</a></p>
+    </section>
+  </main>
+</body>
+</html>

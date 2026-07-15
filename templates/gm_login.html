@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GM Access</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='pf2e.css') }}">
+</head>
+<body>
+  <main class="pf-app">
+    <section class="pf-card mt-16">
+      <p class="pf-kicker">Pathfinder 2e Generator</p>
+      <h1>GM Access</h1>
+      <p>Enter the private GM access key to open the generator.</p>
+      {% if error %}<p class="pf-meta" role="alert">{{ error }}</p>{% endif %}
+      <form method="POST" action="{{ url_for('gm_login') }}">
+        <input type="hidden" name="next" value="{{ next_path }}">
+        <div class="pf-field">
+          <label for="access_key" class="pf-label">Access Key</label>
+          <input id="access_key" name="access_key" type="password" maxlength="512"
+                 class="pf-input pf-select-lg" required autofocus autocomplete="current-password">
+        </div>
+        <div class="pf-actions">
+          <button type="submit" class="pf-btn pf-btn-primary">Open Generator</button>
+        </div>
+      </form>
+    </section>
+  </main>
+</body>
+</html>
