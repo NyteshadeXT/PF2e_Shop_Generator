@@ -5,6 +5,7 @@ from unittest.mock import patch
 import pandas as pd
 
 import app as webapp
+from services.security import AttemptLimiter
 
 
 class AppHardeningTests(unittest.TestCase):
@@ -99,6 +100,83 @@ class AppHardeningTests(unittest.TestCase):
     def test_query_generation_is_post_only(self):
         self.assertEqual(self.client.get("/query").status_code, 405)
 
+    def test_history_paginates_retained_shops_and_rejects_invalid_pages(self):
+        fake_channels = [
+            {
+                "channel": "campaign",
+                "snapshots": 51,
+                "updated_at": "2026-07-15 00:00:00",
+                "live_token": "a" * 32,
+            }
+        ]
+        with (
+            patch.object(webapp, "snapshot_count", return_value=51),
+            patch.object(webapp, "channel_summaries", return_value=fake_channels),
+            patch.object(webapp, "recent_snapshots", return_value=[]) as recent,
+        ):
+            first = self.client.get("/history", query_string={"channel": "campaign"})
+            self.assertEqual(first.status_code, 200)
+            self.assertIn(b"Page 1 of 2", first.data)
+            self.assertIn(b"Older Shops", first.data)
+            recent.assert_called_with(channel="campaign", limit=50, offset=0)
+
+            second = self.client.get(
+                "/history", query_string={"channel": "campaign", "page": "2"}
+            )
+            self.assertEqual(second.status_code, 200)
+            self.assertIn(b"Page 2 of 2", second.data)
+            self.assertIn(b"Newer Shops", second.data)
+            recent.assert_called_with(channel="campaign", limit=50, offset=50)
+
+        self.assertEqual(
+            self.client.get("/history", query_string={"page": "not-a-page"}).status_code,
+            400,
+        )
+
+    def test_player_view_is_read_only(self):
+        self.assertEqual(self.client.post("/player-view").status_code, 405)
+        self.assertEqual(self.client.post("/results/" + "0" * 32).status_code, 405)
+
+    def test_browser_mutations_require_session_csrf_token(self):
+        original = webapp.app.config.get("CSRF_PROTECTION_IN_TESTS")
+        webapp.app.config["CSRF_PROTECTION_IN_TESTS"] = True
+        try:
+            with patch.dict("os.environ", {"LOOTGEN_GM_ACCESS_KEY": ""}):
+                missing = self.client.post("/gm-logout")
+                self.assertEqual(missing.status_code, 400)
+                self.assertIn(b"form expired", missing.data)
+
+                with self.client.session_transaction() as browser_session:
+                    browser_session["csrf_token"] = "known-browser-token"
+
+                wrong = self.client.post(
+                    "/gm-logout", data={"csrf_token": "different-token"}
+                )
+                self.assertEqual(wrong.status_code, 400)
+
+                publish_without_token = self.client.post(
+                    "/player-view/publish",
+                    data={"channel": "campaign", "roll_id": "0" * 32},
+                )
+                self.assertEqual(publish_without_token.status_code, 400)
+
+                backup_without_token = self.client.post("/history/backup")
+                self.assertEqual(backup_without_token.status_code, 400)
+
+                accepted = self.client.post(
+                    "/gm-logout", data={"csrf_token": "known-browser-token"}
+                )
+                self.assertEqual(accepted.status_code, 302)
+                self.assertIn("/gm-login", accepted.headers["Location"])
+        finally:
+            webapp.app.config["CSRF_PROTECTION_IN_TESTS"] = original
+
+    def test_login_form_contains_csrf_token(self):
+        with patch.dict("os.environ", {"LOOTGEN_GM_ACCESS_KEY": "private-table-key"}):
+            response = self.client.get("/gm-login")
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'name="csrf_token"', response.data)
+
     def test_optional_gm_access_protects_generator_but_not_player_links(self):
         with patch.dict("os.environ", {"LOOTGEN_GM_ACCESS_KEY": "private-table-key"}):
             root = self.client.get("/")
@@ -106,12 +184,20 @@ class AppHardeningTests(unittest.TestCase):
             self.assertIn("/gm-login", root.headers["Location"])
             self.assertEqual(self.client.get("/history").status_code, 302)
             self.assertEqual(
+                self.client.get(
+                    "/results/" + "0" * 32,
+                    query_string={"channel": "campaign"},
+                ).status_code,
+                302,
+            )
+            self.assertEqual(
                 self.client.post(
                     "/history/make-live",
                     data={"channel": "campaign", "roll_id": "0" * 32},
                 ).status_code,
                 302,
             )
+            self.assertEqual(self.client.post("/history/backup").status_code, 302)
 
             api = self.client.get("/api/magic-builder/bases", query_string={"type": "weapon"})
             self.assertEqual(api.status_code, 401)
@@ -148,6 +234,36 @@ class AppHardeningTests(unittest.TestCase):
             self.assertEqual(logged_out.status_code, 302)
             self.assertIn("/gm-login", logged_out.headers["Location"])
             self.assertEqual(self.client.get("/").status_code, 302)
+
+    def test_repeated_failed_gm_logins_are_throttled_per_client(self):
+        original = webapp._login_limiter
+        webapp._login_limiter = AttemptLimiter(2, 300)
+        try:
+            with patch.dict("os.environ", {"LOOTGEN_GM_ACCESS_KEY": "private-table-key"}):
+                for _attempt in range(2):
+                    response = self.client.post(
+                        "/gm-login",
+                        data={"access_key": "wrong"},
+                        environ_base={"REMOTE_ADDR": "198.51.100.10"},
+                    )
+                    self.assertEqual(response.status_code, 401)
+
+                blocked = self.client.post(
+                    "/gm-login",
+                    data={"access_key": "private-table-key"},
+                    environ_base={"REMOTE_ADDR": "198.51.100.10"},
+                )
+                self.assertEqual(blocked.status_code, 429)
+                self.assertIn(b"Too many attempts", blocked.data)
+
+                other_client = self.client.post(
+                    "/gm-login",
+                    data={"access_key": "wrong"},
+                    environ_base={"REMOTE_ADDR": "198.51.100.11"},
+                )
+                self.assertEqual(other_client.status_code, 401)
+        finally:
+            webapp._login_limiter = original
 
     def test_gm_login_does_not_redirect_to_an_external_site(self):
         with patch.dict("os.environ", {"LOOTGEN_GM_ACCESS_KEY": "private-table-key"}):

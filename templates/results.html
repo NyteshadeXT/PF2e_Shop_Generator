@@ -37,6 +37,7 @@
           <a href="{{ url_for('history', channel=channel) }}" class="pf-link-chip">Recent Shops</a>
           {% if gm_access_enabled() %}
           <form method="POST" action="{{ url_for('gm_logout') }}" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="pf-link-chip">Lock Generator</button>
           </form>
           {% endif %}
@@ -44,6 +45,8 @@
           <span id="copy-reproduction-status" class="pf-meta" aria-live="polite"></span>
 
           <form method="POST" action="/query" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="generation_request_key" value="{{ generation_request_key }}">
             <input type="hidden" name="shop_type" value="{{ shop_type }}">
             <input type="hidden" name="shop_size" value="{{ shop_size }}">
             <input type="hidden" name="disposition" value="{{ disposition }}">
@@ -65,6 +68,23 @@
             <input type="hidden" name="roll_id"  value='{{ roll_id or "" }}'>
             <button type="submit" class="pf-link-chip" formtarget="_blank">Open Player View</button>
           </form>
+
+          {% if is_live %}
+          <span class="pf-chip" role="status">Live now</span>
+          {% else %}
+          <form method="POST"
+                action="{{ url_for('publish_player_view') }}"
+                target="_blank"
+                rel="noopener"
+                style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="channel" value="{{ channel }}">
+            <input type="hidden" name="roll_id" value="{{ roll_id }}">
+            <button type="submit" class="pf-link-chip"
+                    data-confirm="Replace this game’s current Live Display with this shop?">Publish to Live Display</button>
+          </form>
+          <span class="pf-chip" role="status">Draft — players still see the previous live shop</span>
+          {% endif %}
 
           {% if live_token %}
           <a href="{{ url_for('live_view', live_token=live_token) }}"
@@ -443,7 +463,12 @@
       {% endif %}
     </section>
 
-    <script>
+    <script nonce="{{ csp_nonce() }}">
+      document.querySelectorAll("[data-confirm]").forEach((control) => {
+        control.addEventListener("click", (event) => {
+          if (!window.confirm(control.dataset.confirm)) event.preventDefault();
+        });
+      });
       // Dynamic document title reflecting filters
       (function() {
         const shopName = {{ shop_display_name|tojson }};

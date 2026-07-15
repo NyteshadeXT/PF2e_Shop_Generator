@@ -27,6 +27,7 @@
           <a href="/health" class="pf-link-chip">Health</a>
           {% if gm_access_enabled() %}
           <form method="POST" action="{{ url_for('gm_logout') }}" style="display:inline;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <button type="submit" class="pf-link-chip">Lock Generator</button>
           </form>
           {% endif %}
@@ -40,6 +41,8 @@
       <div class="p-12">
 
         <form id="generatorForm" class="pf-form-grid" action="{{ url_for('query') }}" method="post">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="generation_request_key" value="{{ generation_request_key }}">
 
           <!-- Shop Type -->
           <div class="pf-field">
@@ -261,7 +264,7 @@
 
   </div><!-- .pf-app -->
 </body>
-        <script>
+        <script nonce="{{ csp_nonce() }}">
         (function () {
           const STORAGE_KEY = 'pf2e-item-generator-state-v1';
 
@@ -333,7 +336,7 @@
         })();
         </script>
 
-        <script>
+        <script nonce="{{ csp_nonce() }}">
         (function () {
           const store = window.__pfState;
           const section = 'generator';
@@ -375,7 +378,7 @@
           });
         })();
         </script>
-        <script>
+        <script nonce="{{ csp_nonce() }}">
         (function () {
           const store = window.__pfState;
           const $trad   = document.getElementById('sb-tradition');
@@ -430,7 +433,7 @@
 		</script>
 	
 	{% raw %}
-	<script>
+	<script nonce="{{ csp_nonce() }}">
 	(function () {
 	  const store = window.__pfState;
 	  const $type = document.getElementById('mib-type');

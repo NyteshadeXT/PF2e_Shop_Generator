@@ -6,6 +6,7 @@ import os
 import re
 import secrets
 import sqlite3
+import threading
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
@@ -17,6 +18,9 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _TOKEN_RE = re.compile(r"^[a-f0-9]{12,64}$", re.IGNORECASE)
 _LIVE_TOKEN_RE = re.compile(r"^[a-f0-9]{32}$", re.IGNORECASE)
 _CHANNEL_RE = re.compile(r"^[a-z0-9][a-z0-9_-]{0,63}$", re.IGNORECASE)
+_GENERATION_KEY_RE = re.compile(r"^[A-Za-z0-9_-]{16,128}$")
+_INITIALIZE_LOCK = threading.Lock()
+_INITIALIZED_PATHS: set[Path] = set()
 
 
 class SnapshotNotFound(LookupError):
@@ -29,6 +33,15 @@ class LiveChannelNotFound(LookupError):
 
 class SnapshotConflict(ValueError):
     """Raised when a token is reused for different immutable snapshot data."""
+
+
+class DuplicateGeneration(LookupError):
+    """Raised when a generation request key already owns a stored snapshot."""
+
+    def __init__(self, token: str, channel: str):
+        super().__init__(token)
+        self.token = token
+        self.channel = channel
 
 
 def normalize_channel(value: str | None) -> str:
@@ -52,6 +65,13 @@ def normalize_live_token(value: str | None) -> str:
     return token
 
 
+def normalize_generation_key(value: str | None) -> str:
+    key = (value or "").strip()
+    if not _GENERATION_KEY_RE.fullmatch(key):
+        raise ValueError("Invalid generation request key. Reload the generator and try again.")
+    return key
+
+
 def state_db_path() -> Path:
     raw = os.environ.get("LOOTGEN_STATE_DB_PATH") or CONFIG.get(
         "player_view_db_path", "data/player_views.db"
@@ -62,8 +82,14 @@ def state_db_path() -> Path:
     return path.resolve()
 
 
+def _resolved_db_path(db_path: str | Path | None = None) -> Path:
+    if db_path is None:
+        return state_db_path()
+    return Path(db_path).expanduser().resolve()
+
+
 def _connect(db_path: str | Path | None = None) -> sqlite3.Connection:
-    path = Path(db_path) if db_path is not None else state_db_path()
+    path = _resolved_db_path(db_path)
     path.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(path, timeout=10.0)
     conn.row_factory = sqlite3.Row
@@ -83,41 +109,65 @@ def _connection(db_path: str | Path | None = None):
 
 
 def initialize(db_path: str | Path | None = None) -> None:
-    with _connection(db_path) as conn:
-        conn.executescript(
-            """
-            CREATE TABLE IF NOT EXISTS player_view_snapshots (
-                token TEXT PRIMARY KEY,
-                channel TEXT NOT NULL,
-                snapshot_json TEXT NOT NULL,
-                created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-            );
-            CREATE INDEX IF NOT EXISTS ix_player_view_snapshots_channel_created
-                ON player_view_snapshots(channel, created_at DESC);
+    path = _resolved_db_path(db_path)
+    with _INITIALIZE_LOCK:
+        if path in _INITIALIZED_PATHS and path.exists():
+            return
+        _INITIALIZED_PATHS.discard(path)
+        with _connection(path) as conn:
+            # WAL allows player-facing reads to continue while a GM publishes a
+            # new snapshot. The mode is persistent, so this is only negotiated
+            # during the process's first successful initialization of this file.
+            conn.execute("PRAGMA journal_mode = WAL")
+            conn.executescript(
+                """
+                CREATE TABLE IF NOT EXISTS player_view_snapshots (
+                    token TEXT PRIMARY KEY,
+                    channel TEXT NOT NULL,
+                    snapshot_json TEXT NOT NULL,
+                    generation_key TEXT,
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+                CREATE INDEX IF NOT EXISTS ix_player_view_snapshots_channel_created
+                    ON player_view_snapshots(channel, created_at DESC);
 
-            CREATE TABLE IF NOT EXISTS player_view_channels (
-                channel TEXT PRIMARY KEY,
-                current_token TEXT NOT NULL,
-                live_token TEXT UNIQUE,
-                updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY(current_token) REFERENCES player_view_snapshots(token)
-            );
-            """
-        )
-        columns = {
-            str(row["name"])
-            for row in conn.execute("PRAGMA table_info(player_view_channels)").fetchall()
-        }
-        if "live_token" not in columns:
-            conn.execute("ALTER TABLE player_view_channels ADD COLUMN live_token TEXT")
-        conn.execute(
-            """
-            CREATE UNIQUE INDEX IF NOT EXISTS ux_player_view_channels_live_token
-            ON player_view_channels(live_token)
-            WHERE live_token IS NOT NULL
-            """
-        )
-        conn.commit()
+                CREATE TABLE IF NOT EXISTS player_view_channels (
+                    channel TEXT PRIMARY KEY,
+                    current_token TEXT NOT NULL,
+                    live_token TEXT UNIQUE,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(current_token) REFERENCES player_view_snapshots(token)
+                );
+                """
+            )
+            columns = {
+                str(row["name"])
+                for row in conn.execute("PRAGMA table_info(player_view_channels)").fetchall()
+            }
+            if "live_token" not in columns:
+                conn.execute("ALTER TABLE player_view_channels ADD COLUMN live_token TEXT")
+            snapshot_columns = {
+                str(row["name"])
+                for row in conn.execute("PRAGMA table_info(player_view_snapshots)").fetchall()
+            }
+            if "generation_key" not in snapshot_columns:
+                conn.execute("ALTER TABLE player_view_snapshots ADD COLUMN generation_key TEXT")
+            conn.execute(
+                """
+                CREATE UNIQUE INDEX IF NOT EXISTS ux_player_view_channels_live_token
+                ON player_view_channels(live_token)
+                WHERE live_token IS NOT NULL
+                """
+            )
+            conn.execute(
+                """
+                CREATE UNIQUE INDEX IF NOT EXISTS ux_player_view_snapshots_generation_key
+                ON player_view_snapshots(generation_key)
+                WHERE generation_key IS NOT NULL
+                """
+            )
+            conn.commit()
+        _INITIALIZED_PATHS.add(path)
 
 
 def _cleanup_in_connection(
@@ -257,11 +307,13 @@ def recent_snapshots(
     *,
     channel: str | None = None,
     limit: int = 50,
+    offset: int = 0,
     db_path: str | Path | None = None,
 ) -> list[dict[str, Any]]:
     """Return recent snapshots with enough metadata for a GM recovery screen."""
     normalized_channel = normalize_channel(channel) if channel else None
     safe_limit = max(1, min(int(limit), 200))
+    safe_offset = max(0, int(offset))
     initialize(db_path)
     sql = """
         SELECT
@@ -278,8 +330,8 @@ def recent_snapshots(
     if normalized_channel:
         sql += " WHERE s.channel = ?"
         parameters.append(normalized_channel)
-    sql += " ORDER BY s.created_at DESC, s.rowid DESC LIMIT ?"
-    parameters.append(safe_limit)
+    sql += " ORDER BY s.created_at DESC, s.rowid DESC LIMIT ? OFFSET ?"
+    parameters.extend((safe_limit, safe_offset))
 
     with _connection(db_path) as conn:
         rows = conn.execute(sql, parameters).fetchall()
@@ -308,6 +360,56 @@ def recent_snapshots(
             }
         )
     return results
+
+
+def snapshot_count(
+    *,
+    channel: str | None = None,
+    db_path: str | Path | None = None,
+) -> int:
+    """Count retained snapshots, optionally for one normalized game channel."""
+    normalized_channel = normalize_channel(channel) if channel else None
+    initialize(db_path)
+    with _connection(db_path) as conn:
+        if normalized_channel is None:
+            value = conn.execute("SELECT COUNT(*) FROM player_view_snapshots").fetchone()[0]
+        else:
+            value = conn.execute(
+                "SELECT COUNT(*) FROM player_view_snapshots WHERE channel = ?",
+                (normalized_channel,),
+            ).fetchone()[0]
+    return int(value)
+
+
+def channel_summaries(
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict[str, Any]]:
+    """List known game channels and their retained-history sizes."""
+    initialize(db_path)
+    with _connection(db_path) as conn:
+        rows = conn.execute(
+            """
+            SELECT
+                c.channel,
+                c.updated_at,
+                c.live_token,
+                COUNT(s.token) AS snapshots
+            FROM player_view_channels AS c
+            LEFT JOIN player_view_snapshots AS s ON s.channel = c.channel
+            GROUP BY c.channel, c.updated_at, c.live_token
+            ORDER BY c.updated_at DESC, c.channel ASC
+            """
+        ).fetchall()
+    return [
+        {
+            "channel": str(row["channel"]),
+            "updated_at": str(row["updated_at"]),
+            "live_token": str(row["live_token"] or ""),
+            "snapshots": int(row["snapshots"]),
+        }
+        for row in rows
+    ]
 
 
 def set_current_snapshot(
@@ -361,6 +463,7 @@ def save_snapshot(
     *,
     db_path: str | Path | None = None,
     advance_channel: bool = True,
+    generation_key: str | None = None,
 ) -> str:
     """Atomically store an immutable snapshot and advance its live channel."""
     token = normalize_token(token)
@@ -368,12 +471,28 @@ def save_snapshot(
     if not isinstance(snapshot, dict) or not snapshot:
         raise ValueError("Snapshot must be a non-empty object.")
     payload = json.dumps(snapshot, ensure_ascii=False, separators=(",", ":"), sort_keys=True)
+    normalized_generation_key = (
+        normalize_generation_key(generation_key) if generation_key else None
+    )
     proposed_live_token = secrets.token_hex(16)
     retention_days, max_snapshots = _retention_values()
 
     initialize(db_path)
     with _connection(db_path) as conn:
         conn.execute("BEGIN IMMEDIATE")
+        if normalized_generation_key:
+            generated = conn.execute(
+                """
+                SELECT token, channel FROM player_view_snapshots
+                WHERE generation_key = ?
+                """,
+                (normalized_generation_key,),
+            ).fetchone()
+            if generated is not None:
+                conn.rollback()
+                raise DuplicateGeneration(
+                    str(generated["token"]), str(generated["channel"])
+                )
         existing = conn.execute(
             "SELECT channel, snapshot_json FROM player_view_snapshots WHERE token = ?",
             (token,),
@@ -381,10 +500,12 @@ def save_snapshot(
         if existing is None:
             conn.execute(
                 """
-                INSERT INTO player_view_snapshots(token, channel, snapshot_json)
-                VALUES (?, ?, ?)
+                INSERT INTO player_view_snapshots(
+                    token, channel, snapshot_json, generation_key
+                )
+                VALUES (?, ?, ?, ?)
                 """,
-                (token, channel, payload),
+                (token, channel, payload, normalized_generation_key),
             )
         elif existing["channel"] != channel or existing["snapshot_json"] != payload:
             raise SnapshotConflict("Player View tokens cannot be reused for different snapshots.")
@@ -426,6 +547,26 @@ def save_snapshot(
         )
         conn.commit()
     return str(row["live_token"])
+
+
+def generation_request_snapshot(
+    generation_key: str,
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, str] | None:
+    """Resolve an idempotency key to its immutable stored result, if present."""
+    generation_key = normalize_generation_key(generation_key)
+    initialize(db_path)
+    with _connection(db_path) as conn:
+        row = conn.execute(
+            """
+            SELECT token, channel FROM player_view_snapshots WHERE generation_key = ?
+            """,
+            (generation_key,),
+        ).fetchone()
+    if row is None:
+        return None
+    return {"token": str(row["token"]), "channel": str(row["channel"])}
 
 
 def load_snapshot(
@@ -472,6 +613,29 @@ def current_token(
     return str(row["current_token"]) if row else ""
 
 
+def channel_state(
+    channel: str,
+    *,
+    db_path: str | Path | None = None,
+) -> dict[str, str]:
+    """Return the current immutable token and stable live token for one game."""
+    channel = normalize_channel(channel)
+    initialize(db_path)
+    with _connection(db_path) as conn:
+        row = conn.execute(
+            """
+            SELECT current_token, live_token FROM player_view_channels WHERE channel = ?
+            """,
+            (channel,),
+        ).fetchone()
+    if row is None:
+        raise LiveChannelNotFound(channel)
+    return {
+        "current_token": str(row["current_token"]),
+        "live_token": str(row["live_token"] or ""),
+    }
+
+
 def live_channel(
     live_token: str,
     *,
@@ -492,6 +656,39 @@ def live_channel(
     if row is None:
         raise LiveChannelNotFound(live_token)
     return {"channel": str(row["channel"]), "roll_id": str(row["current_token"])}
+
+
+def rotate_live_token(
+    channel: str,
+    *,
+    db_path: str | Path | None = None,
+) -> str:
+    """Replace a campaign's capability URL while preserving its current shop."""
+    channel = normalize_channel(channel)
+    initialize(db_path)
+    with _connection(db_path) as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        exists = conn.execute(
+            "SELECT 1 FROM player_view_channels WHERE channel = ?", (channel,)
+        ).fetchone()
+        if exists is None:
+            raise LiveChannelNotFound(channel)
+        for _attempt in range(5):
+            token = secrets.token_hex(16)
+            try:
+                conn.execute(
+                    """
+                    UPDATE player_view_channels
+                    SET live_token = ?, updated_at = CURRENT_TIMESTAMP
+                    WHERE channel = ?
+                    """,
+                    (token, channel),
+                )
+                conn.commit()
+                return token
+            except sqlite3.IntegrityError:
+                continue
+        raise sqlite3.IntegrityError("Unable to allocate a unique Live Display token.")
 
 
 def _main() -> None:

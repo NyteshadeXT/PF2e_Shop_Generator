@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -66,12 +67,48 @@ class RenderSecurityTests(unittest.TestCase):
                 self.assertNotIn("exportToCSV", template)
                 self.assertNotIn("treasure_results.csv", template)
 
+    def test_live_polling_pauses_and_backs_off(self):
+        template = (PROJECT_ROOT / "templates" / "results_player.html").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn('document.addEventListener("visibilitychange"', template)
+        self.assertIn('document.hidden', template)
+        self.assertIn('maximumDelay = 30000', template)
+        self.assertIn('"If-None-Match": versionEtag', template)
+        self.assertIn('response.status === 404', template)
+        self.assertNotIn("setInterval(checkForNewShop", template)
+
     def test_privacy_and_content_headers_are_applied(self):
         response = self.client.get("/")
         self.assertEqual(response.headers["Referrer-Policy"], "no-referrer")
         self.assertEqual(response.headers["X-Content-Type-Options"], "nosniff")
         self.assertEqual(response.headers["X-Frame-Options"], "SAMEORIGIN")
         self.assertIn("geolocation=()", response.headers["Permissions-Policy"])
+        self.assertEqual(response.headers["Cross-Origin-Opener-Policy"], "same-origin")
+
+        policy = response.headers["Content-Security-Policy"]
+        self.assertIn("default-src 'self'", policy)
+        self.assertIn("object-src 'none'", policy)
+        self.assertIn("base-uri 'none'", policy)
+        self.assertIn("form-action 'self'", policy)
+        self.assertIn("frame-ancestors 'self'", policy)
+        nonce = re.search(r"script-src 'self' 'nonce-([^']+)'", policy)
+        self.assertIsNotNone(nonce)
+        self.assertIn(f'nonce="{nonce.group(1)}"', response.get_data(as_text=True))
+
+        secure = self.client.get("/", base_url="https://generator.example")
+        self.assertEqual(
+            secure.headers["Strict-Transport-Security"],
+            "max-age=31536000; includeSubDomains",
+        )
+
+    def test_templates_do_not_use_untrusted_inline_script_handlers(self):
+        for template_path in (PROJECT_ROOT / "templates").glob("*.html"):
+            template = template_path.read_text(encoding="utf-8")
+            with self.subTest(template=template_path.name):
+                self.assertIsNone(re.search(r"\son[a-z]+\s*=", template, re.IGNORECASE))
+                for script_tag in re.findall(r"<script\b[^>]*>", template, re.IGNORECASE):
+                    self.assertIn("nonce=", script_tag)
 
 
 if __name__ == "__main__":

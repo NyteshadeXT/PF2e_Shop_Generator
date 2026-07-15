@@ -2,11 +2,14 @@
 
 from flask import (
     Flask, render_template, request, redirect, abort, session,
-    current_app, jsonify, url_for
+    current_app, g, jsonify, send_file, url_for
 )
 
+from io import BytesIO
 import hashlib, json, os, secrets, uuid, sqlite3, re, random
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+import tempfile
 
 # Third-party
 import pandas as pd
@@ -25,19 +28,28 @@ from services.utils import rarity_counts, aon_url
 from services.spellbooks import select_spellbooks
 from services.spellbooks import build_spellbook
 from services.player_views import (
+    backup_database as backup_player_views,
+    channel_summaries,
+    channel_state,
+    DuplicateGeneration,
+    generation_request_snapshot,
+    current_token as persistent_current_token,
     LiveChannelNotFound,
     SnapshotNotFound,
     live_channel as persistent_live_channel,
     load_snapshot as load_persistent_snapshot,
     normalize_channel,
     recent_snapshots,
+    rotate_live_token,
     initialize as initialize_player_views,
     save_snapshot as save_persistent_snapshot,
     set_current_snapshot,
+    snapshot_count,
 )
 from services.randomness import generation_rng, normalize_seed
 from services.reproduction import create_reproduction_key, parse_reproduction_key
 from services.provenance import generation_fingerprint
+from services.security import AttemptLimiter
     
 from copy import deepcopy
 
@@ -49,6 +61,13 @@ except Exception:
 
 def _environment_flag(name: str) -> bool:
     return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _positive_int_environment(name: str, default: int) -> int:
+    try:
+        return max(1, int(os.environ.get(name, default)))
+    except (TypeError, ValueError):
+        return default
 
 
 app = Flask(__name__)
@@ -66,6 +85,10 @@ app.config.update(
     SESSION_COOKIE_SAMESITE="Lax",
     SESSION_COOKIE_SECURE=_environment_flag("RENDER") or _environment_flag("LOOTGEN_SECURE_COOKIES"),
     PERMANENT_SESSION_LIFETIME=timedelta(hours=12),
+)
+_login_limiter = AttemptLimiter(
+    _positive_int_environment("LOOTGEN_LOGIN_ATTEMPTS", 8),
+    _positive_int_environment("LOOTGEN_LOGIN_WINDOW_SECONDS", 300),
 )
 try:
     app.config["MAX_CONTENT_LENGTH"] = max(
@@ -93,6 +116,33 @@ def _gm_is_authenticated() -> bool:
     return secrets.compare_digest(saved, _access_fingerprint(access_key))
 
 
+def _csrf_token() -> str:
+    token = str(session.get("csrf_token") or "")
+    if not token:
+        token = secrets.token_urlsafe(32)
+        session["csrf_token"] = token
+    return token
+
+
+def _csp_nonce() -> str:
+    nonce = str(getattr(g, "csp_nonce", "") or "")
+    if not nonce:
+        nonce = secrets.token_urlsafe(18)
+        g.csp_nonce = nonce
+    return nonce
+
+
+_CSRF_PROTECTED_ENDPOINTS = {
+    "gm_login",
+    "gm_logout",
+    "query",
+    "publish_player_view",
+    "history_make_live",
+    "history_backup",
+    "history_rotate_live",
+}
+
+
 _PUBLIC_ENDPOINTS = {
     "static",
     "favicon",
@@ -114,6 +164,19 @@ def require_gm_access():
     return redirect(url_for("gm_login", next=next_path))
 
 
+@app.before_request
+def require_csrf_token():
+    if request.method != "POST" or request.endpoint not in _CSRF_PROTECTED_ENDPOINTS:
+        return None
+    if app.config.get("TESTING") and not app.config.get("CSRF_PROTECTION_IN_TESTS"):
+        return None
+    submitted = str(request.form.get("csrf_token") or "")
+    expected = str(session.get("csrf_token") or "")
+    if not submitted or not expected or not secrets.compare_digest(submitted, expected):
+        abort(400, "The form expired or came from another site. Reload the page and try again.")
+    return None
+
+
 @app.route("/gm-login", methods=["GET", "POST"])
 def gm_login():
     if not _gm_access_key():
@@ -123,12 +186,17 @@ def gm_login():
     if not next_path.startswith("/") or next_path.startswith("//"):
         next_path = url_for("index")
     if request.method == "POST":
+        client = request.remote_addr or "unknown"
+        if _login_limiter.blocked(client):
+            abort(429, "Too many unsuccessful login attempts. Wait a few minutes and try again.")
         submitted = str(request.form.get("access_key") or "")
         if secrets.compare_digest(submitted, _gm_access_key()):
+            _login_limiter.clear(client)
             session.clear()
             session["gm_access"] = _access_fingerprint(_gm_access_key())
             session.permanent = True
             return redirect(next_path)
+        _login_limiter.record_failure(client)
         error = "That access key was not accepted."
     return render_template("gm_login.html", error=error, next_path=next_path), 401 if error else 200
 
@@ -140,16 +208,41 @@ def gm_logout():
 
 
 app.jinja_env.globals["gm_access_enabled"] = lambda: bool(_gm_access_key())
+app.jinja_env.globals["csrf_token"] = _csrf_token
+app.jinja_env.globals["csp_nonce"] = _csp_nonce
 
 
 @app.after_request
 def add_security_headers(response):
+    nonce = _csp_nonce()
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("Referrer-Policy", "no-referrer")
     response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
     response.headers.setdefault(
         "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
     )
+    response.headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
+    response.headers.setdefault(
+        "Content-Security-Policy",
+        "; ".join(
+            (
+                "default-src 'self'",
+                f"script-src 'self' 'nonce-{nonce}'",
+                "style-src 'self' 'unsafe-inline'",
+                "img-src 'self' data:",
+                "font-src 'self'",
+                "connect-src 'self'",
+                "object-src 'none'",
+                "base-uri 'none'",
+                "form-action 'self'",
+                "frame-ancestors 'self'",
+            )
+        ),
+    )
+    if request.is_secure or _environment_flag("RENDER"):
+        response.headers.setdefault(
+            "Strict-Transport-Security", "max-age=31536000; includeSubDomains"
+        )
     return response
 
 _ERROR_TITLES = {
@@ -157,6 +250,7 @@ _ERROR_TITLES = {
     404: "Page not found",
     405: "Action not available",
     413: "Submission too large",
+    429: "Too many attempts",
     500: "Something went wrong",
     503: "Service temporarily unavailable",
 }
@@ -419,8 +513,15 @@ def live_version(live_token: str):
     except (OSError, sqlite3.Error):
         current_app.logger.exception("Unable to poll live Player View")
         abort(503)
-    response = jsonify(state)
-    response.headers["Cache-Control"] = "no-store"
+    etag = hashlib.sha256(
+        f'{state["channel"]}:{state["roll_id"]}'.encode("utf-8")
+    ).hexdigest()
+    if request.if_none_match.contains(etag):
+        response = current_app.response_class(status=304)
+    else:
+        response = jsonify(state)
+    response.set_etag(etag)
+    response.headers["Cache-Control"] = "private, no-cache"
     return response
 
 
@@ -451,7 +552,7 @@ def health():
 def favicon():
     return ("", 204)
     
-@app.route("/player-view", methods=["GET", "POST"])
+@app.get("/player-view")
 def player_view():
     data = request.values
     try:
@@ -471,7 +572,7 @@ def player_view():
             abort(404)
 
     if not roll_id:
-        return redirect("/") if request.method == "GET" else abort(400, "Missing Player View token.")
+        return redirect("/")
 
     lists: dict = {}
     meta: dict = {}
@@ -554,11 +655,30 @@ def index():
         party_level_min=int(level_caps.get("min", 1)),
         party_level_max=int(level_caps.get("max", 20)),
         seed="",
+        generation_request_key=secrets.token_urlsafe(24),
     )
 
 @app.post("/query")
 def query():
     data = request.values  # supports both .args (GET) and .form (POST)
+    generation_request_key = str(data.get("generation_request_key") or "").strip()
+    if generation_request_key:
+        try:
+            existing_generation = generation_request_snapshot(generation_request_key)
+        except ValueError as exc:
+            abort(400, str(exc))
+        except (OSError, sqlite3.Error):
+            current_app.logger.exception("Unable to check generation request key")
+            abort(503, "Player View storage is temporarily unavailable.")
+        if existing_generation:
+            return redirect(
+                url_for(
+                    "results_view",
+                    channel=existing_generation["channel"],
+                    roll_id=existing_generation["token"],
+                ),
+                code=303,
+            )
     df = load_items()
 
     try:
@@ -715,6 +835,11 @@ def query():
             "magic_items": magic_items,
             "formula_items": result_formulas.get("items", []),
         },
+        "summary": {
+            "picked": picked,
+            "counts": counts,
+            "reproduction_warning": reproduction_warning,
+        },
     }
 
     try:
@@ -724,43 +849,131 @@ def query():
     roll_id = uuid.uuid4().hex
     try:
         # The stored snapshot is authoritative. Notify live views only after commit.
-        live_token = save_persistent_snapshot(roll_id, channel, snapshot)
+        # Keep an existing Live Display on its currently published shop until the
+        # GM deliberately publishes this new snapshot. A game's first shop still
+        # establishes the channel and its stable live link.
+        save_persistent_snapshot(
+            roll_id,
+            channel,
+            snapshot,
+            advance_channel=False,
+            generation_key=generation_request_key or None,
+        )
+    except DuplicateGeneration as duplicate:
+        return redirect(
+            url_for(
+                "results_view", channel=duplicate.channel, roll_id=duplicate.token
+            ),
+            code=303,
+        )
     except (OSError, sqlite3.Error, ValueError, TypeError):
         current_app.logger.exception("Unable to persist generated Player View snapshot")
         abort(503, "Player View storage is temporarily unavailable.")
 
+    return redirect(
+        url_for("results_view", channel=channel, roll_id=roll_id), code=303
+    )
+
+
+@app.get("/results/<roll_id>")
+def results_view(roll_id: str):
+    """Render a stored GM result without repeating the generation POST."""
+    try:
+        channel = normalize_channel(request.args.get("channel"))
+    except ValueError as exc:
+        abort(400, str(exc))
+    try:
+        snapshot = load_persistent_snapshot(roll_id, channel)
+        live_state = channel_state(channel)
+    except (SnapshotNotFound, LiveChannelNotFound):
+        abort(404, "That generated shop is no longer available.")
+    except (OSError, sqlite3.Error, ValueError, json.JSONDecodeError):
+        current_app.logger.exception("Unable to load generated shop result")
+        abort(503, "Player View storage is temporarily unavailable.")
+
+    meta = snapshot.get("shop") or {}
+    lists = snapshot.get("lists") or {}
+    summary = snapshot.get("summary") or {}
+    all_items = (
+        list(lists.get("mundane_items") or [])
+        + list(lists.get("material_items") or [])
+        + list(lists.get("armor_items") or [])
+        + list(lists.get("weapon_items") or [])
+        + list(lists.get("magic_items") or [])
+    )
+    counts = summary.get("counts") or rarity_counts(all_items)
+    picked = summary.get("picked") or {
+        "mundane": len(lists.get("mundane_items") or []),
+        "materials": len(lists.get("material_items") or []),
+        "armor": len(lists.get("armor_items") or []),
+        "weapons": len(lists.get("weapon_items") or []),
+        "magic": len(lists.get("magic_items") or []),
+        "formulas": len(lists.get("formula_items") or []),
+        "critical": _count_crit(all_items),
+    }
     return render_template(
         "results.html",
-        shop_type=shop_type,
-        shop_size=shop_size,
-        disposition=disposition,
-        shop_name=shop_name,
-        party_level=party_level,
-        seed=generation_seed,
-        reproduction_key=reproduction_key,
-        generation_fingerprint=current_fingerprint,
-        reproduction_warning=reproduction_warning,
+        shop_type=meta.get("shop_type"),
+        shop_size=meta.get("shop_size"),
+        disposition=meta.get("disposition"),
+        shop_name=meta.get("shop_name"),
+        party_level=meta.get("party_level"),
+        seed=meta.get("seed"),
+        reproduction_key=meta.get("reproduction_key"),
+        generation_fingerprint=meta.get("generation_fingerprint"),
+        reproduction_warning=summary.get("reproduction_warning", ""),
         picked=picked,
         counts=counts,
-        mundane_items=mundane_items,
-        material_items=material_items,
-        armor_items=armor_items,
-        weapon_items=weapon_items,
-        magic_items=magic_items,
-        formula_items=result_formulas.get("items", []),
+        mundane_items=lists.get("mundane_items", []),
+        material_items=lists.get("material_items", []),
+        armor_items=lists.get("armor_items", []),
+        weapon_items=lists.get("weapon_items", []),
+        magic_items=lists.get("magic_items", []),
+        formula_items=lists.get("formula_items", []),
         aon_url=aon_url,
-        window=magic_window,
+        window=meta.get("window"),
         roll_id=roll_id,
         channel=channel,
-        live_token=live_token,
+        live_token=live_state["live_token"],
+        is_live=live_state["current_token"] == roll_id,
+        generation_request_key=secrets.token_urlsafe(24),
     )
+
+
+@app.post("/player-view/publish")
+def publish_player_view():
+    """Publish a prepared immutable snapshot to its game's Live Display."""
+    try:
+        channel = normalize_channel(request.form.get("channel"))
+        token = str(request.form.get("roll_id") or "").strip()
+        set_current_snapshot(token, channel)
+    except ValueError as exc:
+        abort(400, str(exc))
+    except SnapshotNotFound:
+        abort(404, "That stored Player View no longer exists.")
+    except (OSError, sqlite3.Error):
+        current_app.logger.exception("Unable to publish Player View")
+        abort(503, "Player View storage is temporarily unavailable.")
+    return redirect(url_for("player_view", channel=channel, roll_id=token, published="1"))
 
 
 @app.get("/history")
 def history():
     channel = str(request.args.get("channel") or "").strip()
     try:
-        snapshots = recent_snapshots(channel=channel or None, limit=100)
+        page = int(request.args.get("page") or 1)
+        if page < 1:
+            raise ValueError("History page must be a positive whole number.")
+        per_page = 50
+        total_snapshots = snapshot_count(channel=channel or None)
+        page_count = max(1, (total_snapshots + per_page - 1) // per_page)
+        page = min(page, page_count)
+        snapshots = recent_snapshots(
+            channel=channel or None,
+            limit=per_page,
+            offset=(page - 1) * per_page,
+        )
+        channels = channel_summaries()
     except ValueError as exc:
         abort(400, str(exc))
     except (OSError, sqlite3.Error):
@@ -770,7 +983,38 @@ def history():
         "history.html",
         snapshots=snapshots,
         selected_channel=channel.lower(),
+        channels=channels,
+        total_snapshots=total_snapshots,
+        page=page,
+        page_count=page_count,
+        first_result=((page - 1) * per_page + 1) if total_snapshots else 0,
+        last_result=min(page * per_page, total_snapshots),
     )
+
+
+@app.post("/history/backup")
+def history_backup():
+    """Download an integrity-checked copy of persistent Player View storage."""
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    download_name = f"pf2e-player-views-{timestamp}.db"
+    try:
+        with tempfile.TemporaryDirectory(prefix="pf2e-player-view-backup-") as directory:
+            backup_path = backup_player_views(Path(directory) / download_name)
+            download = BytesIO(backup_path.read_bytes())
+    except (OSError, sqlite3.Error, ValueError):
+        current_app.logger.exception("Unable to create downloadable Player View backup")
+        abort(503, "A Player View backup could not be created right now.")
+    download.seek(0)
+    response = send_file(
+        download,
+        as_attachment=True,
+        download_name=download_name,
+        mimetype="application/vnd.sqlite3",
+        conditional=False,
+        max_age=0,
+    )
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 @app.post("/history/make-live")
@@ -787,6 +1031,21 @@ def history_make_live():
         current_app.logger.exception("Unable to restore live Player View")
         abort(503, "Player View storage is temporarily unavailable.")
     return redirect(url_for("history", channel=channel, restored=token))
+
+
+@app.post("/history/rotate-live")
+def history_rotate_live():
+    try:
+        channel = normalize_channel(request.form.get("channel"))
+        rotate_live_token(channel)
+    except ValueError as exc:
+        abort(400, str(exc))
+    except LiveChannelNotFound:
+        abort(404, "That Live Display no longer exists.")
+    except (OSError, sqlite3.Error):
+        current_app.logger.exception("Unable to rotate Live Display link")
+        abort(503, "Player View storage is temporarily unavailable.")
+    return redirect(url_for("history", channel=channel, rotated="1"))
 
 # Standalone Spellbook page
 @app.get("/spellbooks")

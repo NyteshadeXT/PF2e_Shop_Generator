@@ -27,7 +27,7 @@
         </div>
         <nav class="pf-page-actions" aria-label="Actions">
           <a class="pf-link-chip" href="/" title="Back to Item Generator">Back</a>
-          <button class="pf-link-chip" onclick="window.print()">Print</button>
+          <button class="pf-link-chip" id="print-spellbook" type="button">Print</button>
         </nav>
       </div>
     </header>
@@ -72,6 +72,9 @@
 
 {% if not embed %}
   </div> <!-- /.pf-app -->
+  <script nonce="{{ csp_nonce() }}">
+    document.getElementById("print-spellbook").addEventListener("click", () => window.print());
+  </script>
 </body>
 </html>
 {% endif %}

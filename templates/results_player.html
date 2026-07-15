@@ -5,7 +5,7 @@
   <title>{{ page_title or ("Player View — " ~ (shop_name or ((shop_type or "Shop") | title))) }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="{{ url_for('static', filename='pf2e.css') }}">
-  <style>
+  <style nonce="{{ csp_nonce() }}">
     /* Player-view specific tweaks (optional) */
     .gm-only { display:none !important; }
     .pf-page-actions { display:none; } /* no export/debug buttons for players */
@@ -21,7 +21,12 @@
 		  <span class="pf-kicker">Player View</span>
             <h1>{{ shop_name or ((shop_type or "Shop") | title) }}</h1>
             {% if seed %}<p class="pf-subtitle"><span class="pf-chip">Seed: {{ seed }}</span></p>{% endif %}
-		  {% if live_token %}<p class="pf-subtitle"><span class="pf-chip">Live display — follows the newest shop</span></p>{% endif %}
+		  {% if live_token %}
+          <p class="pf-subtitle">
+            <span class="pf-chip">Live display — follows the newest shop</span>
+            <span id="live-connection-status" class="pf-meta" role="status" aria-live="polite">Live updates active</span>
+          </p>
+          {% endif %}
 		</div>
 	  </div>
         </header>
@@ -428,7 +433,7 @@
       {% endif %}
     </section>
 
-    <script>
+    <script nonce="{{ csp_nonce() }}">
       // Dynamic document title reflecting filters
       (function() {
         const shop = {{ ((shop_type or 'Any') | replace('_',' ') | title)|tojson }};
@@ -443,7 +448,7 @@
 
 </main>
 {% if channel and roll_id %}
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function() {
   const channel = {{ channel|tojson }};
   const rollId = {{ roll_id|tojson }};
@@ -486,23 +491,57 @@
 </script>
 {% endif %}
 {% if live_token %}
-<script>
+<script nonce="{{ csp_nonce() }}">
 (function() {
   const liveToken = {{ live_token|tojson }};
   const currentRoll = {{ roll_id|tojson }};
+  const statusEl = document.getElementById("live-connection-status");
+  const baseDelay = 3000;
+  const maximumDelay = 30000;
   let polling = false;
+  let stopped = false;
+  let failures = 0;
+  let timer = null;
+  let versionEtag = "";
+
+  function setStatus(message) {
+    if (statusEl) statusEl.textContent = message;
+  }
+
+  function scheduleNext(delay) {
+    window.clearTimeout(timer);
+    if (!stopped && !document.hidden) {
+      timer = window.setTimeout(checkForNewShop, delay);
+    }
+  }
 
   async function checkForNewShop() {
-    if (polling) return;
+    if (polling || stopped || document.hidden) return;
     polling = true;
+    let nextDelay = baseDelay;
     try {
+      const headers = versionEtag ? { "If-None-Match": versionEtag } : {};
       const response = await fetch(
         "/api/live/" + encodeURIComponent(liveToken) + "/version",
-        { cache: "no-store" }
+        { cache: "no-cache", headers: headers }
       );
-      if (!response.ok) return;
+      if (response.status === 404) {
+        stopped = true;
+        setStatus("This Live Display link is no longer active. Ask the GM for the new link.");
+        return;
+      }
+      if (response.status === 304) {
+        failures = 0;
+        setStatus("Live updates active");
+        return;
+      }
+      if (!response.ok) throw new Error("Live Display check failed");
+      versionEtag = response.headers.get("ETag") || versionEtag;
       const state = await response.json();
+      failures = 0;
+      setStatus("Live updates active");
       if (state.roll_id && state.roll_id !== currentRoll) {
+        stopped = true;
         const params = new URLSearchParams({
           channel: state.channel,
           roll_id: state.roll_id,
@@ -511,13 +550,30 @@
         window.location.replace("/player-view?" + params.toString());
       }
     } catch (error) {
-      // A temporary network interruption is harmless; the next poll retries.
+      failures += 1;
+      nextDelay = Math.min(baseDelay * (2 ** Math.min(failures, 4)), maximumDelay);
+      setStatus("Connection interrupted; retrying automatically.");
     } finally {
       polling = false;
+      scheduleNext(nextDelay);
     }
   }
 
-  window.setInterval(checkForNewShop, 3000);
+  document.addEventListener("visibilitychange", () => {
+    window.clearTimeout(timer);
+    if (document.hidden) {
+      setStatus("Live updates paused while this tab is hidden.");
+    } else if (!stopped) {
+      failures = 0;
+      setStatus("Checking for the newest shop…");
+      checkForNewShop();
+    }
+  });
+  window.addEventListener("pagehide", () => {
+    stopped = true;
+    window.clearTimeout(timer);
+  });
+  scheduleNext(baseDelay);
 })();
 </script>
 {% endif %}
