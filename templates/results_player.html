@@ -20,6 +20,7 @@
 		<div class="pf-page-title">
 		  <span class="pf-kicker">Player View</span>
             <h1>{{ shop_name or ((shop_type or "Shop") | title) }}</h1>
+            {% if seed %}<p class="pf-subtitle"><span class="pf-chip">Seed: {{ seed }}</span></p>{% endif %}
 		</div>
 	  </div>
         </header>

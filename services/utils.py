@@ -1,6 +1,7 @@
 # services/utils.py
 import pandas as pd
 import re, random
+from services.randomness import get_rng
 
 from decimal import Decimal, ROUND_DOWN
 
@@ -200,7 +201,7 @@ def apply_adjustments_probabilistic(
     if not items or adjustments_df is None or adjustments_df.empty:
         return items
     if rng is None:
-        rng = random.Random()
+        rng = get_rng()
 
     A = adjustments_df.copy()
     # normalize minimal columns
@@ -295,7 +296,7 @@ def parse_scroll_level(item_name: str) -> int | None:
 def pick_one(seq, rnd: random.Random | None = None):
     if not seq:
         return None
-    r = rnd or random
+    r = rnd or get_rng()
     return r.choice(seq)
 
 def apply_rarity_markup(base_price: int | float, rarity: str, multipliers: dict[str, float]) -> int:
@@ -324,7 +325,7 @@ def apply_materials_probabilistic(
     if not items or materials_df is None or materials_df.empty or apply_rate <= 0:
         return items
     if rng is None:
-        rng = random.Random()
+        rng = get_rng()
 
     M = materials_df.copy()
 

@@ -1,11 +1,10 @@
 # services/logic.py
 from dataclasses import dataclass
 from typing import Dict, List, Tuple
-import json, random, re, sqlite3
+import logging, random, re, sqlite3
 from typing import Callable
 
 import pandas as pd
-from pathlib import Path
 from services.utils import (
     to_gp,
     normalize_str_columns,
@@ -17,12 +16,14 @@ from services.utils import (
     within_range,
 )
 from services.db import load_items
+from services.settings import CONFIG
+from services.randomness import get_rng
 
 
 print(">>> USING services.logic from", __file__)
 
-CONFIG = json.loads(Path(__file__).resolve().parent.parent.joinpath("config.json").read_text(encoding="utf-8"))
 GROUPS = CONFIG.get("source_table_groups", {})
+logger = logging.getLogger(__name__)
 
 _ST_ALIAS_MAP = {
     "held_items": "held_item",
@@ -104,7 +105,7 @@ def _counts_block(shop_type: str, shop_size: str) -> dict:
 
 def _counts_for_size(shop_type: str, shop_size: str) -> PickCounts:
     block = _counts_block(shop_type, shop_size)
-    r = random.Random()
+    r = get_rng()
     m_lo, m_hi = _normalize_pair(block.get("mundane"))
     a_lo, a_hi = _normalize_pair(block.get("armor"))
     w_lo, w_hi = _normalize_pair(block.get("weapons"))
@@ -120,12 +121,10 @@ def _counts_for_size_type(shop_type: str, shop_size: str, item_type: str) -> int
     block = _counts_block(shop_type, shop_size)  # uses counts_by_shop if present, else counts
     band = block.get((item_type or "").strip().lower(), [0, 0])
     lo, hi = _normalize_pair(band)
-    return random.randint(lo, hi)
+    return get_rng().randint(lo, hi)
 
 def _counts_for_specific_magic(shop_type_or_size: str | None = None,
                                maybe_shop_size: str | None = None) -> int:
-    import random
-
     if maybe_shop_size is None:
         # legacy call: only size provided
         sz = (shop_type_or_size or "medium").strip().lower()
@@ -139,61 +138,36 @@ def _counts_for_specific_magic(shop_type_or_size: str | None = None,
             band = (CONFIG.get("specific_magic_counts") or {}).get(sz, [0, 0])
 
     lo, hi = _normalize_pair(band)
-    return random.randint(lo, hi)
+    return get_rng().randint(lo, hi)
 
 def _filter_source_tables(df: pd.DataFrame, source_tables) -> pd.DataFrame:
-    # If no source_table column, don't filter on it
+    # Missing source metadata cannot be filtered safely.
     if "source_table" not in df.columns:
-        return df
+        logger.warning("Catalog is missing the required source_table column")
+        return df.iloc[0:0]
 
     # Normalize requested tables
     if isinstance(source_tables, str):
         source_tables = [source_tables]
 
     wanted = {_normalize_source_table_token(s) for s in source_tables if str(s).strip()}
+    if not wanted:
+        logger.warning("No source tables were configured for this selection")
+        return df.iloc[0:0]
     col_norm = df["source_table"].astype(str).map(_normalize_source_table_token)
 
-    # 1) exact normalized match
+    # Aliases are normalized above; selection itself is deliberately exact.
     mask = col_norm.isin(wanted)
 
-    # 2) substring fallbacks per family
     if not mask.any():
-        want_weapon = any(k.startswith("weapon") for k in wanted) or any("weapon" in k for k in wanted)
-        want_armor  = any(k.startswith("armor")  for k in wanted) or any("armor"  in k for k in wanted)
-        want_shield = any(k.startswith("shield") for k in wanted) or any("shield" in k for k in wanted)
-
-        sub_masks = []
-        if want_weapon:
-            sub_masks.append(col_norm.str.contains("weapon", na=False))
-        if want_armor:
-            sub_masks.append(col_norm.str.contains("armor", na=False))
-        if want_shield:
-            sub_masks.append(col_norm.str.contains("shield", na=False))
-
-        if sub_masks:
-            m = sub_masks[0]
-            for sm in sub_masks[1:]:
-                m = m | sm
-            mask = m
-
-    # 3) category fallback if source_table is messy/blank
-    if not mask.any() and "category" in df.columns:
-        cat_norm = df["category"].astype(str).str.strip().str.lower()
-        want_weapon = any(k.startswith("weapon") for k in wanted)
-        want_armor  = any(k.startswith("armor")  for k in wanted)
-        want_shield = any(k.startswith("shield") for k in wanted)
-
-        m = None
-        if want_weapon:
-            m = (cat_norm == "weapon")
-        if want_armor:
-            m = (m | (cat_norm == "armor")) if m is not None else (cat_norm == "armor")
-        if want_shield:
-            m = (m | (cat_norm == "shield")) if m is not None else (cat_norm == "shield")
-        if m is not None:
-            mask = m
-
-    return df[mask] if mask.any() else df
+        available = sorted(set(col_norm.dropna().tolist()))[:25]
+        logger.warning(
+            "No catalog rows matched requested source tables %s; available sample=%s",
+            sorted(wanted),
+            available,
+        )
+        return df.iloc[0:0]
+    return df[mask]
 
 # --- shop type matching (exact + fuzzy) ---
 
@@ -395,7 +369,6 @@ def _boost_quantities(items: list[dict], shop_size: str, item_type: str) -> list
     if not r or not items:
         return items
 
-    import random
     p            = float(r.get("p", 0.55))
     add_min      = int(r.get("add_min", 0))
     add_max      = int(r.get("add_max", 2))
@@ -403,7 +376,7 @@ def _boost_quantities(items: list[dict], shop_size: str, item_type: str) -> list
     crit_add_max = int(r.get("crit_add_max", add_max))
     max_per_item = int(r.get("max_per_item", 5))
 
-    rng = random.Random()
+    rng = get_rng()
     out = []
     for it in items:
         q = int(it.get("quantity", 1) or 1)
@@ -727,7 +700,7 @@ def _enrich_spell_scrolls(items: list[dict]) -> list[dict]:
 
     mults = _rarity_multiplier_map()
 
-    rng = random.Random()
+    rng = get_rng()
     expanded: list[dict] = []
     for it in items:
         qty = max(1, int(it.get("quantity") or 1))
@@ -825,7 +798,7 @@ def _enrich_magic_wands(items: list[dict]) -> list[dict]:
         return items
 
     mults = _rarity_multiplier_map()
-    rng = random.Random()
+    rng = get_rng()
     out: list[dict] = []
 
     for it in items:
@@ -1454,7 +1427,7 @@ def _select_items_core(
     crit_pool = d[(d.get("stock_flag", 0) == 2)]
     norm_pool = d[(d.get("stock_flag", 0) != 2)]
 
-    rng = random.Random()
+    rng = get_rng()
 
     # --- rarity-weighted sampling for BASE picks ---
     def _rarity_weight_series(df_in: pd.DataFrame):
@@ -2349,7 +2322,7 @@ def _counts_for_formulas(shop_type: str, shop_size: str) -> int:
     )
 
     lo, hi = _normalize_pair(band, default=(0, 0))
-    n = random.randint(lo, hi) if hi >= lo else 0
+    n = get_rng().randint(lo, hi) if hi >= lo else 0
 
     # Debug so you can verify which band it used
     print(f'>>> DEBUG[formulas-counts] shop="{st}" size="{sz}" band={band} -> n={n}')
@@ -2426,7 +2399,7 @@ def select_formulas(df: pd.DataFrame, shop_type: str, party_level: int, shop_siz
             w[:] = 1.0
         return w
 
-    rng = random.Random()
+    rng = get_rng()
     replace_needed = len(d) < base_n
     picks = d.sample(
         n=base_n,

@@ -1,12 +1,12 @@
 # services/db.py
-import json, sqlite3, pandas as pd, logging
+import sqlite3, pandas as pd, logging
 from pathlib import Path
 from threading import RLock
 from typing import Any, Iterable, Tuple
 from urllib.parse import quote_plus
 
 
-CONFIG = json.loads(Path(__file__).resolve().parent.parent.joinpath("config.json").read_text(encoding="utf-8"))
+from services.settings import CONFIG
 logger = logging.getLogger(__name__)
 
 def _path_signature(raw_path: str | None) -> Tuple[str | None, float | None]:

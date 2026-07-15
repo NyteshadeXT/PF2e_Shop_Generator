@@ -3,8 +3,9 @@
 # Spellbook generator for the PF2e Item Generator (Remaster rules)
 from __future__ import annotations
 
-import random, sqlite3, uuid
+import sqlite3
 from typing import Dict, List, Tuple, Optional
+from .randomness import get_rng
 
 
 # Add this import (uses your existing helper in utils.py)
@@ -33,12 +34,12 @@ def _pick_tradition(shop_type: str) -> str:
         return "Arcane"
     if st == "Temple":
         return "Divine"
-    return random.choice(TRADITIONS)
+    return get_rng().choice(TRADITIONS)
 
 def _pick_book_level(party_level: int) -> int:
     party_level = max(1, min(20, int(party_level or 1)))
-    sign = 1 if random.randint(1, 2) == 1 else -1
-    delta = random.randint(1, 3)
+    sign = 1 if get_rng().randint(1, 2) == 1 else -1
+    delta = get_rng().randint(1, 3)
     lvl = party_level + sign * delta
     return max(1, min(20, lvl))
 
@@ -46,7 +47,7 @@ def _counts_for_book_level(level: int) -> Dict[int, int]:
     """Direct translation of the Access table with 1d4 variance."""
     L = int(level)
     c = {r: 0 for r in range(1, 11)}
-    d4 = lambda: random.randint(1, 4)
+    d4 = lambda: get_rng().randint(1, 4)
 
     def setr(pairs: Dict[int, int]) -> None:
         c.update(pairs)
@@ -95,7 +96,7 @@ def _counts_for_book_level(level: int) -> Dict[int, int]:
 
 
 def _roll_rarity() -> str:
-    r = random.randint(1, 100)
+    r = get_rng().randint(1, 100)
     if r <= 80:
         return "Common"
     if r <= 99:
@@ -154,7 +155,7 @@ def _make_spellbook_item(tradition: str, book_level: int, chosen_by_rank: Dict[i
         "details_html": _render_contents_html(chosen_by_rank),
     }
     # assign after the dict is created
-    item["_dedupe_key"] = f"{item['name']}#{uuid.uuid4().hex[:6]}"
+    item["_dedupe_key"] = f"{item['name']}#{get_rng().getrandbits(24):06x}"
     return item
 
 def select_spellbooks(
@@ -197,7 +198,7 @@ def select_spellbooks(
 
     for _ in range(target):
         # roll PER BOOK; on miss, skip creating a book entirely
-        if random.random() >= drop_rate:
+        if get_rng().random() >= drop_rate:
             continue
 
         tradition = _pick_tradition(st_norm)
@@ -225,7 +226,7 @@ def select_spellbooks(
                 if not pool:
                     break
 
-                pick = random.choice(pool)
+                pick = get_rng().choice(pool)
                 name = (pick.get("Name") or pick.get("name") or "").strip()
                 if not name:
                     safety -= 1
@@ -340,7 +341,7 @@ def build_spellbook(
                 if not pool:
                     break
 
-                pick = random.choice(pool)
+                pick = get_rng().choice(pool)
                 name = (pick.get("name") or "").strip()
                 if not name or name in chosen_set:
                     safety -= 1

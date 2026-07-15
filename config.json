@@ -3,7 +3,7 @@
   "sqlite_db_path": "data/PF2e_Treasure_Generator_Backend.db",
   "sqlite_view": "v_items_norm",
   "sqlite_adjustments_table": "Adjustments",
-  "random_seed": 1337,
+  "player_view_db_path": "data/player_views.db",
 
   "default_shop_types": [
     "Adventuring",
