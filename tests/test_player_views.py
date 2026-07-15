@@ -1,0 +1,204 @@
+import tempfile
+import unittest
+import os
+import sqlite3
+from contextlib import closing
+from pathlib import Path
+
+from services.player_views import (
+    SnapshotNotFound,
+    cleanup_snapshots,
+    current_token,
+    initialize,
+    live_channel,
+    load_snapshot,
+    save_snapshot,
+    snapshot_stats,
+)
+from services.settings import CONFIG
+
+
+class PlayerViewStorageTests(unittest.TestCase):
+    def setUp(self):
+        self.tempdir = tempfile.TemporaryDirectory()
+        self.db = Path(self.tempdir.name) / "views.db"
+
+    def tearDown(self):
+        self.tempdir.cleanup()
+
+    def test_shared_token_is_immutable_and_repeatable(self):
+        token = "a" * 32
+        snapshot = {"shop": {"shop_name": "Test"}, "lists": {"magic_items": [{"name": "Wand"}]}}
+        save_snapshot(token, "game-one", snapshot, db_path=self.db)
+
+        self.assertEqual(load_snapshot(token, "game-one", db_path=self.db), snapshot)
+        self.assertEqual(load_snapshot(token, "game-one", db_path=self.db), snapshot)
+
+    def test_channels_are_isolated(self):
+        save_snapshot("a" * 32, "game-one", {"lists": {"magic_items": [1]}}, db_path=self.db)
+        save_snapshot("b" * 32, "game-two", {"lists": {"magic_items": [2]}}, db_path=self.db)
+
+        self.assertEqual(current_token("game-one", db_path=self.db), "a" * 32)
+        self.assertEqual(current_token("game-two", db_path=self.db), "b" * 32)
+        with self.assertRaises(SnapshotNotFound):
+            load_snapshot("a" * 32, "game-two", db_path=self.db)
+
+    def test_new_snapshot_advances_only_its_live_channel(self):
+        save_snapshot("a" * 32, "game-one", {"version": 1}, db_path=self.db)
+        save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+
+        self.assertEqual(current_token("game-one", db_path=self.db), "b" * 32)
+        self.assertEqual(load_snapshot("a" * 32, "game-one", db_path=self.db), {"version": 1})
+
+    def test_live_token_is_stable_and_tracks_newest_snapshot(self):
+        live_token = save_snapshot("a" * 32, "game-one", {"version": 1}, db_path=self.db)
+        next_live_token = save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+
+        self.assertEqual(live_token, next_live_token)
+        self.assertEqual(
+            live_channel(live_token, db_path=self.db),
+            {"channel": "game-one", "roll_id": "b" * 32},
+        )
+
+    def test_opening_old_player_view_does_not_roll_live_channel_back(self):
+        save_snapshot("a" * 32, "game-one", {"version": 1}, db_path=self.db)
+        live_token = save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+        save_snapshot(
+            "a" * 32,
+            "game-one",
+            {"version": 1},
+            db_path=self.db,
+            advance_channel=False,
+        )
+
+        self.assertEqual(current_token("game-one", db_path=self.db), "b" * 32)
+        self.assertEqual(live_channel(live_token, db_path=self.db)["roll_id"], "b" * 32)
+
+    def test_existing_state_database_is_migrated_for_live_tokens(self):
+        with closing(sqlite3.connect(self.db)) as conn:
+            conn.executescript(
+                """
+                CREATE TABLE player_view_snapshots (
+                    token TEXT PRIMARY KEY,
+                    channel TEXT NOT NULL,
+                    snapshot_json TEXT NOT NULL,
+                    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+                CREATE TABLE player_view_channels (
+                    channel TEXT PRIMARY KEY,
+                    current_token TEXT NOT NULL,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+                );
+                """
+            )
+            conn.commit()
+        initialize(self.db)
+        with closing(sqlite3.connect(self.db)) as conn:
+            columns = {row[1] for row in conn.execute("PRAGMA table_info(player_view_channels)")}
+        self.assertIn("live_token", columns)
+
+    def test_live_route_redirects_and_polls_persistent_state(self):
+        previous = os.environ.get("LOOTGEN_STATE_DB_PATH")
+        os.environ["LOOTGEN_STATE_DB_PATH"] = str(self.db)
+        try:
+            import app
+
+            live_token = save_snapshot(
+                "a" * 32,
+                "game-one",
+                {"shop": {"shop_name": "Live"}, "lists": {"magic_items": [{"name": "Wand"}]}},
+                db_path=self.db,
+            )
+            client = app.app.test_client()
+            redirect_response = client.get(f"/live/{live_token}")
+            self.assertEqual(redirect_response.status_code, 302)
+            live_page = client.get(f"/live/{live_token}", follow_redirects=True)
+            self.assertEqual(live_page.status_code, 200)
+            self.assertIn(b"follows the newest shop", live_page.data)
+
+            save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+            version = client.get(f"/api/live/{live_token}/version")
+            self.assertEqual(version.status_code, 200)
+            self.assertEqual(version.json["roll_id"], "b" * 32)
+            self.assertEqual(version.headers["Cache-Control"], "no-store")
+        finally:
+            if previous is None:
+                os.environ.pop("LOOTGEN_STATE_DB_PATH", None)
+            else:
+                os.environ["LOOTGEN_STATE_DB_PATH"] = previous
+
+    def test_retention_removes_expired_snapshot_but_protects_current(self):
+        save_snapshot("a" * 32, "game-one", {"version": 1}, db_path=self.db)
+        save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+        with closing(sqlite3.connect(self.db)) as conn:
+            conn.execute(
+                "UPDATE player_view_snapshots SET created_at = '2020-01-01 00:00:00'"
+            )
+            conn.commit()
+
+        removed = cleanup_snapshots(
+            db_path=self.db, retention_days=30, max_snapshots_per_channel=0
+        )
+        self.assertEqual(removed, 1)
+        with self.assertRaises(SnapshotNotFound):
+            load_snapshot("a" * 32, "game-one", db_path=self.db)
+        self.assertEqual(load_snapshot("b" * 32, "game-one", db_path=self.db), {"version": 2})
+
+    def test_per_channel_limit_does_not_affect_other_games(self):
+        for token in ("a", "b", "c", "d"):
+            save_snapshot(token * 32, "game-one", {"token": token}, db_path=self.db)
+        for token in ("e", "f"):
+            save_snapshot(token * 32, "game-two", {"token": token}, db_path=self.db)
+
+        removed = cleanup_snapshots(
+            db_path=self.db, retention_days=0, max_snapshots_per_channel=2
+        )
+        self.assertEqual(removed, 2)
+        with self.assertRaises(SnapshotNotFound):
+            load_snapshot("a" * 32, "game-one", db_path=self.db)
+        with self.assertRaises(SnapshotNotFound):
+            load_snapshot("b" * 32, "game-one", db_path=self.db)
+        self.assertEqual(load_snapshot("c" * 32, "game-one", db_path=self.db)["token"], "c")
+        self.assertEqual(load_snapshot("d" * 32, "game-one", db_path=self.db)["token"], "d")
+        self.assertEqual(load_snapshot("e" * 32, "game-two", db_path=self.db)["token"], "e")
+
+    def test_automatic_cleanup_uses_configured_channel_limit(self):
+        original = dict(CONFIG.get("player_views", {}))
+        try:
+            CONFIG["player_views"] = {
+                "retention_days": 0,
+                "max_snapshots_per_channel": 2,
+            }
+            save_snapshot("a" * 32, "game-one", {"version": 1}, db_path=self.db)
+            save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+            save_snapshot("c" * 32, "game-one", {"version": 3}, db_path=self.db)
+            with self.assertRaises(SnapshotNotFound):
+                load_snapshot("a" * 32, "game-one", db_path=self.db)
+            self.assertEqual(snapshot_stats(db_path=self.db)["snapshots"], 2)
+        finally:
+            CONFIG["player_views"] = original
+
+    def test_missing_shared_view_does_not_regenerate(self):
+        previous = os.environ.get("LOOTGEN_STATE_DB_PATH")
+        os.environ["LOOTGEN_STATE_DB_PATH"] = str(self.db)
+        try:
+            import app
+
+            original = app._build_payload
+            app._build_payload = lambda *args, **kwargs: self.fail("generation must not run")
+            try:
+                response = app.app.test_client().get(
+                    "/player-view?channel=game-one&roll_id=" + "f" * 32
+                )
+            finally:
+                app._build_payload = original
+            self.assertEqual(response.status_code, 404)
+        finally:
+            if previous is None:
+                os.environ.pop("LOOTGEN_STATE_DB_PATH", None)
+            else:
+                os.environ["LOOTGEN_STATE_DB_PATH"] = previous
+
+
+if __name__ == "__main__":
+    unittest.main()

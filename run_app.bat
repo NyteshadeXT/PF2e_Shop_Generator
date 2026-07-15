@@ -25,11 +25,16 @@ echo [*] Installing requirements (prefer wheels)...
 python -m pip install --prefer-binary -r requirements.txt
 
 if "%LOOTGEN_DB_PATH%"=="" (
-  set "LOOTGEN_DB_PATH=C:\Users\kkroe\Desktop\PF2e_Item_Generator\data\PF2e_Treasure_Generator_Backend.db"
+  set "LOOTGEN_DB_PATH=%~dp0data\PF2e_Treasure_Generator_Backend.db"
+)
+
+if "%LOOTGEN_STATE_DB_PATH%"=="" (
+  set "LOOTGEN_STATE_DB_PATH=%~dp0data\player_views.db"
 )
 
 echo [*] Using DB: %LOOTGEN_DB_PATH%
-set FLASK_ENV=development
+echo [*] Player View state DB: %LOOTGEN_STATE_DB_PATH%
+set FLASK_DEBUG=1
 
 REM Open the browser after a short delay, without blocking this window.
 start "" cmd /c "timeout /t 2 /nobreak >nul & start "" http://127.0.0.1:5000"

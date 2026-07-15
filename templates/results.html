@@ -24,6 +24,7 @@
             <span class="pf-chip">Size: {{ shop_size|title }}</span>
             <span class="pf-chip">Disposition: {{ disposition|title }}</span>
             <span class="pf-chip">Party Level: {{ party_level }}</span>
+            <span class="pf-chip">Seed: {{ seed }}</span>
           </p>
         </div>
 
@@ -43,6 +44,7 @@
             "shop_size":   shop_size,
             "disposition": disposition,
             "party_level": party_level,
+            "seed":        seed,
             "window":      window
           }
         } %}
@@ -50,6 +52,17 @@
         <nav class="pf-page-actions" aria-label="Section navigation">
           <a href="/" class="pf-link-chip">Back</a>
           <button class="pf-link-chip" type="button" onclick="exportToCSV()">Export All to CSV</button>
+
+          <form method="POST" action="/query" style="display:inline;">
+            <input type="hidden" name="shop_type" value="{{ shop_type }}">
+            <input type="hidden" name="shop_size" value="{{ shop_size }}">
+            <input type="hidden" name="disposition" value="{{ disposition }}">
+            <input type="hidden" name="shop_name" value="{{ shop_name }}">
+            <input type="hidden" name="party_level" value="{{ party_level }}">
+            <input type="hidden" name="channel" value="{{ channel }}">
+            <input type="hidden" name="seed" value="{{ seed }}">
+            <button type="submit" class="pf-link-chip">Recreate Same Seed</button>
+          </form>
 
           <!-- Open Player View (posts the snapshot + channel/roll) -->
           <form id="playerViewForm"
@@ -63,6 +76,11 @@
             <input type="hidden" name="roll_id"  value='{{ roll_id or "" }}'>
             <button type="submit" class="pf-link-chip" formtarget="_blank">Open Player View</button>
           </form>
+
+          {% if live_token %}
+          <a href="{{ url_for('live_view', live_token=live_token) }}"
+             class="pf-link-chip" target="_blank" rel="noopener">Open Live Display</a>
+          {% endif %}
 
           <a href="#Mundane" class="pf-link-chip">Mundane</a>
           <a href="#Materials" class="pf-link-chip">Materials</a>

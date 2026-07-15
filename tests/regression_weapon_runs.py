@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 import pandas as pd
-import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -351,9 +350,9 @@ def test_weapon_property_per_slot_rate_is_about_thirty_percent():
     rng = random.Random(2027)
 
     cfg = {
-        "fundamental": {"apply_rate": 1.0, "property_pair_rate": 0.0},
         "fundamental": {"apply_rate": 1.0},
         "fundamental property": {"apply_rate": 0.0},
+        "property": {"apply_rate": 1.0, "per_slot_rate": 0.30},
     }
 
     iterations = 2000
@@ -370,7 +369,7 @@ def test_weapon_property_per_slot_rate_is_about_thirty_percent():
             successes += 1
 
     observed = successes / iterations
-    assert observed == pytest.approx(0.30, abs=0.05)
+    assert abs(observed - 0.30) <= 0.05
 
 
 def test_weapon_property_rarity_weighting_favors_common():
@@ -379,9 +378,9 @@ def test_weapon_property_rarity_weighting_favors_common():
     rng = random.Random(2028)
 
     cfg = {
-        "fundamental": {"apply_rate": 1.0, "property_pair_rate": 0.0},
         "fundamental": {"apply_rate": 1.0},
         "fundamental property": {"apply_rate": 0.0},
+        "property": {"apply_rate": 1.0, "per_slot_rate": 1.0},
     }
 
     counts = {"Common": 0, "Uncommon": 0, "Rare": 0}

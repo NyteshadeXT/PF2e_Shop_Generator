@@ -20,6 +20,8 @@
 		<div class="pf-page-title">
 		  <span class="pf-kicker">Player View</span>
             <h1>{{ shop_name or ((shop_type or "Shop") | title) }}</h1>
+            {% if seed %}<p class="pf-subtitle"><span class="pf-chip">Seed: {{ seed }}</span></p>{% endif %}
+		  {% if live_token %}<p class="pf-subtitle"><span class="pf-chip">Live display — follows the newest shop</span></p>{% endif %}
 		</div>
 	  </div>
         </header>
@@ -28,7 +30,7 @@
         <section class="pf-card mt-16" id="share-controls">
           <div class="p-12" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
             <span class="pf-kicker" style="margin-right:8px;">Share Link</span>
-            <button type="button" class="pf-btn" id="copy-share-link">Copy player link</button>
+            <button type="button" class="pf-btn" id="copy-share-link">Copy {{ 'live display' if live_token else 'player' }} link</button>
             <span id="copy-share-status" aria-live="polite" class="pf-muted"></span>
           </div>
         </section>
@@ -469,6 +471,7 @@
 (function() {
   const channel = {{ channel|tojson }};
   const rollId = {{ roll_id|tojson }};
+  const liveToken = {{ (live_token or '')|tojson }};
   if (!channel || !rollId) {
     return;
   }
@@ -488,7 +491,9 @@
   if (!copyBtn) {
     return;
   }
-  const shareUrl = window.location.origin + newUrl;
+  const shareUrl = liveToken
+    ? window.location.origin + "/live/" + encodeURIComponent(liveToken)
+    : window.location.origin + newUrl;
   copyBtn.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
@@ -501,6 +506,42 @@
       }
     }
   });
+})();
+</script>
+{% endif %}
+{% if live_token %}
+<script>
+(function() {
+  const liveToken = {{ live_token|tojson }};
+  const currentRoll = {{ roll_id|tojson }};
+  let polling = false;
+
+  async function checkForNewShop() {
+    if (polling) return;
+    polling = true;
+    try {
+      const response = await fetch(
+        "/api/live/" + encodeURIComponent(liveToken) + "/version",
+        { cache: "no-store" }
+      );
+      if (!response.ok) return;
+      const state = await response.json();
+      if (state.roll_id && state.roll_id !== currentRoll) {
+        const params = new URLSearchParams({
+          channel: state.channel,
+          roll_id: state.roll_id,
+          live: liveToken
+        });
+        window.location.replace("/player-view?" + params.toString());
+      }
+    } catch (error) {
+      // A temporary network interruption is harmless; the next poll retries.
+    } finally {
+      polling = false;
+    }
+  }
+
+  window.setInterval(checkForNewShop, 3000);
 })();
 </script>
 {% endif %}

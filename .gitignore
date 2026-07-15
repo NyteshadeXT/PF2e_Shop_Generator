@@ -1,0 +1,6 @@
+data/player_views.db
+data/player_views.db-shm
+data/player_views.db-wal
+__pycache__/
+*.py[cod]
+.pytest_cache/

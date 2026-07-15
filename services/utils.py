@@ -1,29 +1,14 @@
 # services/utils.py
 import pandas as pd
 import re, random
+from services.randomness import get_rng
+from services.money import format_cp, format_gp, gp_to_cp, parse_price_to_cp
 
-from decimal import Decimal, ROUND_DOWN
+from decimal import Decimal
 
 def to_gp(price_text: str | float | int | None) -> float | None:
-    if price_text is None:
-        return None
-    s = str(price_text).strip().lower()
-    if not s:
-        return None
-    try:
-        return float(s)  # already numeric gp
-    except ValueError:
-        pass
-    if s.endswith("gp"):
-        try: return float(s[:-2].strip())
-        except ValueError: return None
-    if s.endswith("sp"):
-        try: return float(s[:-2].strip()) / 10.0
-        except ValueError: return None
-    if s.endswith("cp"):
-        try: return float(s[:-2].strip()) / 100.0
-        except ValueError: return None
-    return None
+    cp = parse_price_to_cp(price_text)
+    return None if cp is None else cp / 100.0
 
 
 def format_price(gp_value: float | None) -> str:
@@ -31,16 +16,7 @@ def format_price(gp_value: float | None) -> str:
     Format a gp float into PF2e denominations:
       1 gp = 10 sp = 100 cp
     """
-    if gp_value is None:
-        return ""
-    cp_total = int(round(float(gp_value) * 100))  # convert gp → cp
-    gp, rem = divmod(cp_total, 100)
-    sp, cp = divmod(rem, 10)
-    parts = []
-    if gp: parts.append(f"{gp} gp")
-    if sp: parts.append(f"{sp} sp")
-    if cp: parts.append(f"{cp} cp")
-    return " ".join(parts) if parts else "0 gp"
+    return format_gp(gp_value)
 
 
 def normalize_str_columns(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
@@ -133,39 +109,10 @@ def adj_parse_price_to_gp(text: str | None) -> float | None:
     """
     Parse strings like '250 gp', '5 sp', '3 cp' (or bare numbers) to gold pieces as float.
     """
-    if not text: return None
-    s = str(text).strip().lower()
-    if s in ("0", "0 gp", "0.0 gp"): return 0.0
-    total_cp = Decimal(0)
-    for val, unit in re.findall(r"(\d+(?:\.\d+)?)\s*(gp|sp|cp)", s):
-        d = Decimal(val)
-        total_cp += d * 100 if unit == "gp" else d * 10 if unit == "sp" else d
-    if total_cp == 0:
-        try:
-            return float(s)
-        except Exception:
-            return None
-    return float(total_cp / Decimal(100))
-
-def _fmt_dec_no_sci(d: Decimal, places: int = 2) -> str:
-    q = Decimal(10) ** -places
-    d = d.quantize(q, rounding=ROUND_DOWN)
-    s = format(d, "f")          # ← never uses scientific notation
-    if "." in s:
-        s = s.rstrip("0").rstrip(".")
-    return s or "0"
+    return to_gp(text)
 
 def adj_format_price_text(gp: float | None) -> str:
-    if gp is None:
-        return ""
-    gp_dec = Decimal(str(gp))
-    if gp_dec >= 1:
-        return f"{_fmt_dec_no_sci(gp_dec, 2)} gp"
-    sp_dec = gp_dec * 10
-    if sp_dec >= 1:
-        return f"{_fmt_dec_no_sci(sp_dec, 0)} sp"
-    cp_dec = gp_dec * 100
-    return f"{_fmt_dec_no_sci(cp_dec, 0)} cp"
+    return format_gp(gp)
 
 
 def adj_rarity_weights_series(df_in: pd.DataFrame, weights_cfg: dict | None) -> pd.Series:
@@ -200,7 +147,7 @@ def apply_adjustments_probabilistic(
     if not items or adjustments_df is None or adjustments_df.empty:
         return items
     if rng is None:
-        rng = random.Random()
+        rng = get_rng()
 
     A = adjustments_df.copy()
     # normalize minimal columns
@@ -236,11 +183,10 @@ def apply_adjustments_probabilistic(
         ws = adj_rarity_weights_series(pool, rarity_weights or {})
         pick = pool.sample(n=1, replace=True, weights=ws, random_state=rng.randint(0, 10**9)).iloc[0]
 
-        # PRICE = base + adjustment (both parsed to gp)
-        base_gp = adj_parse_price_to_gp(it.get("price") or it.get("price_text"))
-        adj_gp  = adj_parse_price_to_gp(pick.get("price_text"))
-        new_gp  = (base_gp or 0.0) + (adj_gp or 0.0)
-        new_price_text = adj_format_price_text(new_gp)
+        # Calculate in copper pieces to avoid floating-point drift.
+        base_cp = parse_price_to_cp(it.get("price") or it.get("price_text")) or 0
+        adj_cp = parse_price_to_cp(pick.get("price_text")) or 0
+        new_price_text = format_cp(base_cp + adj_cp)
 
         # RARITY = rarer of the two
         new_rarity = adj_rarer_rarity(it.get("rarity"), pick.get("rarity"))
@@ -295,7 +241,7 @@ def parse_scroll_level(item_name: str) -> int | None:
 def pick_one(seq, rnd: random.Random | None = None):
     if not seq:
         return None
-    r = rnd or random
+    r = rnd or get_rng()
     return r.choice(seq)
 
 def apply_rarity_markup(base_price: int | float, rarity: str, multipliers: dict[str, float]) -> int:
@@ -324,7 +270,7 @@ def apply_materials_probabilistic(
     if not items or materials_df is None or materials_df.empty or apply_rate <= 0:
         return items
     if rng is None:
-        rng = random.Random()
+        rng = get_rng()
 
     M = materials_df.copy()
 
@@ -374,14 +320,12 @@ def apply_materials_probabilistic(
         # Pick one material
         pick = pool.sample(n=1, replace=True, random_state=rng.randint(0, 10**9)).iloc[0]
 
-        # PRICE = base + flat add + per-bulk add
-        base_gp = adj_parse_price_to_gp(it.get("price") or it.get("price_text"))
-        add_gp = float(pick.get("price_add", 0.0))
-        per_bulk_gp = float(pick.get("price_add_per_bulk", 0.0))
-        new_gp = (base_gp or 0.0) + add_gp + (per_bulk_gp * item_bulk)
-        if new_gp < 0:
-            new_gp = 0.0
-        new_price_text = adj_format_price_text(new_gp)
+        # Round once to copper pieces after applying the material's bulk charge.
+        base_cp = parse_price_to_cp(it.get("price") or it.get("price_text")) or 0
+        add_gp = Decimal(str(pick.get("price_add", 0.0)))
+        per_bulk_gp = Decimal(str(pick.get("price_add_per_bulk", 0.0)))
+        material_cp = gp_to_cp(add_gp + per_bulk_gp * Decimal(str(item_bulk)))
+        new_price_text = format_cp(max(0, base_cp + material_cp))
 
         # RARITY = rarer of the two
         new_rarity = adj_rarer_rarity(it.get("rarity"), pick.get("rarity"))

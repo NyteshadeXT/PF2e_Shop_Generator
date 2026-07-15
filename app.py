@@ -2,10 +2,10 @@
 
 from flask import (
     Flask, render_template, request, send_file, redirect, abort,
-    Response, stream_with_context, current_app, jsonify
+    Response, stream_with_context, current_app, jsonify, url_for
 )
 
-import io, csv, json, queue, time, uuid, sqlite3, re, random
+import io, csv, json, os, queue, time, uuid, sqlite3, re, random
 from collections import OrderedDict
 
 # Third-party
@@ -24,6 +24,16 @@ from services.logic import (
 from services.utils import rarity_counts, aon_url
 from services.spellbooks import select_spellbooks
 from services.spellbooks import build_spellbook
+from services.player_views import (
+    LiveChannelNotFound,
+    SnapshotNotFound,
+    current_token as persistent_current_token,
+    live_channel as persistent_live_channel,
+    load_snapshot as load_persistent_snapshot,
+    normalize_channel,
+    save_snapshot as save_persistent_snapshot,
+)
+from services.randomness import generation_rng, normalize_seed
     
 from copy import deepcopy
 
@@ -256,13 +266,20 @@ def _publish(channel: str, roll_id: str) -> None:
 
 
 def _current_roll_id(channel: str) -> str:
-    return _latest_roll_id.get(channel, "")
+    try:
+        return persistent_current_token(channel)
+    except (OSError, sqlite3.Error, ValueError):
+        current_app.logger.exception("Unable to read the current Player View token")
+        return _latest_roll_id.get(channel, "")
 
 
 @app.route("/events")
 def sse_events():
     """Server-Sent Events endpoint for live updates on new rolls."""
-    channel = (request.args.get("channel") or "default").strip().lower()
+    try:
+        channel = normalize_channel(request.args.get("channel"))
+    except ValueError as exc:
+        abort(400, str(exc))
     q = _subscribe(channel)
 
     @stream_with_context
@@ -300,8 +317,46 @@ def sse_events():
 @app.route("/version")
 def version():
     """Lightweight polling fallback: returns the current roll id for a channel."""
-    channel = (request.args.get("channel") or "default").strip().lower()
+    try:
+        channel = normalize_channel(request.args.get("channel"))
+    except ValueError as exc:
+        abort(400, str(exc))
     return {"roll_id": _current_roll_id(channel)}
+
+
+@app.get("/live/<live_token>")
+def live_view(live_token: str):
+    """Stable player-facing URL that follows a campaign's newest snapshot."""
+    try:
+        state = persistent_live_channel(live_token)
+    except (LiveChannelNotFound, ValueError):
+        return render_template("player_view_missing.html"), 404
+    except (OSError, sqlite3.Error):
+        current_app.logger.exception("Unable to resolve live Player View")
+        abort(503, "Live Player View storage is temporarily unavailable.")
+    return redirect(
+        url_for(
+            "player_view",
+            channel=state["channel"],
+            roll_id=state["roll_id"],
+            live=live_token,
+        )
+    )
+
+
+@app.get("/api/live/<live_token>/version")
+def live_version(live_token: str):
+    """Persistent polling endpoint; safe across workers and service restarts."""
+    try:
+        state = persistent_live_channel(live_token)
+    except (LiveChannelNotFound, ValueError):
+        abort(404)
+    except (OSError, sqlite3.Error):
+        current_app.logger.exception("Unable to poll live Player View")
+        abort(503)
+    response = jsonify(state)
+    response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 # Optional: preserve the existing /health link in index.html
@@ -322,8 +377,21 @@ def favicon():
 def player_view():
     data = request.values
     raw = data.get("snapshot")
-    channel = (data.get("channel") or "default").strip().lower()
+    try:
+        channel = normalize_channel(data.get("channel"))
+    except ValueError as exc:
+        abort(400, str(exc))
     roll_id = (data.get("roll_id") or "").strip()
+    live_token = (request.args.get("live") or "").strip().lower()
+    if live_token:
+        try:
+            live_state = persistent_live_channel(live_token)
+        except (LiveChannelNotFound, ValueError):
+            return render_template("player_view_missing.html"), 404
+        except (OSError, sqlite3.Error):
+            abort(503, "Live Player View storage is temporarily unavailable.")
+        if live_state["channel"] != channel:
+            abort(404)
 
     if request.method == "GET" and not raw and not roll_id:
         return redirect("/")
@@ -340,7 +408,15 @@ def player_view():
             current_app.logger.exception("Invalid snapshot JSON posted to /player-view: %s", e)
             lists, meta = {}, {}
     elif request.method == "GET" and roll_id:
-        snapshot_payload = _get_snapshot(channel, roll_id)
+        try:
+            snapshot_payload = load_persistent_snapshot(roll_id, channel)
+        except SnapshotNotFound:
+            return render_template(
+                "player_view_missing.html", channel=channel, roll_id=roll_id
+            ), 404
+        except (OSError, sqlite3.Error, ValueError, json.JSONDecodeError):
+            current_app.logger.exception("Unable to load Player View snapshot")
+            abort(503, "Player View storage is temporarily unavailable.")
 
     if isinstance(snapshot_payload, dict) and snapshot_payload:
         if "lists" in snapshot_payload or "shop" in snapshot_payload:
@@ -361,32 +437,23 @@ def player_view():
                 "shop_size":   snapshot_payload.get("shop_size"),
                 "disposition": snapshot_payload.get("disposition"),
                 "party_level": snapshot_payload.get("party_level"),
+                "seed":        snapshot_payload.get("seed"),
                 "window":      snapshot_payload.get("window"),
             }
 
-    # 2) Fallback: recompute only if snapshot is missing
     if not lists:
-        df = load_items()
-        shop_type, shop_size, disposition, party_level = _common_inputs()
-        payload = _build_payload(df, shop_type, shop_size, disposition, party_level)
-        lists = {
-            "mundane_items":  payload.get("mundane_items", []),
-            "material_items": payload.get("materials_items", []),
-            "armor_items":    payload.get("armor_items", []),
-            "weapon_items":   payload.get("weapons_items", []),
-            "magic_items":    payload.get("magic_items", []),
-            "formula_items":  payload.get("formulas_items", []),
-        }
-        meta = {
-            "shop_type": shop_type,
-            "shop_size": shop_size,
-            "disposition": disposition,
-            "party_level": party_level,
-            "window": payload.get("window"),
-        }
+        abort(400, "Player View snapshot is missing or invalid.")
 
-    if not lists:
-        abort(400, "Player View: missing/invalid snapshot.")
+    # A POST carries the exact snapshot. Persist it before returning a shareable URL.
+    if request.method == "POST" and snapshot_payload and roll_id:
+        try:
+            save_persistent_snapshot(
+                roll_id, channel, snapshot_payload, advance_channel=False
+            )
+            _cache_snapshot(channel, roll_id, snapshot_payload)
+        except (OSError, sqlite3.Error, ValueError, TypeError):
+            current_app.logger.exception("Unable to persist posted Player View snapshot")
+            abort(503, "Player View storage is temporarily unavailable.")
 
     shop_name = _norm_str(meta.get("shop_name") or meta.get("name"))
     if not shop_name:
@@ -399,6 +466,7 @@ def player_view():
         page_title=page_title,
         shop_name=shop_name,
         shop_type=meta.get("shop_type"),
+        seed=meta.get("seed"),
         mundane_items=lists.get("mundane_items", []),
         material_items=lists.get("material_items", []),
         armor_items=lists.get("armor_items", []),
@@ -408,6 +476,7 @@ def player_view():
         aon_url=aon_url,
         channel=channel,
         roll_id=roll_id,
+        live_token=live_token,
     )
 
 @app.get("/")
@@ -423,6 +492,7 @@ def index():
         disposition="fair",
         dispositions=dispositions,
         party_level=5,
+        seed="",
     )
 
 @app.route("/query", methods=["GET", "POST"])
@@ -439,23 +509,28 @@ def query():
         party_level = int(data.get("party_level") or 5)
     except Exception:
         party_level = 5
+    try:
+        generation_seed = normalize_seed(data.get("seed"))
+    except ValueError as exc:
+        abort(400, str(exc))
 
     # Run selections
-    mundane_result   = select_mundane_items(df, shop_type, party_level, shop_size, disposition)
-    armor_basic      = select_armor_items(df, shop_type, party_level, shop_size, disposition)
-    weapons_result   = select_weapons_items(df, shop_type, party_level, shop_size, disposition)
-    armor_magic      = select_specific_magic_armor(df, shop_type, party_level, shop_size, disposition)
-    weapon_magic     = select_specific_magic_weapons(df, shop_type, party_level, shop_size, disposition)
-    magic_basic      = select_magic_items(df, shop_type, party_level, shop_size, disposition)
-    material_result  = select_materials(df, shop_type, party_level, shop_size, disposition)
-    result_formulas  = select_formulas(df, shop_type, party_level, shop_size, disposition)
-    spellbook_result = select_spellbooks(
-        df=df,
-        shop_type=shop_type,
-        party_level=party_level,
-        shop_size=shop_size,
-        disposition=disposition,
-    )
+    with generation_rng(generation_seed):
+        mundane_result   = select_mundane_items(df, shop_type, party_level, shop_size, disposition)
+        armor_basic      = select_armor_items(df, shop_type, party_level, shop_size, disposition)
+        weapons_result   = select_weapons_items(df, shop_type, party_level, shop_size, disposition)
+        armor_magic      = select_specific_magic_armor(df, shop_type, party_level, shop_size, disposition)
+        weapon_magic     = select_specific_magic_weapons(df, shop_type, party_level, shop_size, disposition)
+        magic_basic      = select_magic_items(df, shop_type, party_level, shop_size, disposition)
+        material_result  = select_materials(df, shop_type, party_level, shop_size, disposition)
+        result_formulas  = select_formulas(df, shop_type, party_level, shop_size, disposition)
+        spellbook_result = select_spellbooks(
+            df=df,
+            shop_type=shop_type,
+            party_level=party_level,
+            shop_size=shop_size,
+            disposition=disposition,
+        )
 
     # Lists actually rendered in the UI
     material_items = (material_result.get("items") or [])
@@ -546,6 +621,7 @@ def query():
             "shop_size": shop_size,
             "disposition": disposition,
             "party_level": party_level,
+            "seed": generation_seed,
             "window": magic_window,
         },
         "lists": {
@@ -558,10 +634,19 @@ def query():
         },
     }
 
-    channel = (data.get("channel") or "default").strip().lower()
-    roll_id = uuid.uuid4().hex[:12]
-    _publish(channel, roll_id)
+    try:
+        channel = normalize_channel(data.get("channel"))
+    except ValueError as exc:
+        abort(400, str(exc))
+    roll_id = uuid.uuid4().hex
+    try:
+        # The stored snapshot is authoritative. Notify live views only after commit.
+        live_token = save_persistent_snapshot(roll_id, channel, snapshot)
+    except (OSError, sqlite3.Error, ValueError, TypeError):
+        current_app.logger.exception("Unable to persist generated Player View snapshot")
+        abort(503, "Player View storage is temporarily unavailable.")
     _cache_snapshot(channel, roll_id, snapshot)
+    _publish(channel, roll_id)
 
     return render_template(
         "results.html",
@@ -570,6 +655,7 @@ def query():
         disposition=disposition,
         shop_name=shop_name,
         party_level=party_level,
+        seed=generation_seed,
         picked=picked,
         counts=counts,
         mundane_items=mundane_items,
@@ -583,6 +669,7 @@ def query():
         window=magic_window,
         roll_id=roll_id,
         channel=channel,
+        live_token=live_token,
     )
 
 # Standalone Spellbook page
@@ -900,5 +987,8 @@ def api_mib_build():
     return jsonify(ok=True, item=item)
 
 if __name__ == "__main__":
-    # For local dev convenience; in production use a WSGI server (gunicorn on Render)
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    # For local development. Render should start the app with gunicorn.
+    debug = os.environ.get("FLASK_DEBUG", "").strip().lower() in {"1", "true", "yes", "on"}
+    host = os.environ.get("HOST", "127.0.0.1")
+    port = int(os.environ.get("PORT", "5000"))
+    app.run(host=host, port=port, debug=debug)

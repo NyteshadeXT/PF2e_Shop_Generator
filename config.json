@@ -3,7 +3,7 @@
   "sqlite_db_path": "data/PF2e_Treasure_Generator_Backend.db",
   "sqlite_view": "v_items_norm",
   "sqlite_adjustments_table": "Adjustments",
-  "random_seed": 1337,
+  "player_view_db_path": "data/player_views.db",
 
   "default_shop_types": [
     "Adventuring",
@@ -60,9 +60,9 @@
   "specific_magic_counts": { "small": [0,1], "medium": [1,2], "large": [2,4], "grand": [3,5] },
 
   "disposition_multipliers": {
-    "greedy": 0.9,
+    "greedy": 1.15,
     "fair": 1.0,
-    "generous": 1.15
+    "generous": 0.9
   },
 
   "level_spread": { "min_offset": -3, "max_offset": 1 },
@@ -103,6 +103,11 @@
   "critical_bonus_rate": 0.25,
 
   "spellbooks": { "drop_rate": 0.35, "max_books": 3 },
+
+  "player_views": {
+    "retention_days": 365,
+    "max_snapshots_per_channel": 250
+  },
 
   "source_table_groups": {
     "mundane": ["mundane", "adjustments"],

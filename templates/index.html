@@ -80,7 +80,7 @@
 			    </option>
 			  {% endfor %}
 		    </select>
-		    <div class="pf-help">Affects per-unit price adjustments.</div>
+		    <div class="pf-help">Greedy raises prices; Generous lowers them.</div>
 		  </div>
 
           <!-- Party Level -->
@@ -89,6 +89,25 @@
             <input id="party_level" name="party_level" type="number" min="1" max="25" step="1"
                    class="pf-input pf-select-lg" value="{{ party_level or 5 }}" />
             <div class="pf-help">Sets max item level window (e.g., ≤ PL+1 for basics).</div>
+          </div>
+
+          <!-- Game / live display channel -->
+          <div class="pf-field">
+            <label for="channel" class="pf-label">Game / Live View</label>
+            <input id="channel" name="channel" type="text" maxlength="64"
+                   pattern="[A-Za-z0-9][A-Za-z0-9_-]{0,63}"
+                   class="pf-input pf-select-lg" value="{{ channel or 'default' }}"
+                   placeholder="e.g., friday-game" />
+            <div class="pf-help">Use a different short name for each campaign so their live views stay separate.</div>
+          </div>
+
+          <!-- Reproducible generation seed -->
+          <div class="pf-field">
+            <label for="seed" class="pf-label">Generation Seed</label>
+            <input id="seed" name="seed" type="text" maxlength="64"
+                   class="pf-input pf-select-lg" value="{{ seed or '' }}"
+                   placeholder="Leave blank for a new shop" />
+            <div class="pf-help">Enter a previous seed with the same settings to reproduce that inventory.</div>
           </div>
 
           <!-- Actions -->
@@ -321,7 +340,9 @@
                 shop_name: 'input',
                 shop_size: 'change',
                 disposition: 'change',
-                party_level: 'input'
+                party_level: 'input',
+                channel: 'input',
+                seed: 'input'
           };
 
           Object.entries(fields).forEach(([id, evt]) => {
