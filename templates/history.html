@@ -39,6 +39,7 @@
     <section class="pf-card mt-16">
       <div class="p-12">
         <form method="GET" action="{{ url_for('history') }}" class="pf-form-grid">
+          {% if showing_archived %}<input type="hidden" name="archived" value="1">{% endif %}
           <div class="pf-field">
             <label for="channel" class="pf-label">Game / Live View</label>
             <select id="channel" name="channel" class="pf-input pf-select-lg">
@@ -52,7 +53,12 @@
           </div>
           <div class="pf-actions">
             <button type="submit" class="pf-btn pf-btn-primary">Filter Shops</button>
-            {% if selected_channel %}<a href="{{ url_for('history') }}" class="pf-btn">Show All</a>{% endif %}
+            {% if showing_archived %}
+            <a href="{{ url_for('history', channel=selected_channel or None) }}" class="pf-btn">Show Active Shops</a>
+            {% else %}
+            <a href="{{ url_for('history', channel=selected_channel or None, archived=1) }}" class="pf-btn">Show Archived Shops</a>
+            {% endif %}
+            {% if selected_channel %}<a href="{{ url_for('history', archived=1 if showing_archived else None) }}" class="pf-btn">All Games</a>{% endif %}
           </div>
         </form>
       </div>
@@ -68,9 +74,11 @@
       A new secret Live Display link is active. Previously shared live links for this game no longer work.
     </section>
     {% endif %}
+    {% if request.args.get('updated') %}<section class="pf-card mt-16 p-12" role="status">Shop name and settlement updated.</section>{% endif %}
+    {% if request.args.get('deleted') %}<section class="pf-card mt-16 p-12" role="status">The selected draft was permanently deleted.</section>{% endif %}
 
     <section class="pf-card mt-16">
-      <div class="pf-section__header"><h2>Stored Player Views</h2></div>
+      <div class="pf-section__header"><h2>{{ 'Archived' if showing_archived else 'Active' }} Stored Shops</h2></div>
       <div class="p-12">
         <div class="pf-actions pf-actions--between">
           <span class="pf-meta">
@@ -79,10 +87,10 @@
           </span>
           <span>
             {% if page > 1 %}
-            <a class="pf-btn" href="{{ url_for('history', channel=selected_channel or None, page=page-1) }}">Newer Shops</a>
+            <a class="pf-btn" href="{{ url_for('history', channel=selected_channel or None, archived=1 if showing_archived else None, page=page-1) }}">Newer Shops</a>
             {% endif %}
             {% if page < page_count %}
-            <a class="pf-btn" href="{{ url_for('history', channel=selected_channel or None, page=page+1) }}">Older Shops</a>
+            <a class="pf-btn" href="{{ url_for('history', channel=selected_channel or None, archived=1 if showing_archived else None, page=page+1) }}">Older Shops</a>
             {% endif %}
           </span>
         </div>
@@ -90,14 +98,38 @@
         <div class="pf-table-wrap">
           <table class="pf-table">
             <thead>
-              <tr><th>Created</th><th>Game</th><th>Shop</th><th>Settings</th><th>Actions</th></tr>
+              <tr><th>Timeline</th><th>Game</th><th>Shop</th><th>Settings</th><th>Actions</th></tr>
             </thead>
             <tbody>
               {% for entry in snapshots %}
               <tr>
-                <td>{{ entry.created_at }} UTC{% if entry.is_current %}<br><span class="pf-chip">Live now</span>{% endif %}</td>
+                <td>
+                  Created {{ entry.created_at }} UTC<br>
+                  {% if entry.is_current %}
+                    <span class="pf-chip">Live now</span>{% if entry.last_published_at %}<br><span class="pf-meta">Published {{ entry.last_published_at }} UTC</span>{% endif %}
+                  {% elif entry.publication_count %}
+                    <span class="pf-chip">Previously live</span><br><span class="pf-meta">Last published {{ entry.last_published_at }} UTC</span>
+                  {% elif not entry.publication_history_known %}
+                    <span class="pf-chip">Publication history unknown</span>
+                  {% else %}
+                    <span class="pf-chip">Draft — never published</span>
+                  {% endif %}
+                  {% if entry.archived_at %}<br><span class="pf-chip">Archived</span>{% endif %}
+                </td>
                 <td>{{ entry.channel }}</td>
-                <td>{{ entry.shop_name or entry.shop_type or 'Shop' }}</td>
+                <td>
+                  {{ entry.shop_name or entry.shop_type or 'Shop' }}
+                  {% if entry.settlement %}<br><span class="pf-meta">{{ entry.settlement }}</span>{% endif %}
+                  <details>
+                    <summary>Edit archive details</summary>
+                    <form method="POST" action="{{ url_for('history_update_metadata') }}">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="channel" value="{{ entry.channel }}"><input type="hidden" name="roll_id" value="{{ entry.token }}">
+                      <label class="pf-field"><span class="pf-label">Shop name</span><input class="pf-input" name="shop_name" maxlength="100" value="{{ entry.shop_name }}"></label>
+                      <label class="pf-field"><span class="pf-label">Settlement</span><input class="pf-input" name="settlement" maxlength="100" value="{{ entry.settlement }}"></label>
+                      <button class="pf-btn" type="submit">Save Details</button>
+                    </form>
+                  </details>
+                </td>
                 <td>
                   {% if entry.shop_type %}{{ entry.shop_type|replace('_', ' ')|title }}{% endif %}
                   {% if entry.shop_size %} · {{ entry.shop_size|title }}{% endif %}
@@ -118,7 +150,7 @@
                     <button type="submit" class="pf-link-chip"
                             data-confirm="Replace this game’s secret Live Display link? All previously shared live links for this game will stop working.">Rotate Live Link</button>
                   </form>
-                  {% else %}
+                  {% elif not showing_archived %}
                   <form method="POST" action="{{ url_for('history_make_live') }}">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="channel" value="{{ entry.channel }}">
@@ -126,6 +158,22 @@
                     <button type="submit" class="pf-link-chip"
                             data-confirm="Show this older shop on the game’s Live Display?">Make Live</button>
                   </form>
+                  {% endif %}
+                  <form method="POST" action="{{ url_for('history_archive') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="channel" value="{{ entry.channel }}"><input type="hidden" name="roll_id" value="{{ entry.token }}"><input type="hidden" name="archived" value="{{ '0' if showing_archived else '1' }}">
+                    <button type="submit" class="pf-link-chip" {% if entry.is_current %}disabled title="Publish another shop before archiving this one"{% endif %}>{{ 'Restore from Archive' if showing_archived else 'Archive' }}</button>
+                  </form>
+                  {% if not entry.is_current and entry.publication_history_known and not entry.publication_count %}
+                  <details>
+                    <summary>Permanently delete</summary>
+                    <form method="POST" action="{{ url_for('history_delete') }}">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="channel" value="{{ entry.channel }}"><input type="hidden" name="roll_id" value="{{ entry.token }}">
+                      <label class="pf-field"><span class="pf-label">Enter DELETE</span><input class="pf-input" name="confirmation" required autocomplete="off"></label>
+                      <button type="submit" class="pf-link-chip" data-confirm="Permanently delete this stored draft? This cannot be undone.">Delete Permanently</button>
+                    </form>
+                  </details>
+                  {% elif not entry.is_current %}
+                  <span class="pf-meta">Published and legacy shops can be archived, but not permanently deleted.</span>
                   {% endif %}
                 </td>
               </tr>
@@ -139,10 +187,10 @@
         {% if page_count > 1 %}
         <div class="pf-actions pf-actions--end">
           {% if page > 1 %}
-          <a class="pf-btn" href="{{ url_for('history', channel=selected_channel or None, page=page-1) }}">Newer Shops</a>
+          <a class="pf-btn" href="{{ url_for('history', channel=selected_channel or None, archived=1 if showing_archived else None, page=page-1) }}">Newer Shops</a>
           {% endif %}
           {% if page < page_count %}
-          <a class="pf-btn" href="{{ url_for('history', channel=selected_channel or None, page=page+1) }}">Older Shops</a>
+          <a class="pf-btn" href="{{ url_for('history', channel=selected_channel or None, archived=1 if showing_archived else None, page=page+1) }}">Older Shops</a>
           {% endif %}
         </div>
         {% endif %}

@@ -127,6 +127,7 @@ def initialize(db_path: str | Path | None = None) -> None:
                     channel TEXT NOT NULL,
                     snapshot_json TEXT NOT NULL,
                     generation_key TEXT,
+                    publication_history_known INTEGER NOT NULL DEFAULT 1,
                     created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
                 CREATE INDEX IF NOT EXISTS ix_player_view_snapshots_channel_created
@@ -139,6 +140,23 @@ def initialize(db_path: str | Path | None = None) -> None:
                     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     FOREIGN KEY(current_token) REFERENCES player_view_snapshots(token)
                 );
+                CREATE TABLE IF NOT EXISTS snapshot_archive_metadata (
+                    token TEXT PRIMARY KEY,
+                    shop_name TEXT,
+                    settlement TEXT,
+                    archived_at TEXT,
+                    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(token) REFERENCES player_view_snapshots(token) ON DELETE CASCADE
+                );
+                CREATE TABLE IF NOT EXISTS snapshot_publications (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    token TEXT NOT NULL,
+                    channel TEXT NOT NULL,
+                    published_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    FOREIGN KEY(token) REFERENCES player_view_snapshots(token) ON DELETE CASCADE
+                );
+                CREATE INDEX IF NOT EXISTS ix_snapshot_publications_token
+                    ON snapshot_publications(token, published_at DESC);
                 """
             )
             columns = {
@@ -153,6 +171,13 @@ def initialize(db_path: str | Path | None = None) -> None:
             }
             if "generation_key" not in snapshot_columns:
                 conn.execute("ALTER TABLE player_view_snapshots ADD COLUMN generation_key TEXT")
+            if "publication_history_known" not in snapshot_columns:
+                # Rows in an older database may have been published before
+                # publication events were recorded, so their history is unknown.
+                conn.execute(
+                    "ALTER TABLE player_view_snapshots "
+                    "ADD COLUMN publication_history_known INTEGER NOT NULL DEFAULT 0"
+                )
             conn.execute(
                 """
                 CREATE UNIQUE INDEX IF NOT EXISTS ux_player_view_channels_live_token
@@ -167,6 +192,19 @@ def initialize(db_path: str | Path | None = None) -> None:
                 WHERE generation_key IS NOT NULL
                 """
             )
+            # Existing databases predate publication history. Seed one event for
+            # each currently live shop so it is not mislabeled "never published."
+            conn.execute(
+                """
+                INSERT INTO snapshot_publications(token, channel, published_at)
+                SELECT c.current_token, c.channel, c.updated_at
+                FROM player_view_channels AS c
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM snapshot_publications AS p
+                    WHERE p.token = c.current_token
+                )
+                """
+            )
             conn.commit()
         _INITIALIZED_PATHS.add(path)
 
@@ -177,8 +215,8 @@ def _cleanup_in_connection(
     retention_days: int,
     max_snapshots_per_channel: int,
 ) -> int:
-    """Delete expired/excess snapshots without ever deleting a live current snapshot."""
-    before = conn.total_changes
+    """Delete expired/excess drafts while preserving live and archived snapshots."""
+    before = int(conn.execute("SELECT COUNT(*) FROM player_view_snapshots").fetchone()[0])
     if retention_days > 0:
         conn.execute(
             """
@@ -186,6 +224,10 @@ def _cleanup_in_connection(
             WHERE created_at < datetime('now', ?)
               AND token NOT IN (
                   SELECT current_token FROM player_view_channels
+              )
+              AND token NOT IN (
+                  SELECT token FROM snapshot_archive_metadata
+                  WHERE archived_at IS NOT NULL
               )
             """,
             (f"-{retention_days} days",),
@@ -195,12 +237,14 @@ def _cleanup_in_connection(
             """
             WITH ranked AS (
                 SELECT
-                    token,
+                    s.token,
                     ROW_NUMBER() OVER (
-                        PARTITION BY channel
-                        ORDER BY created_at DESC, rowid DESC
+                        PARTITION BY s.channel
+                        ORDER BY s.created_at DESC, s.rowid DESC
                     ) AS position
-                FROM player_view_snapshots
+                FROM player_view_snapshots AS s
+                LEFT JOIN snapshot_archive_metadata AS m ON m.token = s.token
+                WHERE m.archived_at IS NULL
             )
             DELETE FROM player_view_snapshots
             WHERE token IN (
@@ -209,10 +253,15 @@ def _cleanup_in_connection(
               AND token NOT IN (
                   SELECT current_token FROM player_view_channels
               )
+              AND token NOT IN (
+                  SELECT token FROM snapshot_archive_metadata
+                  WHERE archived_at IS NOT NULL
+              )
             """,
             (max_snapshots_per_channel,),
         )
-    return conn.total_changes - before
+    after = int(conn.execute("SELECT COUNT(*) FROM player_view_snapshots").fetchone()[0])
+    return before - after
 
 
 def _retention_values(
@@ -460,6 +509,7 @@ def recent_snapshots(
     channel: str | None = None,
     limit: int = 50,
     offset: int = 0,
+    archived: bool = False,
     db_path: str | Path | None = None,
 ) -> list[dict[str, Any]]:
     """Return recent snapshots with enough metadata for a GM recovery screen."""
@@ -473,15 +523,27 @@ def recent_snapshots(
             s.channel,
             s.snapshot_json,
             s.created_at,
+            s.publication_history_known,
             CASE WHEN c.current_token = s.token THEN 1 ELSE 0 END AS is_current,
-            c.live_token
+            c.live_token,
+            m.shop_name AS archive_shop_name,
+            m.settlement,
+            m.archived_at,
+            COUNT(p.id) AS publication_count,
+            MIN(p.published_at) AS first_published_at,
+            MAX(p.published_at) AS last_published_at
         FROM player_view_snapshots AS s
         LEFT JOIN player_view_channels AS c ON c.channel = s.channel
+        LEFT JOIN snapshot_archive_metadata AS m ON m.token = s.token
+        LEFT JOIN snapshot_publications AS p ON p.token = s.token
     """
     parameters: list[Any] = []
+    conditions = ["m.archived_at IS NOT NULL" if archived else "m.archived_at IS NULL"]
     if normalized_channel:
-        sql += " WHERE s.channel = ?"
+        conditions.append("s.channel = ?")
         parameters.append(normalized_channel)
+    sql += " WHERE " + " AND ".join(conditions)
+    sql += " GROUP BY s.token, s.channel, s.snapshot_json, s.created_at, s.publication_history_known, c.current_token, c.live_token, m.shop_name, m.settlement, m.archived_at"
     sql += " ORDER BY s.created_at DESC, s.rowid DESC LIMIT ? OFFSET ?"
     parameters.extend((safe_limit, safe_offset))
 
@@ -504,7 +566,13 @@ def recent_snapshots(
                 "created_at": str(row["created_at"]),
                 "is_current": bool(row["is_current"]),
                 "live_token": str(row["live_token"] or ""),
-                "shop_name": str(shop.get("shop_name") or shop.get("name") or ""),
+                "shop_name": str(row["archive_shop_name"] or shop.get("shop_name") or shop.get("name") or ""),
+                "settlement": str(row["settlement"] or ""),
+                "archived_at": str(row["archived_at"] or ""),
+                "publication_history_known": bool(row["publication_history_known"]),
+                "publication_count": int(row["publication_count"] or 0),
+                "first_published_at": str(row["first_published_at"] or ""),
+                "last_published_at": str(row["last_published_at"] or ""),
                 "shop_type": str(shop.get("shop_type") or ""),
                 "shop_size": str(shop.get("shop_size") or ""),
                 "party_level": shop.get("party_level"),
@@ -517,20 +585,142 @@ def recent_snapshots(
 def snapshot_count(
     *,
     channel: str | None = None,
+    archived: bool = False,
     db_path: str | Path | None = None,
 ) -> int:
     """Count retained snapshots, optionally for one normalized game channel."""
     normalized_channel = normalize_channel(channel) if channel else None
     initialize(db_path)
     with _connection(db_path) as conn:
-        if normalized_channel is None:
-            value = conn.execute("SELECT COUNT(*) FROM player_view_snapshots").fetchone()[0]
-        else:
-            value = conn.execute(
-                "SELECT COUNT(*) FROM player_view_snapshots WHERE channel = ?",
-                (normalized_channel,),
-            ).fetchone()[0]
+        sql = """
+            SELECT COUNT(*) FROM player_view_snapshots AS s
+            LEFT JOIN snapshot_archive_metadata AS m ON m.token = s.token
+            WHERE m.archived_at IS {}
+        """.format("NOT NULL" if archived else "NULL")
+        parameters = []
+        if normalized_channel is not None:
+            sql += " AND s.channel = ?"
+            parameters.append(normalized_channel)
+        value = conn.execute(sql, parameters).fetchone()[0]
     return int(value)
+
+
+def update_snapshot_metadata(
+    token: str,
+    channel: str,
+    *,
+    shop_name: str,
+    settlement: str,
+    db_path: str | Path | None = None,
+) -> None:
+    """Rename and annotate a stored shop without changing its inventory snapshot."""
+    token = normalize_token(token)
+    channel = normalize_channel(channel)
+    shop_name = str(shop_name or "").strip()
+    settlement = str(settlement or "").strip()
+    if len(shop_name) > 100 or len(settlement) > 100:
+        raise ValueError("Shop name and settlement must be 100 characters or fewer.")
+    initialize(db_path)
+    with _connection(db_path) as conn:
+        exists = conn.execute(
+            "SELECT 1 FROM player_view_snapshots WHERE token = ? AND channel = ?",
+            (token, channel),
+        ).fetchone()
+        if exists is None:
+            raise SnapshotNotFound(token)
+        conn.execute(
+            """
+            INSERT INTO snapshot_archive_metadata(token, shop_name, settlement, updated_at)
+            VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+            ON CONFLICT(token) DO UPDATE SET
+                shop_name = excluded.shop_name,
+                settlement = excluded.settlement,
+                updated_at = CURRENT_TIMESTAMP
+            """,
+            (token, shop_name or None, settlement or None),
+        )
+        conn.commit()
+
+
+def set_snapshot_archived(
+    token: str,
+    channel: str,
+    archived: bool,
+    *,
+    db_path: str | Path | None = None,
+) -> None:
+    token = normalize_token(token)
+    channel = normalize_channel(channel)
+    initialize(db_path)
+    with _connection(db_path) as conn:
+        current = conn.execute(
+            "SELECT current_token FROM player_view_channels WHERE channel = ?", (channel,)
+        ).fetchone()
+        if archived and current is not None and str(current["current_token"]) == token:
+            raise ValueError("The currently live shop cannot be archived.")
+        exists = conn.execute(
+            "SELECT 1 FROM player_view_snapshots WHERE token = ? AND channel = ?",
+            (token, channel),
+        ).fetchone()
+        if exists is None:
+            raise SnapshotNotFound(token)
+        conn.execute(
+            """
+            INSERT INTO snapshot_archive_metadata(token, archived_at, updated_at)
+            VALUES (?, CASE WHEN ? THEN CURRENT_TIMESTAMP ELSE NULL END, CURRENT_TIMESTAMP)
+            ON CONFLICT(token) DO UPDATE SET
+                archived_at = CASE WHEN ? THEN CURRENT_TIMESTAMP ELSE NULL END,
+                updated_at = CURRENT_TIMESTAMP
+            """,
+            (token, int(bool(archived)), int(bool(archived))),
+        )
+        conn.commit()
+
+
+def delete_snapshot(
+    token: str,
+    channel: str,
+    *,
+    db_path: str | Path | None = None,
+) -> None:
+    """Permanently delete only a known, never-published, non-live draft."""
+    token = normalize_token(token)
+    channel = normalize_channel(channel)
+    initialize(db_path)
+    with _connection(db_path) as conn:
+        conn.execute("BEGIN IMMEDIATE")
+        current = conn.execute(
+            "SELECT current_token FROM player_view_channels WHERE channel = ?", (channel,)
+        ).fetchone()
+        if current is not None and str(current["current_token"]) == token:
+            raise ValueError("The currently live shop cannot be deleted.")
+        snapshot = conn.execute(
+            """
+            SELECT
+                s.publication_history_known,
+                (SELECT COUNT(*) FROM snapshot_publications AS p
+                 WHERE p.token = s.token) AS publication_count
+            FROM player_view_snapshots AS s
+            WHERE s.token = ? AND s.channel = ?
+            """,
+            (token, channel),
+        ).fetchone()
+        if snapshot is None:
+            raise SnapshotNotFound(token)
+        if int(snapshot["publication_count"] or 0) > 0:
+            raise ValueError(
+                "Previously published shops cannot be permanently deleted. Archive it instead."
+            )
+        if not bool(snapshot["publication_history_known"]):
+            raise ValueError(
+                "This legacy shop's publication history is unknown and it cannot be safely "
+                "deleted. Archive it instead."
+            )
+        conn.execute(
+            "DELETE FROM player_view_snapshots WHERE token = ? AND channel = ?",
+            (token, channel),
+        )
+        conn.commit()
 
 
 def channel_summaries(
@@ -546,9 +736,10 @@ def channel_summaries(
                 c.channel,
                 c.updated_at,
                 c.live_token,
-                COUNT(s.token) AS snapshots
+                COUNT(CASE WHEN m.archived_at IS NULL THEN s.token END) AS snapshots
             FROM player_view_channels AS c
             LEFT JOIN player_view_snapshots AS s ON s.channel = c.channel
+            LEFT JOIN snapshot_archive_metadata AS m ON m.token = s.token
             GROUP BY c.channel, c.updated_at, c.live_token
             ORDER BY c.updated_at DESC, c.channel ASC
             """
@@ -578,11 +769,18 @@ def set_current_snapshot(
     with _connection(db_path) as conn:
         conn.execute("BEGIN IMMEDIATE")
         exists = conn.execute(
-            "SELECT 1 FROM player_view_snapshots WHERE token = ? AND channel = ?",
+            """
+            SELECT m.archived_at
+            FROM player_view_snapshots AS s
+            LEFT JOIN snapshot_archive_metadata AS m ON m.token = s.token
+            WHERE s.token = ? AND s.channel = ?
+            """,
             (token, channel),
         ).fetchone()
         if exists is None:
             raise SnapshotNotFound(token)
+        if exists["archived_at"] is not None:
+            raise ValueError("Restore this shop from the archive before publishing it.")
         conn.execute(
             """
             INSERT INTO player_view_channels(channel, current_token, live_token, updated_at)
@@ -604,6 +802,10 @@ def set_current_snapshot(
         row = conn.execute(
             "SELECT live_token FROM player_view_channels WHERE channel = ?", (channel,)
         ).fetchone()
+        conn.execute(
+            "INSERT INTO snapshot_publications(token, channel) VALUES (?, ?)",
+            (token, channel),
+        )
         conn.commit()
     return str(row["live_token"])
 
@@ -653,9 +855,10 @@ def save_snapshot(
             conn.execute(
                 """
                 INSERT INTO player_view_snapshots(
-                    token, channel, snapshot_json, generation_key
+                    token, channel, snapshot_json, generation_key,
+                    publication_history_known
                 )
-                VALUES (?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, 1)
                 """,
                 (token, channel, payload, normalized_generation_key),
             )
@@ -692,6 +895,14 @@ def save_snapshot(
         row = conn.execute(
             "SELECT live_token FROM player_view_channels WHERE channel = ?", (channel,)
         ).fetchone()
+        live_row = conn.execute(
+            "SELECT current_token FROM player_view_channels WHERE channel = ?", (channel,)
+        ).fetchone()
+        if existing is None and live_row is not None and str(live_row["current_token"]) == token:
+            conn.execute(
+                "INSERT INTO snapshot_publications(token, channel) VALUES (?, ?)",
+                (token, channel),
+            )
         _cleanup_in_connection(
             conn,
             retention_days=retention_days,

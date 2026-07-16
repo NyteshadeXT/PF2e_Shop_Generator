@@ -5,6 +5,7 @@ from unittest.mock import patch
 import pandas as pd
 
 import app as webapp
+import services.player_view_routes as player_view_routes
 from services.security import AttemptLimiter
 
 
@@ -110,9 +111,9 @@ class AppHardeningTests(unittest.TestCase):
             }
         ]
         with (
-            patch.object(webapp, "snapshot_count", return_value=51),
-            patch.object(webapp, "channel_summaries", return_value=fake_channels),
-            patch.object(webapp, "recent_snapshots", return_value=[]) as recent,
+            patch.object(player_view_routes, "snapshot_count", return_value=51),
+            patch.object(player_view_routes, "channel_summaries", return_value=fake_channels),
+            patch.object(player_view_routes, "recent_snapshots", return_value=[]) as recent,
         ):
             first = self.client.get("/history", query_string={"channel": "campaign"})
             self.assertEqual(first.status_code, 200)
@@ -136,6 +137,27 @@ class AppHardeningTests(unittest.TestCase):
     def test_player_view_is_read_only(self):
         self.assertEqual(self.client.post("/player-view").status_code, 405)
         self.assertEqual(self.client.post("/results/" + "0" * 32).status_code, 405)
+
+    def test_player_view_omits_gm_hidden_items(self):
+        snapshot = {
+            "shop": {"shop_name": "Visibility Test"},
+            "lists": {
+                "mundane_items": [
+                    {"name": "Visible Rope", "level": 0, "rarity": "Common", "price": "1 sp", "quantity": 1},
+                    {"name": "Secret Map", "level": 1, "rarity": "Rare", "price": "10 gp", "quantity": 1, "player_hidden": True},
+                ],
+                "material_items": [], "formula_items": [], "armor_items": [],
+                "weapon_items": [], "magic_items": [],
+            },
+        }
+        with patch.object(player_view_routes, "load_snapshot", return_value=snapshot):
+            response = self.client.get(
+                "/player-view",
+                query_string={"channel": "campaign", "roll_id": "a" * 32},
+            )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b"Visible Rope", response.data)
+        self.assertNotIn(b"Secret Map", response.data)
 
     def test_browser_mutations_require_session_csrf_token(self):
         original = webapp.app.config.get("CSRF_PROTECTION_IN_TESTS")

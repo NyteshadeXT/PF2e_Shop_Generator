@@ -57,7 +57,7 @@ def validate_generation_inputs(data: Mapping, df: pd.DataFrame):
         data.get("disposition"),
         (CONFIG.get("disposition_multipliers") or {}).keys(),
         "disposition",
-        "fair",
+        "standard",
     ).lower()
 
     caps = CONFIG.get("level_caps", {"min": 1, "max": 20})
@@ -92,6 +92,60 @@ def _unique_items(items):
             seen.add(key)
             output.append(item)
     return output
+
+
+def _is_magic_equipment(item: dict) -> bool:
+    category = str(item.get("category") or "").strip().lower()
+    source_table = str(item.get("source_table") or "").strip().lower()
+    return bool(item.get("is_magic_countable")) or category in {
+        "runed weapon",
+        "runed armor",
+        "runed shield",
+    } or source_table.startswith("specific_magic_")
+
+
+def summarize_inventory(lists: Mapping) -> dict:
+    """Build mutually exclusive GM summary totals from persisted inventory lists."""
+    mundane_items = list(lists.get("mundane_items") or [])
+    material_items = list(lists.get("material_items") or [])
+    armor_items = list(lists.get("armor_items") or [])
+    weapon_items = list(lists.get("weapon_items") or [])
+    magic_items = list(lists.get("magic_items") or [])
+    formula_items = list(lists.get("formula_items") or [])
+
+    magical_armor = _unique_items([item for item in armor_items if _is_magic_equipment(item)])
+    magical_weapons = _unique_items([item for item in weapon_items if _is_magic_equipment(item)])
+    armor_nonmagic = [item for item in armor_items if item not in magical_armor]
+    weapons_nonmagic = [item for item in weapon_items if item not in magical_weapons]
+    all_magic_items = _unique_items(magic_items + magical_armor + magical_weapons)
+
+    picked = {
+        "mundane": len(_unique_items(mundane_items)),
+        "materials": len(_unique_items(material_items)),
+        "armor": len(_unique_items(armor_nonmagic)),
+        "weapons": len(_unique_items(weapons_nonmagic)),
+        "magic": len(all_magic_items),
+        "formulas": len(formula_items),
+        "critical_mundane": count_critical(mundane_items),
+        "critical_materials": count_critical(material_items),
+        "critical_armor_shield": count_critical(armor_nonmagic),
+        "critical_weapons": count_critical(weapons_nonmagic),
+        "critical_magic": count_critical(all_magic_items),
+    }
+    picked["critical"] = sum(
+        picked[key]
+        for key in (
+            "critical_mundane",
+            "critical_materials",
+            "critical_armor_shield",
+            "critical_weapons",
+            "critical_magic",
+        )
+    )
+    counts = rarity_counts(
+        mundane_items + material_items + armor_items + weapon_items + magic_items
+    )
+    return {"picked": picked, "counts": counts, "reproduction_warning": ""}
 
 
 def build_payload(df, shop_type, shop_size, disposition, party_level):
@@ -188,59 +242,22 @@ def generate_shop_snapshot(df: pd.DataFrame, submitted: Mapping) -> dict:
 
     material_items = material_result.get("items") or []
     mundane_items = mundane_result.get("items") or []
-    magic_armor = armor_magic.get("items") or []
-    magic_weapons = weapon_magic.get("items") or []
+    magic_armor = [dict(item, is_magic_countable=True) for item in (armor_magic.get("items") or [])]
+    magic_weapons = [dict(item, is_magic_countable=True) for item in (weapon_magic.get("items") or [])]
     armor_items = (armor_basic.get("items") or []) + magic_armor
     weapon_items = (weapons_result.get("items") or []) + magic_weapons
     magic_items = (magic_basic.get("items") or []) + (spellbook_result.get("items") or [])
 
-    runed_weapons = [
-        item
-        for item in weapon_items
-        if item.get("category") == "Runed Weapon" or item.get("is_magic_countable")
-    ]
-    weapons_nonruned = [item for item in weapon_items if item not in runed_weapons]
-    runed_armor = [
-        item
-        for item in armor_items
-        if item.get("category") == "Runed Armor" or item.get("is_magic_countable")
-    ]
-
-    picked = {
-        "mundane": len(_unique_items(mundane_items)),
-        "materials": len(_unique_items(material_items)),
-        "armor": len(_unique_items(armor_items)),
-        "weapons": len(_unique_items(weapons_nonruned)),
-        "magic": len(
-            _unique_items(
-                magic_items + magic_armor + magic_weapons + runed_weapons + runed_armor
-            )
-        ),
-        "formulas": len(result_formulas.get("items", [])),
-        "critical": (
-            count_critical(mundane_items)
-            + count_critical(material_items)
-            + count_critical(armor_items)
-            + count_critical(weapons_nonruned)
-            + count_critical(magic_armor)
-            + count_critical(magic_weapons)
-            + count_critical(magic_items)
-            + count_critical(runed_weapons)
-        ),
-        "critical_mundane": count_critical(mundane_items),
-        "critical_materials": count_critical(material_items),
-        "critical_armor_shield": count_critical(armor_items),
-        "critical_weapons": count_critical(weapons_nonruned),
-        "critical_magic": (
-            count_critical(magic_armor)
-            + count_critical(magic_weapons)
-            + count_critical(magic_items)
-            + count_critical(runed_weapons)
-        ),
+    lists = {
+        "mundane_items": mundane_items,
+        "material_items": material_items,
+        "armor_items": armor_items,
+        "weapon_items": weapon_items,
+        "magic_items": magic_items,
+        "formula_items": result_formulas.get("items", []),
     }
-    counts = rarity_counts(
-        mundane_items + material_items + armor_items + weapon_items + magic_items
-    )
+    summary = summarize_inventory(lists)
+    summary["reproduction_warning"] = reproduction_warning
     magic_window = magic_basic.get("window") if isinstance(magic_basic, dict) else None
 
     return {
@@ -255,17 +272,6 @@ def generate_shop_snapshot(df: pd.DataFrame, submitted: Mapping) -> dict:
             "generation_fingerprint": current_fingerprint,
             "window": magic_window,
         },
-        "lists": {
-            "mundane_items": mundane_items,
-            "material_items": material_items,
-            "armor_items": armor_items,
-            "weapon_items": weapon_items,
-            "magic_items": magic_items,
-            "formula_items": result_formulas.get("items", []),
-        },
-        "summary": {
-            "picked": picked,
-            "counts": counts,
-            "reproduction_warning": reproduction_warning,
-        },
+        "lists": lists,
+        "summary": summary,
     }

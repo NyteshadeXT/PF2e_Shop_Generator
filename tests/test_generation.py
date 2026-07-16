@@ -53,7 +53,14 @@ class GenerationServiceTests(unittest.TestCase):
     def test_orchestration_builds_one_complete_deterministic_snapshot(self):
         mundane = [_item("Rope", critical=True)]
         materials = [_item("Cold Iron", rarity="Uncommon")]
-        armor_basic = [_item("Chain Shirt", critical=True)]
+        armor_basic = [
+            _item("Chain Shirt", critical=True),
+            _item(
+                "Runed Mail",
+                category="Runed Armor",
+                is_magic_countable=True,
+            ),
+        ]
         magic_armor = [_item("Dragonplate", rarity="Rare", critical=True)]
         weapons_basic = [
             _item("Club"),
@@ -114,18 +121,26 @@ class GenerationServiceTests(unittest.TestCase):
                 "window": (3, 6),
             },
         )
-        self.assertEqual(first["lists"]["armor_items"], armor_basic + magic_armor)
-        self.assertEqual(first["lists"]["weapon_items"], weapons_basic + magic_weapons)
+        self.assertEqual(first["lists"]["armor_items"][:2], armor_basic)
+        self.assertEqual(first["lists"]["armor_items"][2]["name"], "Dragonplate")
+        self.assertTrue(first["lists"]["armor_items"][2]["is_magic_countable"])
+        self.assertEqual(first["lists"]["weapon_items"][:2], weapons_basic)
+        self.assertEqual(first["lists"]["weapon_items"][2]["name"], "Flaming Sword")
+        self.assertTrue(first["lists"]["weapon_items"][2]["is_magic_countable"])
         self.assertEqual(first["lists"]["magic_items"], magic + spellbooks)
         self.assertEqual(first["lists"]["formula_items"], formulas)
 
         summary = first["summary"]
         self.assertEqual(
             summary["counts"],
-            {"common": 5, "uncommon": 2, "rare": 2, "unique": 0},
+            {"common": 6, "uncommon": 2, "rare": 2, "unique": 0},
         )
         self.assertEqual(summary["picked"]["weapons"], 1)
-        self.assertEqual(summary["picked"]["magic"], 5)
+        self.assertEqual(summary["picked"]["armor"], 1)
+        self.assertEqual(summary["picked"]["magic"], 6)
+        self.assertEqual(summary["picked"]["critical"], 6)
+        self.assertEqual(summary["picked"]["critical_armor_shield"], 1)
+        self.assertEqual(summary["picked"]["critical_magic"], 4)
         self.assertEqual(
             summary["picked"]["critical"],
             summary["picked"]["critical_mundane"]

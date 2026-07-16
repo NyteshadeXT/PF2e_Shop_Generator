@@ -82,15 +82,15 @@
 		  <div class="pf-field">
 		    <label for="disposition" class="pf-label">Disposition</label>
 		    <select id="disposition" name="disposition" class="pf-select pf-select-lg">
-			  {% set current_disp = (disposition or 'fair') %}
-			  {% set opts = dispositions or ['fair'] %}
+			  {% set current_disp = (disposition or 'standard') %}
+			  {% set opts = dispositions or ['standard'] %}
 			  {% for opt in opts %}
 			    <option value="{{ opt|lower }}" {% if current_disp|lower == opt|lower %}selected{% endif %}>
-				  {{ opt.replace('_',' ')|title }}
+				  {{ disposition_labels.get(opt, opt.replace('_',' ')|title) }}
 			    </option>
 			  {% endfor %}
 		    </select>
-		    <div class="pf-help">Greedy raises prices; Generous lowers them.</div>
+		    <div class="pf-help">Five-point price scale; 3 is standard catalog pricing.</div>
 		  </div>
 
           <!-- Party Level -->
@@ -432,7 +432,6 @@
 		})();
 		</script>
 	
-	{% raw %}
 	<script nonce="{{ csp_nonce() }}">
 	(function () {
 	  const store = window.__pfState;
@@ -453,6 +452,9 @@
 	  const $build = document.getElementById('mib-build');
 	  const $out = document.getElementById('mib-output');
 	  const $re = document.getElementById('mib-reroll');
+	  const curateRoll = {{ (curate_roll or '')|tojson }};
+	  const curateChannel = {{ (curate_channel or '')|tojson }};
+	  const curateCsrf = {{ csrf_token()|tojson }};
 
 	  let rollNonce = 0;
 
@@ -517,7 +519,17 @@
 			if (sel.dataset) sel.dataset.pendingValue = '';
 	  }
 
+	  function renderMessage(message) {
+		$out.replaceChildren();
+		const status = document.createElement('p');
+		status.className = 'pf-meta';
+		status.textContent = message;
+		$out.appendChild(status);
+	  }
+
 	  async function loadBases() {
+		$load.disabled = true;
+		try {
 			const t = $type.value;
 			const max_level = Number($lvl.value || 1);
 			const params = new URLSearchParams({ type: t, max_level: String(max_level) });
@@ -530,17 +542,21 @@
 			const desiredShield = $sName?.dataset?.pendingValue || $sName?.value || '';
 
 			const r = await fetch('/api/magic-builder/bases?' + params.toString());
-			let names = [];
-			try {
-			  const j = await r.json();
-			  names = j.names || [];
-			} catch (_) {}
+			const j = await r.json();
+			if (!r.ok || !j.ok) throw new Error(j.error || `Request failed (${r.status})`);
+			const names = j.names || [];
 
 			if (t === 'weapon') optFill($wName, names, desiredWeapon);
 			if (t === 'armor')  optFill($aName, names, desiredArmor);
 			if (t === 'shield') optFill($sName, names, desiredShield);
 
+			if (!names.length) renderMessage('No base items match those selections.');
 			remember();
+		} catch (error) {
+			renderMessage(`Unable to load base items: ${error.message || 'Unknown error'}`);
+		} finally {
+			$load.disabled = false;
+		}
 	  }
 
 	  function uiBaseName() {
@@ -607,6 +623,28 @@
 		  linkWrap.appendChild(link);
 		  card.appendChild(linkWrap);
 		}
+		if (curateRoll && curateChannel) {
+		  const form = document.createElement('form');
+		  form.method = 'POST';
+		  form.action = `/results/${encodeURIComponent(curateRoll)}/curate`;
+		  form.className = 'pf-actions';
+		  const fields = {
+			csrf_token: curateCsrf,
+			channel: curateChannel,
+			operation: 'add_builder',
+			item_json: JSON.stringify({...it, item_type: $type.value})
+		  };
+		  Object.entries(fields).forEach(([name, value]) => {
+			const input = document.createElement('input');
+			input.type = 'hidden'; input.name = name; input.value = value;
+			form.appendChild(input);
+		  });
+		  const add = document.createElement('button');
+		  add.type = 'submit'; add.className = 'pf-btn pf-btn-primary';
+		  add.textContent = 'Add to Curated Shop';
+		  form.appendChild(add);
+		  card.appendChild(form);
+		}
 		$out.appendChild(card);
 	  }
 
@@ -616,6 +654,8 @@
 	  }
 
 	  async function buildItem() {
+		$build.disabled = true;
+		try {
 			const body = {
 			  item_type: $type.value,
 			  max_level: Number($lvl.value || 1),
@@ -630,16 +670,14 @@
 			  body: JSON.stringify(body)
 			});
 			const j = await r.json();
-			if (!j.ok) {
-			  $out.replaceChildren();
-			  const error = document.createElement('p');
-			  error.className = 'pf-meta';
-			  error.textContent = `Error: ${j.error || 'Unknown'}`;
-			  $out.appendChild(error);
-			  return;
-			}
+			if (!r.ok || !j.ok) throw new Error(j.error || `Request failed (${r.status})`);
 			renderItem(j.item);
 			remember();
+		} catch (error) {
+			renderMessage(`Unable to build item: ${error.message || 'Unknown error'}`);
+		} finally {
+			$build.disabled = false;
+		}
 	  }
 
 	  // Wire up
@@ -659,7 +697,7 @@
 
 	  $load.addEventListener('click', loadBases);
 	  $build.addEventListener('click', buildItem);
+	})();
 	</script>
-	{% endraw %}
 
 </html>

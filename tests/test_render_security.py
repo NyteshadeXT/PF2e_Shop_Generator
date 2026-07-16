@@ -53,12 +53,20 @@ class RenderSecurityTests(unittest.TestCase):
             )
         self.assertNotIn(attack, rendered)
         self.assertIn("\\u003c/script\\u003e", rendered)
+        template = (PROJECT_ROOT / "templates" / "results.html").read_text(encoding="utf-8")
+        self.assertIn("curation | default({})", template)
+        self.assertIn("Regenerate Original Shop", template)
+        self.assertIn("regenerate the uncurated source inventory", template)
 
     def test_magic_builder_uses_text_content_for_api_fields(self):
         template = (PROJECT_ROOT / "templates" / "index.html").read_text(encoding="utf-8")
         self.assertNotIn("$out.innerHTML", template)
         self.assertIn("title.textContent = it.name", template)
-        self.assertIn("error.textContent", template)
+        self.assertIn("status.textContent = message", template)
+        self.assertNotIn("{% raw %}", template)
+        self.assertEqual(template.count("(function () {"), template.count("})();"))
+        self.assertIn("Unable to load base items", template)
+        self.assertIn("Unable to build item", template)
 
     def test_csv_export_has_been_removed(self):
         for name in ("results.html", "results_player.html"):
@@ -76,7 +84,16 @@ class RenderSecurityTests(unittest.TestCase):
         self.assertIn('maximumDelay = 30000', template)
         self.assertIn('"If-None-Match": versionEtag', template)
         self.assertIn('response.status === 404', template)
+        self.assertIn('Shop updated.', template)
+        self.assertIn('updated: "1"', template)
+        self.assertIn('}, 1400)', template)
+        self.assertIn('class="player-section-nav"', template)
         self.assertNotIn("setInterval(checkForNewShop", template)
+
+    def test_player_navigation_does_not_displace_table_headers(self):
+        stylesheet = (PROJECT_ROOT / "static" / "pf2e.css").read_text(encoding="utf-8")
+        self.assertIn(".player-section-nav {", stylesheet)
+        self.assertNotIn(".player-view { --sticky-offset:", stylesheet)
 
     def test_privacy_and_content_headers_are_applied(self):
         response = self.client.get("/")
@@ -98,7 +115,12 @@ class RenderSecurityTests(unittest.TestCase):
         self.assertNotIn("'unsafe-inline'", policy)
         nonce = re.search(r"script-src 'self' 'nonce-([^']+)'", policy)
         self.assertIsNotNone(nonce)
-        self.assertIn(f'nonce="{nonce.group(1)}"', response.get_data(as_text=True))
+        rendered = response.get_data(as_text=True)
+        script_tags = re.findall(r"<script\b[^>]*>", rendered, re.IGNORECASE)
+        self.assertTrue(script_tags)
+        for script_tag in script_tags:
+            self.assertIn(f'nonce="{nonce.group(1)}"', script_tag)
+        self.assertNotIn("{{ csp_nonce() }}", rendered)
 
         secure = self.client.get("/", base_url="https://generator.example")
         self.assertEqual(

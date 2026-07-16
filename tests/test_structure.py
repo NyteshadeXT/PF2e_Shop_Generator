@@ -8,11 +8,19 @@ ROOT = Path(__file__).resolve().parents[1]
 class ApplicationStructureTests(unittest.TestCase):
     def test_generation_and_magic_builder_are_not_defined_in_app_module(self):
         app_source = (ROOT / "app.py").read_text(encoding="utf-8")
+        player_routes_source = (ROOT / "services" / "player_view_routes.py").read_text(
+            encoding="utf-8"
+        )
         self.assertNotIn("def _st_norm(", app_source)
         self.assertNotIn('def api_mib_bases(', app_source)
         self.assertNotIn('def api_mib_build(', app_source)
         self.assertIn("generate_shop_snapshot", app_source)
         self.assertIn("magic_builder_bp", app_source)
+        self.assertIn("register_player_view_routes(app)", app_source)
+        self.assertNotIn('def player_view(', app_source)
+        self.assertNotIn('def history(', app_source)
+        self.assertIn('def player_view(', player_routes_source)
+        self.assertIn('def history(', player_routes_source)
 
     def test_normalization_and_shield_helpers_have_one_definition_each(self):
         builder_source = (ROOT / "services" / "magic_builder.py").read_text(

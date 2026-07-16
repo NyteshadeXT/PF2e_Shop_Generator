@@ -4,7 +4,7 @@ A modular Flask web app that modernizes your Access-based shop generator with a 
 
 ## Run locally
 
-On Windows, double-click `run_app.bat`. It verifies the configuration and catalog, creates or repairs `.venv` when its Python executable is missing, installs the declared requirements, and opens `http://127.0.0.1:5000`.
+On Windows, double-click `run_app.bat`. It verifies the configuration and catalog, creates or repairs `.venv` when it is missing or uses the wrong Python version, installs the declared requirements, and opens `http://127.0.0.1:5000`. If startup fails, the command window remains open with the specific problem and recovery instructions.
 
 To run manually:
 
@@ -15,7 +15,7 @@ python -m venv .venv
 # Open http://127.0.0.1:5000
 ```
 
-On macOS or Linux, use `.venv/bin/python` in the last two commands instead. Python 3.12 is selected for both Render and GitHub Actions through `.python-version`, and the production dependencies in `requirements.txt` are pinned to the versions exercised by CI.
+On macOS or Linux, use `.venv/bin/python` in the last two commands instead. Python 3.13 is selected for local startup, Render, and GitHub Actions through `.python-version`, and the production dependencies in `requirements.txt` are pinned to the versions exercised by CI. The Windows launcher reads this file directly instead of hard-coding a separate Python version.
 
 ## Configure
 Edit `config.json` to tweak counts, disposition multipliers, critical rates, and level spread. SQLite is the only supported catalog source; catalog-load failures stop generation instead of silently falling back to a different file.
@@ -45,7 +45,7 @@ Use **Recent Shops** from the generator to recover Player View links after closi
 
 Recent Shops provides a picker containing every known game and its retained shop count. History is paginated in groups of 50, so all retained snapshots remain reachable even when a game uses the default 250-shop limit.
 
-Snapshots are retained for 365 days with a maximum of 250 snapshots per game by default. Current live snapshots are always protected. Change `player_views.retention_days` and `player_views.max_snapshots_per_channel` in `config.json`; set either value to `0` to disable that limit.
+Snapshots are retained for 365 days with a maximum of 250 active snapshots per game by default. Current live and deliberately archived snapshots are always protected; archived shops do not consume the active per-game limit. Change `player_views.retention_days` and `player_views.max_snapshots_per_channel` in `config.json`; set either value to `0` to disable that limit. Permanent deletion is available only for drafts known to have never been published. Previously published shops and legacy shops whose publication history cannot be proven remain recoverable through the archive.
 
 Maintain the state database manually with:
 
@@ -112,11 +112,11 @@ Browser responses use a restrictive Content Security Policy: executable scripts 
 
 ## Reproducing a shop
 
-Every generated shop displays a generation seed, a build fingerprint, and **Copy Reproduction Key**. A seed reproduces inventory when used with the same shop type, size, disposition, and party level. Catalog, spell, formula, adjustment, material, and rune candidates are placed in a canonical content-derived order before seeded sampling, so SQLite row order does not change a result. A reproduction key carries the settings plus the fingerprint of the generator code, configuration, catalog, Python, pandas, and NumPy versions. When an older or mismatched key is used, its settings are still restored but the results page warns that exact inventory may differ. Existing `pf2e1` keys remain supported. **Recreate Same Seed** remains the quickest one-click option from the results page. Leaving the field blank creates a new random seed. Random state is isolated per request, so concurrent hosted users do not affect one another's results.
+Every generated shop displays a generation seed, a build fingerprint, and **Copy Reproduction Key**. A seed reproduces inventory when used with the same shop type, size, disposition, and party level. Catalog, spell, formula, adjustment, material, and rune candidates are placed in a canonical content-derived order before seeded sampling, so SQLite row order does not change a result. A reproduction key carries the settings plus the fingerprint of the generator code, configuration, catalog, Python, pandas, and NumPy versions. When an older or mismatched key is used, its settings are still restored but the results page warns that exact inventory may differ. Existing `pf2e1` keys remain supported. **Recreate Same Seed** remains the quickest one-click option from the results page. On a manually curated revision, these controls are instead labeled as the **Original Seed**, **Original Generation Key**, and **Regenerate Original Shop**, because they reproduce the uncurated source inventory; the immutable stored snapshot preserves the curated shop itself. Leaving the field blank creates a new random seed. Random state is isolated per request, so concurrent hosted users do not affect one another's results.
 
 CSV export has been removed in favor of reproducible shops and immutable Player View links.
 
-Generation validation, deterministic selection orchestration, and snapshot assembly live in `services/generation.py`. The Magic Item Builder API is registered from `services/magic_builder.py`. Keeping these workflows outside `app.py` leaves the application module focused on web sessions, stored Player Views, and page routing.
+Generation validation, deterministic selection orchestration, and snapshot assembly live in `services/generation.py`. The Magic Item Builder API is registered from `services/magic_builder.py`. Player-facing displays, stored GM results, publishing, and campaign archive routes live in `services/player_view_routes.py`, while durable storage remains in `services/player_views.py`. Keeping these workflows outside `app.py` leaves the application module focused on application setup, web sessions, generation requests, and the smaller standalone tools.
 
 Spellbook generation loads each required magical tradition once per request and performs rank, rarity, duplicate, and theme selection in memory. Multiple books of the same tradition reuse that pool instead of repeatedly querying SQLite.
 

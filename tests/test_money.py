@@ -43,12 +43,21 @@ class MoneyTests(unittest.TestCase):
         self.assertEqual(to_gp("2 gp 5 sp 3 cp"), 2.53)
 
     def test_disposition_names_match_price_behavior(self):
+        self.assertEqual(_apply_disposition(10, "very_generous"), 8.0)
         self.assertEqual(_apply_disposition(10, "greedy"), 11.5)
         self.assertEqual(_apply_disposition(10, "fair"), 10.0)
+        self.assertEqual(_apply_disposition(10, "standard"), 10.0)
         self.assertEqual(_apply_disposition(10, "generous"), 9.0)
+        self.assertEqual(_apply_disposition(10, "very_greedy"), 13.0)
         mults = CONFIG["disposition_multipliers"]
-        self.assertGreater(mults["greedy"], mults["fair"])
-        self.assertGreater(mults["fair"], mults["generous"])
+        self.assertGreater(mults["very_greedy"], mults["greedy"])
+        self.assertGreater(mults["greedy"], mults["standard"])
+        self.assertGreater(mults["standard"], mults["generous"])
+        self.assertGreater(mults["generous"], mults["very_generous"])
+        self.assertEqual(
+            [name for name in mults if name != "fair"],
+            ["very_generous", "generous", "standard", "greedy", "very_greedy"],
+        )
 
     def test_adjustment_adds_combined_prices_exactly(self):
         items = [{

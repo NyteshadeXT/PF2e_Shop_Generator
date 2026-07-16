@@ -19,6 +19,7 @@ from services.player_views import (
     channel_summaries,
     cleanup_snapshots,
     current_token,
+    delete_snapshot,
     initialize,
     generation_request_snapshot,
     live_channel,
@@ -28,8 +29,10 @@ from services.player_views import (
     rotate_live_token,
     save_snapshot,
     set_current_snapshot,
+    set_snapshot_archived,
     snapshot_stats,
     snapshot_count,
+    update_snapshot_metadata,
     verify_player_view_database,
 )
 from services.settings import CONFIG
@@ -328,6 +331,73 @@ class PlayerViewStorageTests(unittest.TestCase):
         with self.assertRaises(SnapshotNotFound):
             set_current_snapshot("a" * 32, "game-two", db_path=self.db)
 
+    def test_archive_metadata_publication_states_and_guarded_delete(self):
+        first = "a" * 32
+        current = "b" * 32
+        draft = "c" * 32
+        legacy = "d" * 32
+        save_snapshot(first, "game-one", {"shop": {"shop_name": "First"}}, db_path=self.db)
+        save_snapshot(current, "game-one", {"shop": {"shop_name": "Current"}}, db_path=self.db)
+        save_snapshot(
+            draft,
+            "game-one",
+            {"shop": {"shop_name": "Draft"}},
+            db_path=self.db,
+            advance_channel=False,
+        )
+        save_snapshot(
+            legacy,
+            "game-one",
+            {"shop": {"shop_name": "Legacy"}},
+            db_path=self.db,
+            advance_channel=False,
+        )
+        with closing(sqlite3.connect(self.db)) as conn:
+            conn.execute(
+                "UPDATE player_view_snapshots SET publication_history_known = 0 WHERE token = ?",
+                (legacy,),
+            )
+            conn.commit()
+        update_snapshot_metadata(
+            draft,
+            "game-one",
+            shop_name="Renamed Draft",
+            settlement="Otari",
+            db_path=self.db,
+        )
+
+        rows = {row["token"]: row for row in recent_snapshots(channel="game-one", db_path=self.db)}
+        self.assertTrue(rows[current]["is_current"])
+        self.assertGreater(rows[current]["publication_count"], 0)
+        self.assertFalse(rows[first]["is_current"])
+        self.assertGreater(rows[first]["publication_count"], 0)
+        self.assertEqual(rows[draft]["publication_count"], 0)
+        self.assertTrue(rows[draft]["publication_history_known"])
+        self.assertFalse(rows[legacy]["publication_history_known"])
+        self.assertEqual(rows[draft]["shop_name"], "Renamed Draft")
+        self.assertEqual(rows[draft]["settlement"], "Otari")
+
+        with self.assertRaises(ValueError):
+            set_snapshot_archived(current, "game-one", True, db_path=self.db)
+        with self.assertRaises(ValueError):
+            delete_snapshot(current, "game-one", db_path=self.db)
+        with self.assertRaises(ValueError):
+            delete_snapshot(first, "game-one", db_path=self.db)
+        with self.assertRaises(ValueError):
+            delete_snapshot(legacy, "game-one", db_path=self.db)
+
+        set_snapshot_archived(draft, "game-one", True, db_path=self.db)
+        self.assertNotIn(draft, {row["token"] for row in recent_snapshots(channel="game-one", db_path=self.db)})
+        archived = recent_snapshots(channel="game-one", archived=True, db_path=self.db)
+        self.assertEqual([row["token"] for row in archived], [draft])
+        with self.assertRaises(ValueError):
+            set_current_snapshot(draft, "game-one", db_path=self.db)
+
+        set_snapshot_archived(draft, "game-one", False, db_path=self.db)
+        delete_snapshot(draft, "game-one", db_path=self.db)
+        with self.assertRaises(SnapshotNotFound):
+            load_snapshot(draft, "game-one", db_path=self.db)
+
     def test_history_page_reopens_and_restores_stored_shop(self):
         previous = os.environ.get("LOOTGEN_STATE_DB_PATH")
         os.environ["LOOTGEN_STATE_DB_PATH"] = str(self.db)
@@ -421,6 +491,8 @@ class PlayerViewStorageTests(unittest.TestCase):
                     current_token TEXT NOT NULL,
                     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
                 );
+                INSERT INTO player_view_snapshots(token, channel, snapshot_json)
+                VALUES ('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'legacy-game', '{"version":1}');
                 """
             )
             conn.commit()
@@ -430,8 +502,13 @@ class PlayerViewStorageTests(unittest.TestCase):
             snapshot_columns = {
                 row[1] for row in conn.execute("PRAGMA table_info(player_view_snapshots)")
             }
+            legacy_history_known = conn.execute(
+                "SELECT publication_history_known FROM player_view_snapshots"
+            ).fetchone()[0]
         self.assertIn("live_token", columns)
         self.assertIn("generation_key", snapshot_columns)
+        self.assertIn("publication_history_known", snapshot_columns)
+        self.assertEqual(legacy_history_known, 0)
 
     def test_live_route_redirects_and_polls_persistent_state(self):
         previous = os.environ.get("LOOTGEN_STATE_DB_PATH")
@@ -483,6 +560,14 @@ class PlayerViewStorageTests(unittest.TestCase):
     def test_retention_removes_expired_snapshot_but_protects_current(self):
         save_snapshot("a" * 32, "game-one", {"version": 1}, db_path=self.db)
         save_snapshot("b" * 32, "game-one", {"version": 2}, db_path=self.db)
+        save_snapshot(
+            "c" * 32,
+            "game-one",
+            {"version": 3},
+            db_path=self.db,
+            advance_channel=False,
+        )
+        set_snapshot_archived("c" * 32, "game-one", True, db_path=self.db)
         with closing(sqlite3.connect(self.db)) as conn:
             conn.execute(
                 "UPDATE player_view_snapshots SET created_at = '2020-01-01 00:00:00'"
@@ -496,19 +581,20 @@ class PlayerViewStorageTests(unittest.TestCase):
         with self.assertRaises(SnapshotNotFound):
             load_snapshot("a" * 32, "game-one", db_path=self.db)
         self.assertEqual(load_snapshot("b" * 32, "game-one", db_path=self.db), {"version": 2})
+        self.assertEqual(load_snapshot("c" * 32, "game-one", db_path=self.db), {"version": 3})
 
     def test_per_channel_limit_does_not_affect_other_games(self):
         for token in ("a", "b", "c", "d"):
             save_snapshot(token * 32, "game-one", {"token": token}, db_path=self.db)
         for token in ("e", "f"):
             save_snapshot(token * 32, "game-two", {"token": token}, db_path=self.db)
+        set_snapshot_archived("a" * 32, "game-one", True, db_path=self.db)
 
         removed = cleanup_snapshots(
             db_path=self.db, retention_days=0, max_snapshots_per_channel=2
         )
-        self.assertEqual(removed, 2)
-        with self.assertRaises(SnapshotNotFound):
-            load_snapshot("a" * 32, "game-one", db_path=self.db)
+        self.assertEqual(removed, 1)
+        self.assertEqual(load_snapshot("a" * 32, "game-one", db_path=self.db)["token"], "a")
         with self.assertRaises(SnapshotNotFound):
             load_snapshot("b" * 32, "game-one", db_path=self.db)
         self.assertEqual(load_snapshot("c" * 32, "game-one", db_path=self.db)["token"], "c")
@@ -538,14 +624,16 @@ class PlayerViewStorageTests(unittest.TestCase):
             import app
             app.app.config.update(TESTING=True)
 
-            original = app._build_payload
-            app._build_payload = lambda *args, **kwargs: self.fail("generation must not run")
+            original = app.generate_shop_snapshot
+            app.generate_shop_snapshot = lambda *args, **kwargs: self.fail(
+                "generation must not run"
+            )
             try:
                 response = app.app.test_client().get(
                     "/player-view?channel=game-one&roll_id=" + "f" * 32
                 )
             finally:
-                app._build_payload = original
+                app.generate_shop_snapshot = original
             self.assertEqual(response.status_code, 404)
         finally:
             if previous is None:

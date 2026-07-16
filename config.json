@@ -60,9 +60,12 @@
   "specific_magic_counts": { "small": [0,1], "medium": [1,2], "large": [2,4], "grand": [3,5] },
 
   "disposition_multipliers": {
+    "very_generous": 0.8,
+    "generous": 0.9,
+    "standard": 1.0,
     "greedy": 1.15,
-    "fair": 1.0,
-    "generous": 0.9
+    "very_greedy": 1.3,
+    "fair": 1.0
   },
 
   "level_spread": { "min_offset": -3, "max_offset": 1 },

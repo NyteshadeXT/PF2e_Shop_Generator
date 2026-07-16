@@ -134,7 +134,7 @@ class MagicBuilderTests(unittest.TestCase):
         self.assertEqual(first, repeated)
         self.assertNotEqual(first, changed)
 
-    def test_builder_forces_only_fundamental_rune_rate(self):
+    def test_builder_forces_fundamental_and_property_opportunity(self):
         configured = {
             "fundamental": {"apply_rate": 0.25},
             "properties": {"apply_rate": 0.4},
@@ -150,7 +150,22 @@ class MagicBuilderTests(unittest.TestCase):
         self.assertEqual(result["fundamental_apply_rate"], 1.0)
         self.assertEqual(result["properties"]["apply_rate"], 0.4)
         self.assertEqual(result["property_apply_rate"], 0.6)
+        self.assertTrue(result["_prefer_higher_level"])
         self.assertEqual(configured["fundamental"]["apply_rate"], 0.25)
+
+    def test_builder_removes_outer_property_gate(self):
+        configured = {
+            "fundamental": {"apply_rate": 0.25},
+            "property": {"apply_rate": 0.30, "per_slot_rate": 0.30},
+        }
+        with patch.dict(
+            magic_builder.CONFIG, {"weapon_runes": configured}, clear=False
+        ):
+            result = magic_builder._runes_config("weapon")
+
+        self.assertEqual(result["property"]["apply_rate"], 1.0)
+        self.assertEqual(result["property"]["per_slot_rate"], 0.30)
+        self.assertEqual(configured["property"]["apply_rate"], 0.30)
 
 
 if __name__ == "__main__":

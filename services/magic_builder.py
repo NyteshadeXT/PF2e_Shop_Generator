@@ -84,6 +84,14 @@ def _runes_config(item_type: str) -> dict:
         CONFIG.get(f"{item_type}_runes") or CONFIG.get("runes") or {}
     )
     _force_fundamental_apply_rate_only(config, 1.0)
+    # The builder is explicitly creating a magic item. Avoid compounding the
+    # normal shop-generation property gate with the per-slot roll: each weapon
+    # or armor slot gets its configured chance directly. A shield has only its
+    # single property-rune opportunity, so it always reaches that selection.
+    property_config = config.get("property")
+    if isinstance(property_config, dict):
+        property_config["apply_rate"] = 1.0
+    config["_prefer_higher_level"] = True
     return config
 
 
@@ -272,6 +280,7 @@ def api_mib_build():
     rng = random.Random(seed)
     runes = _load_runes_df()
     rune_config = _runes_config(item_type)
+    rune_config["_target_level"] = max_level
     if item_type == "weapon":
         item = apply_weapon_runes(
             item, player_level=max_level, runes_df=runes, rng=rng, rune_cfg=rune_config

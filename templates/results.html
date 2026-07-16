@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   {% set shop_display_name = shop_name | default('') | trim %}
+  {% set curation_data = curation | default({}) %}
   {% if not shop_display_name %}
     {% set shop_display_name = (shop_type or 'Any') | replace('_',' ') | title %}
   {% endif %}
@@ -22,9 +23,9 @@
           <p class="pf-subtitle">
             <span class="pf-chip">Shop: {{ (shop_type or "Any") | replace('_',' ') | title }}</span>
             <span class="pf-chip">Size: {{ shop_size|title }}</span>
-            <span class="pf-chip">Disposition: {{ disposition|title }}</span>
+            <span class="pf-chip">Disposition: {{ disposition|replace('_', ' ')|title }}</span>
             <span class="pf-chip">Party Level: {{ party_level }}</span>
-            <span class="pf-chip">Seed: {{ seed }}</span>
+            <span class="pf-chip">{{ 'Original Seed' if curation_data.is_curated else 'Seed' }}: {{ seed }}</span>
             <span class="pf-chip">Build: {{ generation_fingerprint }}</span>
           </p>
           {% if reproduction_warning %}
@@ -41,7 +42,7 @@
             <button type="submit" class="pf-link-chip">Lock Generator</button>
           </form>
           {% endif %}
-          <button class="pf-link-chip" type="button" id="copy-reproduction-key">Copy Reproduction Key</button>
+          <button class="pf-link-chip" type="button" id="copy-reproduction-key">{{ 'Copy Original Generation Key' if curation_data.is_curated else 'Copy Reproduction Key' }}</button>
           <span id="copy-reproduction-status" class="pf-meta" aria-live="polite"></span>
 
           <form method="POST" action="/query">
@@ -54,7 +55,7 @@
             <input type="hidden" name="party_level" value="{{ party_level }}">
             <input type="hidden" name="channel" value="{{ channel }}">
             <input type="hidden" name="seed" value="{{ seed }}">
-            <button type="submit" class="pf-link-chip">Recreate Same Seed</button>
+            <button type="submit" class="pf-link-chip">{{ 'Regenerate Original Shop' if curation_data.is_curated else 'Recreate Same Seed' }}</button>
           </form>
 
           <!-- Open the immutable snapshot already saved during generation. -->
@@ -65,7 +66,7 @@
                 rel="noopener">
             <input type="hidden" name="channel"  value='{{ channel or "default" }}'>
             <input type="hidden" name="roll_id"  value='{{ roll_id or "" }}'>
-            <button type="submit" class="pf-link-chip" formtarget="_blank">Open Player View</button>
+            <button type="submit" class="pf-link-chip" formtarget="_blank">Preview Player View</button>
           </form>
 
           {% if is_live %}
@@ -98,21 +99,104 @@
       </div>
     </header>
 
+    <section id="Curate" class="pf-card mt-12">
+      <div class="pf-section__header">
+        <h2>Curate This Shop{% if curation_data.is_curated %} — Revision {{ curation_data.revision }}{% endif %}</h2>
+      </div>
+      <div class="p-12">
+        <p class="pf-meta">Each change creates a new saved draft. Players continue seeing the currently published version until you select Publish.</p>
+        {% if curation_data.is_curated %}
+        <p class="pf-meta" role="note">This revision includes manual changes. Its original seed and generation key regenerate the uncurated source inventory; this stored snapshot preserves the curated version.</p>
+        {% endif %}
+
+        <h3>Edit an existing item</h3>
+        <form method="POST" action="{{ url_for('curation.curate_snapshot', roll_id=roll_id) }}" class="pf-actions">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="channel" value="{{ channel }}">
+          <label class="pf-field">
+            <span class="pf-label">Item</span>
+            <select class="pf-select" id="curate-existing-item" required>
+              <option value="">Choose an item</option>
+              {% for section, label, items in [
+                ('mundane', 'Mundane', mundane_items),
+                ('materials', 'Materials', material_items),
+                ('formulas', 'Formulas', formula_items),
+                ('armor', 'Armor/Shields', armor_items),
+                ('weapons', 'Weapons', weapon_items),
+                ('magic', 'Magic Items', magic_items)
+              ] %}
+                {% if items %}<optgroup label="{{ label }}">{% endif %}
+                {% for it in items %}<option value="{{ section }}|{{ loop.index0 }}">{{ '[Hidden] ' if it.player_hidden else '' }}{{ it.name }} (qty {{ it.quantity or 1 }})</option>{% endfor %}
+                {% if items %}</optgroup>{% endif %}
+              {% endfor %}
+            </select>
+          </label>
+          <input type="hidden" name="section" id="curate-existing-section">
+          <input type="hidden" name="item_index" id="curate-existing-index">
+          <label class="pf-field"><span class="pf-label">New quantity</span><input class="pf-input" type="number" name="quantity" min="1" max="999" value="1"></label>
+          <button class="pf-btn" type="submit" name="operation" value="quantity">Update Quantity</button>
+          <button class="pf-btn" type="submit" name="operation" value="hide">Hide from Players</button>
+          <button class="pf-btn" type="submit" name="operation" value="reveal">Reveal to Players</button>
+          <button class="pf-btn" type="submit" name="operation" value="remove" data-confirm="Remove this item from the draft?">Remove Item</button>
+        </form>
+
+        <h3>Add a catalog item</h3>
+        <form method="POST" action="{{ url_for('curation.curate_snapshot', roll_id=roll_id) }}" class="pf-actions" id="catalog-add-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="channel" value="{{ channel }}">
+          <input type="hidden" name="operation" value="add_catalog">
+          <label class="pf-field"><span class="pf-label">Search catalog</span><input class="pf-input" id="catalog-search" autocomplete="off" placeholder="Type at least 2 characters"></label>
+          <label class="pf-field"><span class="pf-label">Matching item</span><select class="pf-select" id="catalog-results" required><option value="">Search first</option></select></label>
+          <input type="hidden" name="catalog_name" id="catalog-name">
+          <input type="hidden" name="catalog_source" id="catalog-source">
+          <label class="pf-field"><span class="pf-label">Add to</span><select class="pf-select" name="section" required>
+            <option value="mundane">Mundane</option><option value="materials">Materials</option><option value="formulas">Formulas</option><option value="armor">Armor/Shields</option><option value="weapons">Weapons</option><option value="magic">Magic Items</option>
+          </select></label>
+          <label class="pf-field"><span class="pf-label">Quantity</span><input class="pf-input" type="number" name="quantity" min="1" max="999" value="1"></label>
+          <button class="pf-btn pf-btn-primary" type="submit">Add Catalog Item</button>
+        </form>
+
+        <h3>Add a custom item</h3>
+        <form method="POST" action="{{ url_for('curation.curate_snapshot', roll_id=roll_id) }}" class="pf-actions">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="channel" value="{{ channel }}"><input type="hidden" name="operation" value="add_custom">
+          <label class="pf-field"><span class="pf-label">Name</span><input class="pf-input" name="name" required maxlength="200"></label>
+          <label class="pf-field"><span class="pf-label">Section</span><select class="pf-select" name="section"><option value="mundane">Mundane</option><option value="materials">Materials</option><option value="formulas">Formulas</option><option value="armor">Armor/Shields</option><option value="weapons">Weapons</option><option value="magic">Magic Items</option></select></label>
+          <label class="pf-field"><span class="pf-label">Level</span><input class="pf-input" type="number" name="level" min="0" max="30" value="0"></label>
+          <label class="pf-field"><span class="pf-label">Rarity</span><select class="pf-select" name="rarity"><option>Common</option><option>Uncommon</option><option>Rare</option><option>Unique</option></select></label>
+          <label class="pf-field"><span class="pf-label">Price</span><input class="pf-input" name="price" value="—" maxlength="50"></label>
+          <label class="pf-field"><span class="pf-label">Quantity</span><input class="pf-input" type="number" name="quantity" min="1" max="999" value="1"></label>
+          <label class="pf-field"><span class="pf-label">Category</span><input class="pf-input" name="category" value="Custom Item" maxlength="100"></label>
+          <label class="pf-checkbox"><input type="checkbox" name="magical" value="1"> Count as magical equipment</label>
+          <button class="pf-btn pf-btn-primary" type="submit">Add Custom Item</button>
+        </form>
+
+        <h3>Rebuild or use the Magic Item Builder</h3>
+        <div class="pf-actions">
+          <form method="POST" action="{{ url_for('curation.curate_snapshot', roll_id=roll_id) }}" class="pf-actions">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><input type="hidden" name="channel" value="{{ channel }}"><input type="hidden" name="operation" value="rebuild">
+            <select class="pf-select" name="section"><option value="mundane">Mundane</option><option value="materials">Materials</option><option value="formulas">Formulas</option><option value="armor">Armor/Shields</option><option value="weapons">Weapons</option><option value="magic">Magic Items</option></select>
+            <button class="pf-btn" type="submit" data-confirm="Replace this entire section with a newly generated section?">Rebuild Section</button>
+          </form>
+          <a class="pf-btn" href="{{ url_for('index', curate_roll=roll_id, curate_channel=channel) }}#magic-item-builder">Build and Add Magic Item</a>
+        </div>
+      </div>
+    </section>
+
     <!-- Summary card (Picked / Rarity) -->
     <section class="pf-card mt-12">
       <div class="pf-meta">
         <strong>Picked:</strong>
         Mundane {{ picked.mundane|default(0) }},
         Materials {{ picked.materials|default(0) }},
-        Armor (incl. Shields) {{ picked.armor|default(0) }},
-        Weapons {{ picked.weapons|default(0) }},
-        Magic {{ picked.magic|default(0) }},
+        Mundane Armor/Shields {{ picked.armor|default(0) }},
+        Mundane Weapons {{ picked.weapons|default(0) }},
+        Magic Items {{ picked.magic|default(0) }},
         Critical Total {{ picked.critical|default(0) }} —
         M {{ picked.critical_mundane|default(0) }},
         Mat {{ picked.critical_materials|default(0) }},
-        A/S {{ picked.critical_armor_shield|default(0) }},
-        W {{ picked.critical_weapons|default(0) }},
-        Mg {{ picked.critical_magic|default(0) }}<br>
+        Mundane A/S {{ picked.critical_armor_shield|default(0) }},
+        Mundane W {{ picked.critical_weapons|default(0) }},
+        Magic {{ picked.critical_magic|default(0) }}<br>
         <strong>Rarity:</strong>
         Common {{ counts.common|default(0) }} •
         Uncommon {{ counts.uncommon|default(0) }} •
@@ -471,21 +555,22 @@
       (function() {
         const shopName = {{ shop_display_name|tojson }};
         const size = {{ (shop_size|title)|tojson }};
-        const disp = {{ (disposition|title)|tojson }};
+        const disp = {{ (disposition|replace('_', ' ')|title)|tojson }};
         const pl   = {{ (party_level|default(''))|tojson }};
         document.title = `Item Generator – ${shopName} / ${size} / ${disp} / PL ${pl}`;
       })();
 
       (function() {
         const key = {{ (reproduction_key|default(''))|tojson }};
+        const isCurated = {{ (curation_data.is_curated|default(false))|tojson }};
         const button = document.getElementById("copy-reproduction-key");
         const status = document.getElementById("copy-reproduction-status");
         button?.addEventListener("click", async () => {
           try {
             await navigator.clipboard.writeText(key);
-            if (status) status.textContent = "Key copied!";
+            if (status) status.textContent = isCurated ? "Original generation key copied!" : "Key copied!";
           } catch (_) {
-            window.prompt("Copy this reproduction key:", key);
+            window.prompt(isCurated ? "Copy this original generation key:" : "Copy this reproduction key:", key);
             if (status) status.textContent = "Key ready to copy.";
           }
         });
@@ -494,4 +579,38 @@
 
   </div><!-- .pf-app -->
 </body>
+<script nonce="{{ csp_nonce() }}">
+(function () {
+  const existing = document.getElementById('curate-existing-item');
+  if (existing) existing.addEventListener('change', () => {
+    const parts = existing.value.split('|');
+    document.getElementById('curate-existing-section').value = parts[0] || '';
+    document.getElementById('curate-existing-index').value = parts[1] || '';
+  });
+
+  const search = document.getElementById('catalog-search');
+  const results = document.getElementById('catalog-results');
+  let timer;
+  if (search && results) search.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      const query = search.value.trim();
+      if (query.length < 2) return;
+      const response = await fetch('/api/catalog/search?q=' + encodeURIComponent(query));
+      const payload = await response.json();
+      results.replaceChildren(new Option('Choose a match', ''));
+      (payload.items || []).forEach((item) => {
+        const option = new Option(`${item.name} — Level ${item.level} ${item.rarity} (${item.source_table})`, JSON.stringify(item));
+        results.add(option);
+      });
+    }, 250);
+  });
+  if (results) results.addEventListener('change', () => {
+    if (!results.value) return;
+    const item = JSON.parse(results.value);
+    document.getElementById('catalog-name').value = item.name;
+    document.getElementById('catalog-source').value = item.source_table;
+  });
+})();
+</script>
 </html>

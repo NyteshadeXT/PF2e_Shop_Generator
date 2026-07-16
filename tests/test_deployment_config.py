@@ -59,7 +59,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
         self.assertEqual(
             requirements.splitlines(),
             [
-                "Flask==3.1.2",
+                "Flask==3.1.3",
                 "gunicorn==23.0.0",
                 "pandas==2.3.3",
                 "numpy==2.3.4",
@@ -72,7 +72,7 @@ class DeploymentConfigurationTests(unittest.TestCase):
             PROJECT_ROOT / ".github" / "workflows" / "tests.yml"
         ).read_text(encoding="utf-8")
 
-        self.assertEqual(runtime, "3.12")
+        self.assertEqual(runtime, "3.13")
         self.assertIn('python-version-file: ".python-version"', workflow)
 
     def test_windows_launcher_repairs_partial_environment_and_checks_assets(self):
@@ -84,9 +84,15 @@ class DeploymentConfigurationTests(unittest.TestCase):
             launcher,
         )
         self.assertIn('if not exist "%VENV_PYTHON%"', launcher)
-        self.assertIn("py -3.12 -m venv --clear .venv", launcher)
+        self.assertIn('set /p "REQUIRED_PYTHON="<.python-version', launcher)
+        self.assertIn('set "REBUILD_VENV=1"', launcher)
+        self.assertIn("Existing virtual environment uses the wrong Python version", launcher)
+        self.assertIn("Python %REQUIRED_PYTHON% is not installed", launcher)
+        self.assertIn("py -%REQUIRED_PYTHON% -m venv --clear .venv", launcher)
         self.assertIn("validate_catalog", launcher)
         self.assertIn("python -m pip install --prefer-binary -r requirements.txt", launcher)
+        self.assertIn(":startup_failed", launcher)
+        self.assertIn("pause", launcher)
 
     def test_local_runtime_files_are_ignored_but_deploy_assets_are_not(self):
         ignore_rules = (PROJECT_ROOT / ".gitignore").read_text(encoding="utf-8")

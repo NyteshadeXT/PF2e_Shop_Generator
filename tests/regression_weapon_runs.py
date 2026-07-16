@@ -144,7 +144,7 @@ def test_weapon_fundamental_property_gate_can_fail():
     rune_names = {r.get("name") for r in fused.get("runes", [])}
     assert "Weapon Potency +1" in rune_names
     assert "Striking" not in rune_names
-    assert "striking" not in str(fused.get("_rune_fund_label", "")).lower()
+    assert fused.get("_rune_fund_label") == "+1"
     
 
 def test_weapon_fundamental_property_obeys_apply_rate():
@@ -227,6 +227,7 @@ def test_armor_potency_always_applies_with_candidates():
 
     rune_names = {r.get("name") for r in fused.get("runes", [])}
     assert "Armor Potency +1" in rune_names
+    assert fused.get("_rune_fund_label") == "+1"
 
 
 def test_apply_armor_runes_pairs_resilient_when_gate_succeeds():
@@ -285,7 +286,7 @@ def test_armor_fundamental_property_gate_can_fail():
     rune_names = {r.get("name") for r in fused.get("runes", [])}
     assert "Armor Potency +1" in rune_names
     assert "Resilient" not in rune_names
-    assert "resilient" not in str(fused.get("_rune_fund_label", "")).lower()
+    assert fused.get("_rune_fund_label") == "+1"
 
 
 def test_armor_fundamental_property_obeys_apply_rate():

@@ -1241,7 +1241,11 @@ def _resolve_rarity_weights(primary: dict | None, fallback: dict | None = None) 
 
 
 def _weighted_pick_by_rarity(
-    pool: list[dict], rng: random.Random, rarity_weights: dict[str, float]
+    pool: list[dict],
+    rng: random.Random,
+    rarity_weights: dict[str, float],
+    *,
+    target_level: int | None = None,
 ) -> dict | None:
     if not pool:
         return None
@@ -1255,6 +1259,12 @@ def _weighted_pick_by_rarity(
             weight = float(weight)
         except (TypeError, ValueError):
             weight = default_weight
+        if target_level is not None:
+            rune_level = int(entry.get("level") or 0)
+            distance = abs(int(target_level) - rune_level)
+            # Preserve a genuine weighted roll while strongly preferring runes
+            # whose item level is closest to the builder's Maximum Level.
+            weight *= 1.0 / ((distance + 1) ** 2)
         weights.append(max(weight, 0.0))
 
     if not any(w > 0 for w in weights):
@@ -1269,15 +1279,18 @@ def _weighted_pick_by_rarity(
             return entry
     return pool[-1]
 
-def _format_fundamental_pair_label(potency_rune: dict | None, property_rune: dict) -> str:
-    prop_label = str(property_rune.get("name") or "").strip()
+def _format_potency_label(potency_rune: dict | None) -> str:
     if not potency_rune:
-        return prop_label
+        return ""
     rank = parse_potency_rank(potency_rune.get("name"))
     if rank:
-        potency_label = f"+{rank}"
-    else:
-        potency_label = str(potency_rune.get("name") or "").strip()
+        return f"+{rank}"
+    return str(potency_rune.get("name") or "").strip()
+
+
+def _format_fundamental_pair_label(potency_rune: dict | None, property_rune: dict) -> str:
+    prop_label = str(property_rune.get("name") or "").strip()
+    potency_label = _format_potency_label(potency_rune)
     return " ".join(part for part in (potency_label, prop_label) if part)
     
 def _fundamental_candidates(all_runes, weapon_level, party_level):
@@ -1313,7 +1326,9 @@ def _fundamental_candidates(all_runes, weapon_level, party_level):
                     out.append(r)
     return out
 
-def _weighted_pick_fundamental(cands: list[dict], rng: random.Random, cfg: dict | None) -> dict | None:
+def _weighted_pick_fundamental(
+    cands: list[dict], rng: random.Random, cfg: dict | None
+) -> dict | None:
     if not cands:
         return None
     fcfg = (cfg or {}).get("fundamental", {}) if cfg else {}
@@ -1333,9 +1348,18 @@ def _weighted_pick_fundamental(cands: list[dict], rng: random.Random, cfg: dict 
             pot_w = {}
 
     weights = []
+    target_level = None
+    if cfg and cfg.get("_prefer_higher_level"):
+        try:
+            target_level = int(cfg.get("_target_level"))
+        except (TypeError, ValueError):
+            target_level = None
     for r in cands:
         pr = parse_potency_rank(r.get("name"))
         w = float(pot_w.get(str(pr), 1.0))
+        if target_level is not None:
+            distance = abs(target_level - int(r.get("level") or 0))
+            w *= 1.0 / ((distance + 1) ** 2)
         weights.append(max(w, 0.0001))
 
     # simple roulette-wheel using rng
@@ -1686,6 +1710,7 @@ def apply_weapon_runes(
         primary=(rcfg.get("rarity_weights") if isinstance(rcfg, dict) else None),
         fallback=CONFIG.get("rarity_weights", {"Common": 1.0}),
     )
+    target_level = player_level if rcfg.get("_prefer_higher_level") else None
 
 
     # Base state from current weapon row
@@ -1714,8 +1739,7 @@ def apply_weapon_runes(
             new_rarity = bump_rarity(new_rarity, (potency_rune.get("rarity") or "Common"))
 
             potency = parse_potency_rank(potency_rune.get("name"))
-            fund_label = str(potency_rune.get("name", "")).strip()
-            fused["_rune_fund_label"] = fund_label
+            fused["_rune_fund_label"] = _format_potency_label(potency_rune)
 
             if potency > 0 and rng.random() < pair_rate:
                 prop_cands = _weapon_fundamental_property_candidates(
@@ -1745,7 +1769,9 @@ def apply_weapon_runes(
                 pool = [r for r in prop_cands if r.get("name") not in picked_names]
                 if not pool:
                     break
-                r = _weighted_pick_by_rarity(pool, rng, rarity_weights)
+                r = _weighted_pick_by_rarity(
+                    pool, rng, rarity_weights, target_level=target_level
+                )
                 if r is None:
                     break
                 picked_names.add(r.get("name"))
@@ -1847,6 +1873,7 @@ def apply_armor_runes(
         primary=(rcfg.get("rarity_weights") if isinstance(rcfg, dict) else None),
         fallback=CONFIG.get("rarity_weights", {"Common": 1.0}),
     )
+    target_level = player_level if rcfg.get("_prefer_higher_level") else None
 
     armor_level = int(fused.get("level") or 0)
     base_rarity = (fused.get("rarity") or "Common").strip().title()
@@ -1869,7 +1896,7 @@ def apply_armor_runes(
             new_rarity  = bump_rarity(new_rarity, (potency_rune.get("rarity") or "Common"))
 
             potency = parse_potency_rank(potency_rune.get("name"))  # 1..3
-            fused["_rune_fund_label"] = str(potency_rune.get("name", "")).strip()
+            fused["_rune_fund_label"] = _format_potency_label(potency_rune)
 
             if potency > 0 and rng.random() < pair_rate:
                 prop_cands = _armor_fundamental_property_candidates(
@@ -1899,7 +1926,9 @@ def apply_armor_runes(
                 pool = [r for r in prop_cands if r.get("name") not in picked_names]
                 if not pool:
                     break
-                r = _weighted_pick_by_rarity(pool, rng, rarity_weights)
+                r = _weighted_pick_by_rarity(
+                    pool, rng, rarity_weights, target_level=target_level
+                )
                 if r is None:
                     break
                 picked_names.add(r.get("name"))
@@ -1992,6 +2021,7 @@ def apply_shield_runes(
         primary=rcfg.get("rarity_weights"),
         fallback=CONFIG.get("rarity_weights", {"Common": 1.0}),
     )
+    target_level = player_level if rcfg.get("_prefer_higher_level") else None
 
     # Base state
     base_rarity = (fused.get("rarity") or "Common").strip().title()
@@ -2004,7 +2034,9 @@ def apply_shield_runes(
     if rng.random() < prop_rate:
         pool = _shield_property_candidates(all_runes, player_level, fused)
         if pool:
-            r = _weighted_pick_by_rarity(pool, rng, rarity_weights)
+            r = _weighted_pick_by_rarity(
+                pool, rng, rarity_weights, target_level=target_level
+            )
             if r is None:
                 r = pool[rng.randint(0, len(pool) - 1)]
             chosen.append(r)
@@ -2039,7 +2071,7 @@ def apply_shield_runes(
 
 
 def _apply_disposition(gp: float, disposition: str) -> float:
-    mults = CONFIG.get("disposition_multipliers", {"greedy": 1.15, "fair": 1.0, "generous": 0.9})
+    mults = CONFIG.get("disposition_multipliers", {"standard": 1.0, "fair": 1.0})
     m = mults.get((disposition or "fair").lower(), 1.0)
     return _multiply_gp(gp, m)
 
