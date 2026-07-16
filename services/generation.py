@@ -5,6 +5,7 @@ from collections.abc import Mapping
 
 import pandas as pd
 
+from services.inventory_sections import flattened_inventory, inventory_lists
 from services.logic import (
     CONFIG,
     select_armor_items,
@@ -106,12 +107,13 @@ def _is_magic_equipment(item: dict) -> bool:
 
 def summarize_inventory(lists: Mapping) -> dict:
     """Build mutually exclusive GM summary totals from persisted inventory lists."""
-    mundane_items = list(lists.get("mundane_items") or [])
-    material_items = list(lists.get("material_items") or [])
-    armor_items = list(lists.get("armor_items") or [])
-    weapon_items = list(lists.get("weapon_items") or [])
-    magic_items = list(lists.get("magic_items") or [])
-    formula_items = list(lists.get("formula_items") or [])
+    normalized = inventory_lists(lists)
+    mundane_items = normalized["mundane_items"]
+    material_items = normalized["material_items"]
+    armor_items = normalized["armor_items"]
+    weapon_items = normalized["weapon_items"]
+    magic_items = normalized["magic_items"]
+    formula_items = normalized["formula_items"]
 
     magical_armor = _unique_items([item for item in armor_items if _is_magic_equipment(item)])
     magical_weapons = _unique_items([item for item in weapon_items if _is_magic_equipment(item)])
@@ -142,33 +144,8 @@ def summarize_inventory(lists: Mapping) -> dict:
             "critical_magic",
         )
     )
-    counts = rarity_counts(
-        mundane_items + material_items + armor_items + weapon_items + magic_items
-    )
+    counts = rarity_counts(flattened_inventory(normalized))
     return {"picked": picked, "counts": counts, "reproduction_warning": ""}
-
-
-def build_payload(df, shop_type, shop_size, disposition, party_level):
-    """Build the legacy flat inventory shape without any web dependencies."""
-    mundane = select_mundane_items(df, shop_type, party_level, shop_size, disposition)
-    materials = select_materials(df, shop_type, party_level, shop_size, disposition)
-    armor = select_armor_items(df, shop_type, party_level, shop_size, disposition)
-    weapons = select_weapons_items(df, shop_type, party_level, shop_size, disposition)
-    magic = select_magic_items(df, shop_type, party_level, shop_size, disposition)
-    formulas = select_formulas(df, shop_type, party_level, shop_size, disposition)
-    window = (magic.get("window") if isinstance(magic, dict) else None) or (
-        party_level,
-        party_level,
-    )
-    return {
-        "mundane_items": mundane.get("items", []),
-        "materials_items": materials.get("items", []),
-        "armor_items": armor.get("items", []),
-        "weapons_items": weapons.get("items", []),
-        "magic_items": magic.get("items", []) if isinstance(magic, dict) else [],
-        "formulas_items": formulas.get("items", []),
-        "window": window,
-    }
 
 
 def generate_shop_snapshot(df: pd.DataFrame, submitted: Mapping) -> dict:

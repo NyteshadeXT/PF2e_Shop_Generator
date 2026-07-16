@@ -10,6 +10,7 @@ from flask import Blueprint, abort, current_app, jsonify, redirect, request, url
 
 from services.db import load_items
 from services.generation import generate_shop_snapshot, summarize_inventory
+from services.inventory_sections import SECTION_LIST_KEYS
 from services.player_views import (
     SnapshotNotFound,
     load_snapshot,
@@ -20,14 +21,7 @@ from services.player_views import (
 
 bp = Blueprint("curation", __name__)
 
-SECTIONS = {
-    "mundane": "mundane_items",
-    "materials": "material_items",
-    "formulas": "formula_items",
-    "armor": "armor_items",
-    "weapons": "weapon_items",
-    "magic": "magic_items",
-}
+SECTIONS = SECTION_LIST_KEYS
 
 
 def _section(value: str) -> tuple[str, str]:

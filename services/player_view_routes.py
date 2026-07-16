@@ -24,6 +24,15 @@ from flask import (
 )
 
 from services.generation import count_critical
+from services.inventory_sections import (
+    flattened_inventory,
+    inventory_lists,
+    legacy_snapshot_lists,
+    player_visible_lists,
+    section_counts,
+    section_template_context,
+    template_inventory_context,
+)
 from services.player_views import (
     LiveChannelNotFound,
     SnapshotNotFound,
@@ -124,23 +133,15 @@ def player_view():
         current_app.logger.exception("Unable to load Player View snapshot")
         abort(503, "Player View storage is temporarily unavailable.")
 
-    lists: dict = {}
+    raw_lists: dict = {}
     meta: dict = {}
     if isinstance(snapshot, dict) and snapshot:
         if "lists" in snapshot or "shop" in snapshot:
-            lists = snapshot.get("lists") or {}
+            raw_lists = snapshot.get("lists") or {}
             meta = snapshot.get("shop") or {}
         else:
             # Continue to display snapshots created before the nested format.
-            lists = {
-                "mundane_items": snapshot.get("mundane_items", []),
-                "material_items": snapshot.get("material_items", [])
-                or snapshot.get("materials_items", []),
-                "armor_items": snapshot.get("armor_items", []),
-                "weapon_items": snapshot.get("weapon_items", []),
-                "magic_items": snapshot.get("magic_items", []),
-                "formula_items": snapshot.get("formula_items", []),
-            }
+            raw_lists = legacy_snapshot_lists(snapshot)
             meta = {
                 "shop_type": snapshot.get("shop_type"),
                 "shop_size": snapshot.get("shop_size"),
@@ -150,22 +151,10 @@ def player_view():
                 "window": snapshot.get("window"),
             }
 
-    if not lists:
+    if not raw_lists:
         abort(400, "Player View snapshot is missing or invalid.")
 
-    # Hidden merchandise stays in the immutable GM draft but never reaches a
-    # player-facing rendering of that revision.
-    for list_key in (
-        "mundane_items",
-        "material_items",
-        "formula_items",
-        "armor_items",
-        "weapon_items",
-        "magic_items",
-    ):
-        lists[list_key] = [
-            item for item in (lists.get(list_key) or []) if not item.get("player_hidden")
-        ]
+    lists = player_visible_lists(raw_lists)
 
     shop_name = _normalized_text(meta.get("shop_name") or meta.get("name")) or None
     default_label = (_normalized_text(meta.get("shop_type")) or "Shop").title()
@@ -175,16 +164,11 @@ def player_view():
         shop_name=shop_name,
         shop_type=meta.get("shop_type"),
         seed=meta.get("seed"),
-        mundane_items=lists.get("mundane_items", []),
-        material_items=lists.get("material_items", []),
-        armor_items=lists.get("armor_items", []),
-        weapon_items=lists.get("weapon_items", []),
-        magic_items=lists.get("magic_items", []),
-        formula_items=lists.get("formula_items", []),
         aon_url=aon_url,
         channel=channel,
         roll_id=roll_id,
         live_token=live_token,
+        **template_inventory_context(lists),
     )
 
 
@@ -204,25 +188,12 @@ def results_view(roll_id: str):
         abort(503, "Player View storage is temporarily unavailable.")
 
     meta = snapshot.get("shop") or {}
-    lists = snapshot.get("lists") or {}
+    lists = inventory_lists(snapshot.get("lists") or {})
     summary = snapshot.get("summary") or {}
-    all_items = (
-        list(lists.get("mundane_items") or [])
-        + list(lists.get("material_items") or [])
-        + list(lists.get("armor_items") or [])
-        + list(lists.get("weapon_items") or [])
-        + list(lists.get("magic_items") or [])
-    )
+    all_items = flattened_inventory(lists)
     counts = summary.get("counts") or rarity_counts(all_items)
-    picked = summary.get("picked") or {
-        "mundane": len(lists.get("mundane_items") or []),
-        "materials": len(lists.get("material_items") or []),
-        "armor": len(lists.get("armor_items") or []),
-        "weapons": len(lists.get("weapon_items") or []),
-        "magic": len(lists.get("magic_items") or []),
-        "formulas": len(lists.get("formula_items") or []),
-        "critical": count_critical(all_items),
-    }
+    picked = summary.get("picked") or section_counts(lists)
+    picked.setdefault("critical", count_critical(all_items))
     return render_template(
         "results.html",
         shop_type=meta.get("shop_type"),
@@ -236,12 +207,6 @@ def results_view(roll_id: str):
         reproduction_warning=summary.get("reproduction_warning", ""),
         picked=picked,
         counts=counts,
-        mundane_items=lists.get("mundane_items", []),
-        material_items=lists.get("material_items", []),
-        armor_items=lists.get("armor_items", []),
-        weapon_items=lists.get("weapon_items", []),
-        magic_items=lists.get("magic_items", []),
-        formula_items=lists.get("formula_items", []),
         aon_url=aon_url,
         window=meta.get("window"),
         roll_id=roll_id,
@@ -250,6 +215,8 @@ def results_view(roll_id: str):
         is_live=live_state["current_token"] == roll_id,
         generation_request_key=secrets.token_urlsafe(24),
         curation=snapshot.get("curation") or {},
+        inventory_sections=section_template_context(lists),
+        **template_inventory_context(lists),
     )
 
 

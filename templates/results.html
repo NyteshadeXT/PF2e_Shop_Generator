@@ -117,17 +117,10 @@
             <span class="pf-label">Item</span>
             <select class="pf-select" id="curate-existing-item" required>
               <option value="">Choose an item</option>
-              {% for section, label, items in [
-                ('mundane', 'Mundane', mundane_items),
-                ('materials', 'Materials', material_items),
-                ('formulas', 'Formulas', formula_items),
-                ('armor', 'Armor/Shields', armor_items),
-                ('weapons', 'Weapons', weapon_items),
-                ('magic', 'Magic Items', magic_items)
-              ] %}
-                {% if items %}<optgroup label="{{ label }}">{% endif %}
-                {% for it in items %}<option value="{{ section }}|{{ loop.index0 }}">{{ '[Hidden] ' if it.player_hidden else '' }}{{ it.name }} (qty {{ it.quantity or 1 }})</option>{% endfor %}
-                {% if items %}</optgroup>{% endif %}
+              {% for section in inventory_sections|default([]) %}
+                {% if section.entries %}<optgroup label="{{ section.label }}">{% endif %}
+                {% for it in section.entries %}<option value="{{ section.name }}|{{ loop.index0 }}">{{ '[Hidden] ' if it.player_hidden else '' }}{{ it.name }} (qty {{ it.quantity or 1 }})</option>{% endfor %}
+                {% if section.entries %}</optgroup>{% endif %}
               {% endfor %}
             </select>
           </label>

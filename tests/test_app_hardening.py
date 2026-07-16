@@ -6,6 +6,7 @@ import pandas as pd
 
 import app as webapp
 import services.player_view_routes as player_view_routes
+import services.web_security as web_security
 from services.security import AttemptLimiter
 
 
@@ -258,8 +259,8 @@ class AppHardeningTests(unittest.TestCase):
             self.assertEqual(self.client.get("/").status_code, 302)
 
     def test_repeated_failed_gm_logins_are_throttled_per_client(self):
-        original = webapp._login_limiter
-        webapp._login_limiter = AttemptLimiter(2, 300)
+        original = web_security._login_limiter
+        web_security._login_limiter = AttemptLimiter(2, 300)
         try:
             with patch.dict("os.environ", {"LOOTGEN_GM_ACCESS_KEY": "private-table-key"}):
                 for _attempt in range(2):
@@ -285,7 +286,7 @@ class AppHardeningTests(unittest.TestCase):
                 )
                 self.assertEqual(other_client.status_code, 401)
         finally:
-            webapp._login_limiter = original
+            web_security._login_limiter = original
 
     def test_gm_login_does_not_redirect_to_an_external_site(self):
         with patch.dict("os.environ", {"LOOTGEN_GM_ACCESS_KEY": "private-table-key"}):

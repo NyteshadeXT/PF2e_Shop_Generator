@@ -1,12 +1,11 @@
 # app.py — production-ready Flask application (Render + Player View)
 
 from flask import (
-    Flask, render_template, request, redirect, abort, session,
-    current_app, g, jsonify, url_for
+    Flask, render_template, request, redirect, abort,
+    current_app, jsonify, url_for
 )
 
-import hashlib, os, secrets, uuid, sqlite3
-from datetime import timedelta
+import os, secrets, uuid, sqlite3
 from pathlib import Path
 
 # Third-party
@@ -33,7 +32,7 @@ from services.player_views import (
     state_db_path,
 )
 from services.player_view_routes import register_routes as register_player_view_routes
-from services.security import SQLiteAttemptLimiter, load_session_secret
+from services.web_security import configure_web_security, environment_flag
 
 # Optional: debug blueprint (if exists)
 try:
@@ -41,203 +40,17 @@ try:
 except Exception:
     debug_bp = None
 
-def _environment_flag(name: str) -> bool:
-    return os.environ.get(name, "").strip().lower() in {"1", "true", "yes", "on"}
-
-
-def _positive_int_environment(name: str, default: int) -> int:
-    try:
-        return max(1, int(os.environ.get(name, default)))
-    except (TypeError, ValueError):
-        return default
-
-
 app = Flask(__name__)
-session_secret_file = os.environ.get("LOOTGEN_SESSION_SECRET_FILE", "").strip()
-if session_secret_file:
-    session_secret_path = Path(session_secret_file).expanduser()
-    if not session_secret_path.is_absolute():
-        session_secret_path = Path(__file__).resolve().parent / session_secret_path
-else:
-    session_secret_path = state_db_path().parent / ".lootgen-session-secret"
-app.config.update(
-    SECRET_KEY=load_session_secret(
-        os.environ.get("LOOTGEN_SESSION_SECRET"),
-        session_secret_path,
-    ),
-    SESSION_COOKIE_HTTPONLY=True,
-    SESSION_COOKIE_SAMESITE="Lax",
-    SESSION_COOKIE_SECURE=_environment_flag("RENDER") or _environment_flag("LOOTGEN_SECURE_COOKIES"),
-    PERMANENT_SESSION_LIFETIME=timedelta(hours=12),
+configure_web_security(
+    app,
+    project_root=Path(__file__).resolve().parent,
+    state_database=state_db_path(),
 )
-_login_limiter = SQLiteAttemptLimiter(
-    _positive_int_environment("LOOTGEN_LOGIN_ATTEMPTS", 8),
-    _positive_int_environment("LOOTGEN_LOGIN_WINDOW_SECONDS", 300),
-    state_db_path(),
-)
-try:
-    app.config["MAX_CONTENT_LENGTH"] = max(
-        64 * 1024, int(os.environ.get("LOOTGEN_MAX_REQUEST_BYTES", 2 * 1024 * 1024))
-    )
-except (TypeError, ValueError):
-    app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024
-if debug_bp is not None and _environment_flag("LOOTGEN_ENABLE_DEBUG_ROUTES"):
+if debug_bp is not None and environment_flag("LOOTGEN_ENABLE_DEBUG_ROUTES"):
     app.register_blueprint(debug_bp, url_prefix="/debug")
 app.register_blueprint(magic_builder_bp)
 app.register_blueprint(curation_bp)
 register_player_view_routes(app)
-
-
-def _gm_access_key() -> str:
-    return os.environ.get("LOOTGEN_GM_ACCESS_KEY", "").strip()
-
-
-def _access_fingerprint(access_key: str) -> str:
-    return hashlib.sha256(access_key.encode("utf-8")).hexdigest()
-
-
-def _gm_is_authenticated() -> bool:
-    access_key = _gm_access_key()
-    if not access_key:
-        return True
-    saved = str(session.get("gm_access") or "")
-    return secrets.compare_digest(saved, _access_fingerprint(access_key))
-
-
-def _csrf_token() -> str:
-    token = str(session.get("csrf_token") or "")
-    if not token:
-        token = secrets.token_urlsafe(32)
-        session["csrf_token"] = token
-    return token
-
-
-def _csp_nonce() -> str:
-    nonce = str(getattr(g, "csp_nonce", "") or "")
-    if not nonce:
-        nonce = secrets.token_urlsafe(18)
-        g.csp_nonce = nonce
-    return nonce
-
-
-_CSRF_PROTECTED_ENDPOINTS = {
-    "gm_login",
-    "gm_logout",
-    "query",
-    "publish_player_view",
-    "history_make_live",
-    "history_backup",
-    "history_rotate_live",
-    "history_update_metadata",
-    "history_archive",
-    "history_delete",
-    "curation.curate_snapshot",
-}
-
-
-_PUBLIC_ENDPOINTS = {
-    "static",
-    "favicon",
-    "health",
-    "gm_login",
-    "player_view",
-    "live_view",
-    "live_version",
-}
-
-
-@app.before_request
-def require_gm_access():
-    if not _gm_access_key() or request.endpoint in _PUBLIC_ENDPOINTS or _gm_is_authenticated():
-        return None
-    if request.path.startswith("/api/"):
-        return _json_error_response(401, "GM access is required.")
-    next_path = request.full_path.rstrip("?") if request.method == "GET" else url_for("index")
-    return redirect(url_for("gm_login", next=next_path))
-
-
-@app.before_request
-def require_csrf_token():
-    if request.method != "POST" or request.endpoint not in _CSRF_PROTECTED_ENDPOINTS:
-        return None
-    if app.config.get("TESTING") and not app.config.get("CSRF_PROTECTION_IN_TESTS"):
-        return None
-    submitted = str(request.form.get("csrf_token") or "")
-    expected = str(session.get("csrf_token") or "")
-    if not submitted or not expected or not secrets.compare_digest(submitted, expected):
-        abort(400, "The form expired or came from another site. Reload the page and try again.")
-    return None
-
-
-@app.route("/gm-login", methods=["GET", "POST"])
-def gm_login():
-    if not _gm_access_key():
-        return redirect(url_for("index"))
-    error = None
-    next_path = str(request.values.get("next") or url_for("index"))
-    if not next_path.startswith("/") or next_path.startswith("//"):
-        next_path = url_for("index")
-    if request.method == "POST":
-        client = request.remote_addr or "unknown"
-        if _login_limiter.blocked(client):
-            abort(429, "Too many unsuccessful login attempts. Wait a few minutes and try again.")
-        submitted = str(request.form.get("access_key") or "")
-        if secrets.compare_digest(submitted, _gm_access_key()):
-            _login_limiter.clear(client)
-            session.clear()
-            session["gm_access"] = _access_fingerprint(_gm_access_key())
-            session.permanent = True
-            return redirect(next_path)
-        _login_limiter.record_failure(client)
-        error = "That access key was not accepted."
-    return render_template("gm_login.html", error=error, next_path=next_path), 401 if error else 200
-
-
-@app.post("/gm-logout")
-def gm_logout():
-    session.clear()
-    return redirect(url_for("gm_login"))
-
-
-app.jinja_env.globals["gm_access_enabled"] = lambda: bool(_gm_access_key())
-app.jinja_env.globals["csrf_token"] = _csrf_token
-app.jinja_env.globals["csp_nonce"] = _csp_nonce
-
-
-@app.after_request
-def add_security_headers(response):
-    nonce = _csp_nonce()
-    response.headers.setdefault("X-Content-Type-Options", "nosniff")
-    response.headers.setdefault("Referrer-Policy", "no-referrer")
-    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
-    response.headers.setdefault(
-        "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
-    )
-    response.headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
-    response.headers.setdefault(
-        "Content-Security-Policy",
-        "; ".join(
-            (
-                "default-src 'self'",
-                f"script-src 'self' 'nonce-{nonce}'",
-                "script-src-attr 'none'",
-                "style-src 'self'",
-                "style-src-attr 'none'",
-                "img-src 'self' data:",
-                "font-src 'self'",
-                "connect-src 'self'",
-                "object-src 'none'",
-                "base-uri 'none'",
-                "form-action 'self'",
-                "frame-ancestors 'self'",
-            )
-        ),
-    )
-    if request.is_secure or _environment_flag("RENDER"):
-        response.headers.setdefault(
-            "Strict-Transport-Security", "max-age=31536000; includeSubDomains"
-        )
-    return response
 
 _ERROR_TITLES = {
     400: "Check the submitted information",
@@ -285,25 +98,6 @@ def handle_unexpected_error(error: Exception):
 
 # Make AoN helper available in Jinja
 app.jinja_env.globals["aon_url"] = aon_url
-
-# use the already-imported LOGIC_CONFIG from services.logic
-DB_PATH = LOGIC_CONFIG.get("sqlite_db_path", "data/pf2e.sqlite")
-
-# ----------------------------
-# Helper utilities
-# ---------------------------- 
-def _open_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-def _row_has_all_themes(row_traits: str, themes: list[str]) -> bool:
-    """Case-insensitive AND filter: all theme terms must appear in the spell's traits"""
-    if not themes:
-        return True
-    traits = [t.strip().lower() for t in (row_traits or "").split(",")]
-    themes_norm = [x.strip().lower() for x in themes if x.strip()]
-    return all(any(theme in tr for tr in traits) for theme in themes_norm)
 
 @app.get("/health")
 def health():

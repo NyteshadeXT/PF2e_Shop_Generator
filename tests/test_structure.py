@@ -11,6 +11,15 @@ class ApplicationStructureTests(unittest.TestCase):
         player_routes_source = (ROOT / "services" / "player_view_routes.py").read_text(
             encoding="utf-8"
         )
+        security_source = (ROOT / "services" / "web_security.py").read_text(
+            encoding="utf-8"
+        )
+        sections_source = (ROOT / "services" / "inventory_sections.py").read_text(
+            encoding="utf-8"
+        )
+        spell_items_source = (ROOT / "services" / "spell_items.py").read_text(
+            encoding="utf-8"
+        )
         self.assertNotIn("def _st_norm(", app_source)
         self.assertNotIn('def api_mib_bases(', app_source)
         self.assertNotIn('def api_mib_build(', app_source)
@@ -21,6 +30,16 @@ class ApplicationStructureTests(unittest.TestCase):
         self.assertNotIn('def history(', app_source)
         self.assertIn('def player_view(', player_routes_source)
         self.assertIn('def history(', player_routes_source)
+        self.assertIn("configure_web_security(", app_source)
+        self.assertNotIn('def gm_login(', app_source)
+        self.assertIn('def gm_login(', security_source)
+        self.assertIn("INVENTORY_SECTIONS = (", sections_source)
+        self.assertIn("SECTION_LIST_KEYS", sections_source)
+        self.assertIn("def enrich_spell_scrolls(", spell_items_source)
+        self.assertIn("def enrich_magic_wands(", spell_items_source)
+        self.assertNotIn("_SPELLS_DF_CACHE:", app_source)
+        self.assertNotIn("_SPELLS_DF_CACHE:", (ROOT / "services" / "logic.py").read_text(encoding="utf-8"))
+        self.assertNotIn("def build_payload(", (ROOT / "services" / "generation.py").read_text(encoding="utf-8"))
 
     def test_normalization_and_shield_helpers_have_one_definition_each(self):
         builder_source = (ROOT / "services" / "magic_builder.py").read_text(

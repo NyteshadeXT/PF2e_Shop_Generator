@@ -14,10 +14,12 @@ _GENERATION_CODE = (
     PROJECT_ROOT / "services" / "db.py",
     PROJECT_ROOT / "services" / "catalog_order.py",
     PROJECT_ROOT / "services" / "generation.py",
+    PROJECT_ROOT / "services" / "inventory_sections.py",
     PROJECT_ROOT / "services" / "logic.py",
     PROJECT_ROOT / "services" / "money.py",
     PROJECT_ROOT / "services" / "randomness.py",
     PROJECT_ROOT / "services" / "spellbooks.py",
+    PROJECT_ROOT / "services" / "spell_items.py",
     PROJECT_ROOT / "services" / "utils.py",
 )
 

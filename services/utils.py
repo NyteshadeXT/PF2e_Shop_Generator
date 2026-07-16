@@ -12,14 +12,6 @@ def to_gp(price_text: str | float | int | None) -> float | None:
     return None if cp is None else cp / 100.0
 
 
-def format_price(gp_value: float | None) -> str:
-    """
-    Format a gp float into PF2e denominations:
-      1 gp = 10 sp = 100 cp
-    """
-    return format_gp(gp_value)
-
-
 def normalize_str_columns(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
     if df is None or df.empty:
         return df
@@ -51,27 +43,6 @@ def rarity_counts(items: list[dict]) -> dict:
         r = canonical_rarity(it.get("rarity")).lower()
         counts[r] = counts.get(r, 0) + 1
     return counts
-
-
-def normalize_token(s: str | None) -> str:
-    s = str(s or "").lower().strip()
-    return "".join(ch for ch in s if ch.isalnum())
-
-
-def parse_int(val, default: int, lo: int | None = None, hi: int | None = None, warn=None) -> int:
-    try:
-        x = int(val)
-    except Exception:
-        if warn: warn(f"Invalid int '{val}', defaulting to {default}")
-        x = default
-    if lo is not None: x = max(lo, x)
-    if hi is not None: x = min(hi, x)
-    return x
-
-
-def group_from_config(groups: dict, key: str, default: list[str]) -> list[str]:
-    vals = groups.get(key, [])
-    return vals if isinstance(vals, list) and vals else default
 
 
 from urllib.parse import quote_plus
@@ -230,27 +201,6 @@ def apply_adjustments_probabilistic(
 
     return out
     
-_SCROLL_RE = re.compile(r"^Spell scroll \((\d+)(?:st|nd|rd|th) level\)$", re.IGNORECASE)
-
-def parse_scroll_level(item_name: str) -> int | None:
-    """
-    'Spell scroll (5th level)' -> 5
-    Returns None if not a spell scroll name.
-    """
-    m = _SCROLL_RE.match(item_name.strip())
-    return int(m.group(1)) if m else None
-
-def pick_one(seq, rnd: random.Random | None = None):
-    if not seq:
-        return None
-    r = rnd or get_rng()
-    return r.choice(seq)
-
-def apply_rarity_markup(base_price: int | float, rarity: str, multipliers: dict[str, float]) -> int:
-    mult = multipliers.get(rarity.title(), 1.0)
-    # round to nearest gp (or keep your currency rounding rules)
-    return int(round(base_price * mult))
-
 # --- Materials helpers (utils) ---
 def apply_materials_probabilistic(
     items: list[dict],
