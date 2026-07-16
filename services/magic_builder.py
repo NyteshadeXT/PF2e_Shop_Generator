@@ -9,15 +9,14 @@ import pandas as pd
 from flask import Blueprint, current_app, jsonify, request
 
 from services.db import load_items
-from services.logic import (
-    CONFIG,
-    GROUPS,
-    _compose_armor_name,
-    _compose_weapon_name,
-    _load_runes_df,
+from services.logic import CONFIG, GROUPS
+from services.rune_selection import load_runes_frame as _load_runes_df
+from services.runed_equipment import (
     apply_armor_runes,
     apply_shield_runes,
     apply_weapon_runes,
+    compose_armor_name as _compose_armor_name,
+    compose_weapon_name as _compose_weapon_name,
 )
 
 bp = Blueprint("magic_builder", __name__)

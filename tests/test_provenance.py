@@ -13,11 +13,23 @@ class ProvenanceTests(unittest.TestCase):
         inventory_sections_path = (
             provenance.PROJECT_ROOT / "services" / "inventory_sections.py"
         )
+        rune_prerequisites_path = (
+            provenance.PROJECT_ROOT / "services" / "rune_prerequisites.py"
+        )
+        rune_selection_path = (
+            provenance.PROJECT_ROOT / "services" / "rune_selection.py"
+        )
+        runed_equipment_path = (
+            provenance.PROJECT_ROOT / "services" / "runed_equipment.py"
+        )
         app_path = provenance.PROJECT_ROOT / "app.py"
 
         self.assertIn(generation_path, provenance._GENERATION_CODE)
         self.assertIn(spell_items_path, provenance._GENERATION_CODE)
         self.assertIn(inventory_sections_path, provenance._GENERATION_CODE)
+        self.assertIn(rune_prerequisites_path, provenance._GENERATION_CODE)
+        self.assertIn(rune_selection_path, provenance._GENERATION_CODE)
+        self.assertIn(runed_equipment_path, provenance._GENERATION_CODE)
         self.assertNotIn(app_path, provenance._GENERATION_CODE)
 
     def test_fingerprint_is_stable_until_an_input_changes(self):
