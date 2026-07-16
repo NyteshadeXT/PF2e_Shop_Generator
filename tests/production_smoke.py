@@ -269,7 +269,11 @@ def run(base_url: str) -> None:
         "/player-view?channel=smoke&roll_id=" + ("0" * 32),
         404,
     )
-    if b"no longer available" not in missing_body.lower():
+    missing_page = missing_body.lower()
+    if (
+        b"player view unavailable" not in missing_page
+        or b"could not be found" not in missing_page
+    ):
         raise AssertionError("Missing Player View did not return the expected safe page.")
 
     policy = str(login_headers.get("Content-Security-Policy") or "")

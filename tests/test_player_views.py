@@ -635,6 +635,9 @@ class PlayerViewStorageTests(unittest.TestCase):
             finally:
                 app.generate_shop_snapshot = original
             self.assertEqual(response.status_code, 404)
+            self.assertIn(b"Player View unavailable", response.data)
+            self.assertIn(b"could not be found", response.data)
+            self.assertNotIn(("f" * 32).encode("ascii"), response.data)
         finally:
             if previous is None:
                 os.environ.pop("LOOTGEN_STATE_DB_PATH", None)
