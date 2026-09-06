@@ -1,14 +1,14 @@
 # PF2e equipment inventory audit
 
-- Obsidian notes scanned: **3490**
-- Database item rows scanned: **4503**
+- Obsidian notes scanned: **5548**
+- Database item rows scanned: **4495**
 - Excluded database tables: **Spells**, **Spells_Focus**
-- Obsidian-only notes: **1351**
-- Database-only rows: **2357**
-- Matched note/database pairs: **2148**
-- Obsidian duplicate keys: **6**
-- Database names appearing in multiple tables: **18**
-- Notes skipped for invalid metadata: **2059**
+- Obsidian-only notes: **2006**
+- Database-only rows: **953**
+- Matched note/database pairs: **3542**
+- Obsidian duplicate keys: **0**
+- Database names appearing in multiple tables: **0**
+- Notes skipped for invalid metadata: **0**
 
 ## Review order
 
