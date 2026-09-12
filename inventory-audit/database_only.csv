@@ -6,373 +6,26 @@ Dragon's Creast,Adjustments,Dragon's Crest; Dragonscale Staff; Dragonscale Amule
 Improved Mirror,Adjustments,
 Interior Polish,Adjustments,
 Mirror (Shield),Adjustments,Meteor Shield; Burr Shield; Martyr's Shield
-Shield Augmentation (Backswing),Adjustments,Shield Augmentation
-"Shield Augmentation (Disarm, Nonlethal)",Adjustments,
-"Shield Augmentation (Disarm, Shove)",Adjustments,Shield Augmentation
-"Shield Augmentation (Disarm, Thrown 10 feet)",Adjustments,
-"Shield Augmentation (Disarm, Trip)",Adjustments,Shield Augmentation
-"Shield Augmentation (Disarm, Versatile S)",Adjustments,
-Shield Augmentation (Forceful),Adjustments,Shield Augmentation
-"Shield Augmentation (Nonlethal, Shove)",Adjustments,Shield Augmentation
-"Shield Augmentation (Nonlethal, Thrown 10 feet)",Adjustments,
-"Shield Augmentation (Nonlethal, Trip)",Adjustments,Shield Augmentation
-"Shield Augmentation (Nonlethal, Versatile S)",Adjustments,
-"Shield Augmentation (Shove, Thrown 10 feet)",Adjustments,
-"Shield Augmentation (Shove, Trip)",Adjustments,Shield Augmentation
-"Shield Augmentation (Shove, Versatile S)",Adjustments,
-"Shield Augmentation (Thrown 10 feet, Trip)",Adjustments,
-"Shield Augmentation (Thrown 10 feet, Versatile S)",Adjustments,
-"Shield Augmentation (Trip, Versatile S)",Adjustments,Shield Augmentation
 Shield Harness,Adjustments,Shield Archon Eyes; Guide Harness
 Shield Sheath,Adjustments,
 Shield Strap,Adjustments,
-Aether Marble (Greater),Alchemical_Items,Aether Marbles (Greater); Aether Marbles (Moderate); Aether Marbles (Lesser)
-Aether Marble (Lesser),Alchemical_Items,Aether Marbles (Lesser); Aether Marbles (Greater); Aether Marbles (Moderate)
-Aether Marble (Moderate),Alchemical_Items,Aether Marbles (Moderate); Aether Marbles (Greater)
-Assassin Vine Wine,Alchemical_Items,
-Assassin Vine Wine (Aged),Alchemical_Items,
-Bloodeye Coffee,Alchemical_Items,
-Choker-Arm Mutagen (Greater),Alchemical_Items,Theatrical Mutagen (Greater); Quicksilver Mutagen (Greater); Serene Mutagen (Greater)
-Choker-Arm Mutagen (Lesser),Alchemical_Items,Theatrical Mutagen (Lesser); Quicksilver Mutagen (Lesser); Serene Mutagen (Lesser)
-Choker-Arm Mutagen (Major),Alchemical_Items,Theatrical Mutagen (Major); Quicksilver Mutagen (Major)
-Choker-Arm Mutagen (Moderate),Alchemical_Items,Theatrical Mutagen (Moderate); Quicksilver Mutagen (Moderate); Serene Mutagen (Moderate)
-Death Knell Powder,Alchemical_Items,Deathcap Powder
-False Flayleaf,Alchemical_Items,Flayleaf
-Hunting Spider Venom,Alchemical_Items,Unprocessed Hunting Spider Venom; Spider Venom
-Lich Dust,Alchemical_Items,Alicorn Dust
-Malyass Root Paste,Alchemical_Items,
-Olfactory Obfuscator,Alchemical_Items,Olfactory Obfuscator (Lesser); Olfactory Obfuscator (Greater)
-Pesh Paste,Alchemical_Items,
-Peshspine Grenade (Greater),Alchemical_Items,Peshpine Grenade (Greater); Peshpine Grenade (Moderate); Peshpine Grenade (Lesser)
-Peshspine Grenade (Lesser),Alchemical_Items,Peshpine Grenade (Lesser); Peshpine Grenade (Greater); Peshpine Grenade (Major)
-Peshspine Grenade (Major),Alchemical_Items,Peshpine Grenade (Major); Peshpine Grenade (Moderate); Peshpine Grenade (Lesser)
-Peshspine Grenade (Moderate),Alchemical_Items,Peshpine Grenade (Moderate); Peshpine Grenade (Greater); Peshpine Grenade (Major)
-Purple Worm Venom,Alchemical_Items,
-Rainbow Vinegar,Alchemical_Items,Rainbow Vinegar (Greater); Rainbow Vinegar (Moderate)
-Salamander Elixir (Greater),Alchemical_Items,Leaper's Elixir (Greater); Sixfingers Elixir (Greater)
-Salamander Elixir (Lesser),Alchemical_Items,Leaper's Elixir (Lesser); Sixfingers Elixir (Lesser)
-Salamander Elixir (Moderate),Alchemical_Items,Sixfingers Elixir (Moderate)
-Shadow Essence,Alchemical_Items,Shadow Signet
-Silver Powder Orb,Alchemical_Items,Silver Orb (Powder)
-Silversheen,Alchemical_Items,Silver Salve
-Sinew-Shock Serum (Greater),Alchemical_Items,Vanishing Shocker (Greater); Surging Serum (Greater)
-Sinew-Shock Serum (Lesser),Alchemical_Items,Vanishing Shocker (Lesser)
-Sinew-Shock Serum (Major),Alchemical_Items,Vanishing Shocker (Major)
-Sinew-Shock Serum (Moderate),Alchemical_Items,Vanishing Shocker (Moderate); Surging Serum (Moderate)
-Sovereign Glue,Alchemical_Items,
-Spellsap Grenade (Moderate),Alchemical_Items,Spellsap Grenade (Greater); Peshpine Grenade (Moderate); Star Grenade (Moderate)
-Spiderfoot Brew (Major),Alchemical_Items,Spiderfoot Brew (Moderate); Spiderfoot Brew (Lesser); Spiderfoot Brew (Greater)
-Sunrod,Alchemical_Items,
-Tanglefoot Bag (Greater),Alchemical_Items,Tanglefoot Extruder
-Tanglefoot Bag (Lesser),Alchemical_Items,
-Tanglefoot Bag (Major),Alchemical_Items,
-Tanglefoot Bag (Moderate),Alchemical_Items,
-Thunderstone (Greater),Alchemical_Items,Thundering (Greater); Shatterstone (Greater); Spiny Lodestone (Greater)
-Thunderstone (Lesser),Alchemical_Items,
-Thunderstone (Major),Alchemical_Items,Thunder Snare; Spiny Lodestone (Major)
-Thunderstone (Moderate),Alchemical_Items,Thunderbird Tuft (Moderate); Blasting Stone (Moderate)
-Tindertwig,Alchemical_Items,
-Winter Wolf Elixir (Greater),Alchemical_Items,Winterstep Elixir (Greater); Viperous Elixir (Greater); Witchwarg Elixir (Greater)
-Winter Wolf Elixir (Lesser),Alchemical_Items,Winterstep Elixir (Lesser); Viperous Elixir (Lesser); Witchwarg Elixir (Lesser)
-Winter Wolf Elixir (Moderate),Alchemical_Items,Winterstep Elixir (Moderate); Viperous Elixir (Moderate); Witchwarg Elixir (Moderate)
-Witchwarg Elixir (Greter),Alchemical_Items,Witchwarg Elixir (Greater); Witchwarg Elixir (Lesser); Witchwarg Elixir (Moderate)
-Yellow Musk Vial,Alchemical_Items,Yellow Musk Poison
-Elemental Ammunition - Acid (Lesser),Alchemical_Items,Elemental Ammunition (Lesser); Elemental Ammunition (Greater); Elemental Ammunition (Moderate)
-Elemental Ammunition - Cold (Lesser),Alchemical_Items,Elemental Ammunition (Lesser); Elemental Ammunition (Moderate); Elemental Ammunition (Greater)
-Elemental Ammunition - Electricity (Lesser),Alchemical_Items,Elemental Ammunition (Lesser); Elemental Ammunition (Greater)
-Elemental Ammunition - Fire (Lesser),Alchemical_Items,Elemental Ammunition (Lesser); Elemental Ammunition (Greater); Elemental Ammunition (Moderate)
-Elemental Ammunition - Poison (Lesser),Alchemical_Items,Elemental Ammunition (Lesser); Elemental Ammunition (Greater); Elemental Ammunition (Moderate)
-Elemental Ammunition - Acid (Moderate),Alchemical_Items,Elemental Ammunition (Moderate); Elemental Ammunition (Greater); Elemental Ammunition (Lesser)
-Elemental Ammunition - Cold (Moderate),Alchemical_Items,Elemental Ammunition (Moderate); Elemental Ammunition (Greater); Elemental Ammunition (Lesser)
-Elemental Ammunition - Electricity (Moderate),Alchemical_Items,Elemental Ammunition (Moderate); Elemental Ammunition (Greater); Elemental Ammunition (Lesser)
-Elemental Ammunition - Fire (Moderate),Alchemical_Items,Elemental Ammunition (Moderate); Elemental Ammunition (Greater); Elemental Ammunition (Lesser)
-Elemental Ammunition - Poison (Moderate),Alchemical_Items,Elemental Ammunition (Moderate); Elemental Ammunition (Greater); Elemental Ammunition (Lesser)
-Elemental Ammunition - Acid  (Greater),Alchemical_Items,Elemental Ammunition (Greater); Elemental Ammunition (Moderate); Elemental Ammunition (Lesser)
-Elemental Ammunition - Cold  (Greater),Alchemical_Items,Elemental Ammunition (Greater); Elemental Ammunition (Moderate); Elemental Ammunition (Lesser)
-Elemental Ammunition - Electricity  (Greater),Alchemical_Items,Elemental Ammunition (Greater); Elemental Ammunition (Moderate); Elemental Ammunition (Lesser)
-Elemental Ammunition - Fire  (Greater),Alchemical_Items,Elemental Ammunition (Greater); Elemental Ammunition (Moderate); Elemental Ammunition (Lesser)
-Elemental Ammunition - Poison  (Greater),Alchemical_Items,Elemental Ammunition (Greater); Elemental Ammunition (Moderate); Elemental Ammunition (Lesser)
-Bane Ammunition - Aberration (Lesser),Alchemical_Items,Bane Ammunition (Lesser); Bane Ammunition (Greater); Bane Ammunition (Moderate)
-Bane Ammunition - Animal (Lesser),Alchemical_Items,Bane Ammunition (Lesser); Ooze Ammunition (Lesser); Blister Ammunition (Lesser)
-Bane Ammunition - Beast (Lesser),Alchemical_Items,Bane Ammunition (Lesser); Bane Ammunition (Greater); Ooze Ammunition (Lesser)
-Bane Ammunition - Dragon (Lesser),Alchemical_Items,Bane Ammunition (Lesser); Bane Ammunition (Greater); Ooze Ammunition (Lesser)
-Bane Ammunition - Fey (Lesser),Alchemical_Items,Bane Ammunition (Lesser); Ooze Ammunition (Lesser); Blister Ammunition (Lesser)
-Bane Ammunition - Giant (Lesser),Alchemical_Items,Bane Ammunition (Lesser); Bane Ammunition (Greater); Ooze Ammunition (Lesser)
-Bane Ammunition - Ooze (Lesser),Alchemical_Items,Bane Ammunition (Lesser); Ooze Ammunition (Lesser); Blister Ammunition (Lesser)
-Bane Ammunition - Fungus/Plant (Lesser),Alchemical_Items,Bane Ammunition (Lesser)
-Bane Ammunition - Aberration (Greater),Alchemical_Items,Bane Ammunition (Greater)
-Bane Ammunition - Animal (Greater),Alchemical_Items,Bane Ammunition (Greater); Bane Ammunition (Moderate); Bane Ammunition (Lesser)
-Bane Ammunition - Beast (Greater),Alchemical_Items,Bane Ammunition (Greater); Bane Ammunition (Moderate); Bane Ammunition (Lesser)
-Bane Ammunition - Dragon (Greater),Alchemical_Items,Bane Ammunition (Greater); Bane Ammunition (Moderate); Ooze Ammunition (Greater)
-Bane Ammunition - Fey (Greater),Alchemical_Items,Bane Ammunition (Greater); Bane Ammunition (Moderate); Ooze Ammunition (Greater)
-Bane Ammunition - Giant (Greater),Alchemical_Items,Bane Ammunition (Greater); Ooze Ammunition (Greater); Blister Ammunition (Greater)
-Bane Ammunition - Ooze (Greater),Alchemical_Items,Bane Ammunition (Greater); Bane Ammunition (Moderate); Ooze Ammunition (Greater)
-Bane Ammunition - Fungus/Plant (Greater),Alchemical_Items,Bane Ammunition (Greater)
-Bane Ammunition - Aberration (Moderate),Alchemical_Items,Bane Ammunition (Moderate)
-Bane Ammunition - Animal (Moderate),Alchemical_Items,Bane Ammunition (Moderate); Ooze Ammunition (Moderate); Blister Ammunition (Moderate)
-Bane Ammunition - Beast (Moderate),Alchemical_Items,Bane Ammunition (Moderate); Ooze Ammunition (Moderate); Blister Ammunition (Moderate)
-Bane Ammunition - Dragon (Moderate),Alchemical_Items,Bane Ammunition (Moderate); Bane Ammunition (Greater); Ooze Ammunition (Moderate)
-Bane Ammunition - Fey (Moderate),Alchemical_Items,Bane Ammunition (Moderate); Ooze Ammunition (Moderate); Blister Ammunition (Moderate)
-Bane Ammunition - Giant (Moderate),Alchemical_Items,Bane Ammunition (Moderate); Bane Ammunition (Greater); Ooze Ammunition (Moderate)
-Bane Ammunition - Ooze (Moderate),Alchemical_Items,Bane Ammunition (Moderate); Ooze Ammunition (Moderate); Blister Ammunition (Moderate)
-Bane Ammunition - Fungus/Plant (Moderate),Alchemical_Items,Bane Ammunition (Moderate)
-Energy Mutagen - Acid (Greater),Alchemical_Items,Energy Mutagen (Greater); Energy Mutagen (Moderate); Serene Mutagen (Greater)
-Energy Mutagen - Cold (Greater),Alchemical_Items,Energy Mutagen (Greater); Energy Mutagen (Moderate); Energy Mutagen (Lesser)
-Energy Mutagen - Electricity (Greater),Alchemical_Items,Energy Mutagen (Greater)
-Energy Mutagen - Fire (Greater),Alchemical_Items,Energy Mutagen (Greater); Energy Mutagen (Moderate); Serene Mutagen (Greater)
-Energy Mutagen - Acid (Lesser),Alchemical_Items,Energy Mutagen (Lesser); Serene Mutagen (Lesser); Prey Mutagen (Lesser)
-Energy Mutagen - Cold (Lesser),Alchemical_Items,Energy Mutagen (Lesser); Energy Mutagen (Moderate); Serene Mutagen (Lesser)
-Energy Mutagen - Electricity (Lesser),Alchemical_Items,Energy Mutagen (Lesser)
-Energy Mutagen - Fire (Lesser),Alchemical_Items,Energy Mutagen (Lesser); Energy Mutagen (Greater); Serene Mutagen (Lesser)
-Energy Mutagen - Acid (Major),Alchemical_Items,Energy Mutagen (Major); Serene Mutagen (Major); Energy Mutagen (Moderate)
-Energy Mutagen - Cold (Major),Alchemical_Items,Energy Mutagen (Major); Serene Mutagen (Major); Energy Mutagen (Moderate)
-Energy Mutagen - Electricity (Major),Alchemical_Items,Energy Mutagen (Major)
-Energy Mutagen - Fire (Major),Alchemical_Items,Energy Mutagen (Major); Energy Mutagen (Greater); Serene Mutagen (Major)
-Energy Mutagen - Acid (Moderate),Alchemical_Items,Energy Mutagen (Moderate); Serene Mutagen (Moderate); Prey Mutagen (Moderate)
-Energy Mutagen - Cold (Moderate),Alchemical_Items,Energy Mutagen (Moderate); Serene Mutagen (Moderate); Prey Mutagen (Moderate)
-Energy Mutagen - Electricity (Moderate),Alchemical_Items,Energy Mutagen (Moderate)
-Energy Mutagen - Fire (Moderate),Alchemical_Items,Energy Mutagen (Moderate); Energy Mutagen (Greater); Serene Mutagen (Moderate)
-Hide,Armor_Basic,
-Leather,Armor_Basic,Lucky Feather; Leather Armor; Hodag Leather
-Padded,Armor_Basic,
-Quilted Armor,Armor_Basic,
-Robes,Armor_Basic,
-Studded leather,Armor_Basic,Studded Leather Armor
-Darkwood Armor (High-Grade),Armor_Material,Duskwood Armor (High Grade); Duskwood Weapon (High Grade); Dawnsilver Armor (High Grade)
-Darkwood Armor (Standard-Grade),Armor_Material,Duskwood Armor (Standard Grade); Duskwood Weapon (Standard Grade); Dawnsilver Armor (Standard Grade)
-Djezet Armor (High-Grade),Armor_Material,Keep Stone Armor (High Grade); Dawnsilver Armor (High Grade); Adamantine Armor High (Standard Grade)
-Djezet Armor (Standard-Grade),Armor_Material,Dawnsilver Armor (Standard Grade); Adamantine Armor (Standard Grade); Duskwood Armor (Standard Grade)
-Dragonhide Armor (High-Grade),Armor_Material,Dawnsilver Armor (High Grade); Cold Iron Armor (High Grade); dragonhide armor
-Dragonhide Armor (Standard-Grade),Armor_Material,Dawnsilver Armor (Standard Grade); Cold Iron Armor (Standard Grade); Duskwood Armor (Standard Grade)
-Grisantian Pelt Armor (High-Grade),Armor_Material,Adamantine Armor High (Standard Grade)
-Grisantian Pelt Armor (Standard-Grade),Armor_Material,Adamantine Armor (Standard Grade); Adamantine Armor High (Standard Grade); Dawnsilver Armor (Standard Grade)
-Mithral Armor (High-Grade),Armor_Material,Inubrix Armor High (Standard Grade)
-Mithral Armor (Standard-Grade),Armor_Material,Inubrix Armor (Standard Grade); Abysium Armor (Standard Grade); Dawnsilver Armor (Standard Grade)
-Noqual Armor (High-Grade),Armor_Material,Inubrix Armor High (Standard Grade); Cold Iron Armor (High Grade); Abysium Armor (High Grade)
-Noqual Armor (Standard-Grade),Armor_Material,Inubrix Armor (Standard Grade); Cold Iron Armor (Standard Grade); Abysium Armor (Standard Grade)
-Orichalcum Armor (High-Grade),Armor_Material,Abysium Armor (High Grade)
-Siccatite Armor (High-Grade),Armor_Material,Adamantine Armor High (Standard Grade); Keep Stone Armor (High Grade); Inubrix Armor High (Standard Grade)
-Siccatite Armor (Standard-Grade),Armor_Material,Adamantine Armor (Standard Grade); Inubrix Armor (Standard Grade); Abysium Armor (Standard Grade)
-Silver Armor (High-Grade),Armor_Material,Dawnsilver Armor (High Grade); Inubrix Armor High (Standard Grade); Abysium Armor (High Grade)
-Silver Armor (Low-Grade),Armor_Material,Cold Iron Armor (Low Grade); Dawnsilver Armor (High Grade)
-Silver Armor (Standard-Grade),Armor_Material,Dawnsilver Armor (Standard Grade); Inubrix Armor (Standard Grade); Abysium Armor (Standard Grade)
-Sisterstone Armor (High-Grade),Armor_Material,Keep Stone Armor (High Grade); Cold Iron Armor (High Grade); Dawnsilver Armor (High Grade)
-Sisterstone Armor (Low-Grade),Armor_Material,Cold Iron Armor (Low Grade)
-Sisterstone Armor (Standard-Grade),Armor_Material,Cold Iron Armor (Standard Grade); Dawnsilver Armor (Standard Grade); Inubrix Armor (Standard Grade)
-Sovereign Steel Armor (High-Grade),Armor_Material,
-Sovereign Steel Armor (Standard-Grade),Armor_Material,Dawnsilver Armor (Standard Grade)
-Horseshoes of Speed,C_C_Structure,
-Horseshoes of Speed (Greater),C_C_Structure,
 Adamantine Flake,Consumables,Adamantine; Adamantine Echo; Adamantine Chunk
 Adamantine Flake (Greater),Consumables,
 Adamantine Flake (Major),Consumables,
 Adamantine Flake (True),Consumables,
-Animal Nip (Greater),Consumables,Animal Nip (Moderate); Animal Nip (Lesser); Animal Staff (Greater)
-Black Dragon's Breath Potion (Adult),Consumables,Red Dragon's Breath Potion (Adult); Silver Dragon's Breath Potion (Adult)
-Black Dragon's Breath Potion (Wyrm),Consumables,Red Dragon's Breath Potion (Wyrm); Silver Dragon's Breath Potion (Wyrm); Red Dragon's Breath Potion (Young)
-Black Dragon's Breath Potion (Young),Consumables,Red Dragon's Breath Potion (Young); Silver Dragon's Breath Potion (Young); Red Dragon's Breath Potion (Wyrm)
-Blue Dragon's Breath Potion (Adult),Consumables,Red Dragon's Breath Potion (Adult); Silver Dragon's Breath Potion (Adult); Red Dragon's Breath Potion (Young)
-Blue Dragon's Breath Potion (Wyrm),Consumables,Red Dragon's Breath Potion (Wyrm); Silver Dragon's Breath Potion (Wyrm); Red Dragon's Breath Potion (Young)
-Blue Dragon's Breath Potion (Young),Consumables,Red Dragon's Breath Potion (Young); Silver Dragon's Breath Potion (Young); Red Dragon's Breath Potion (Wyrm)
 Bottled Firefly Swarm,Consumables,
 Bottled Firefly Swarm (Greater),Consumables,
 Bottled Firefly Swarm (Major),Consumables,
 Bottled Firefly Swarm (True),Consumables,
-Bralani Breath,Consumables,Blight Breath
-Bralani Breath (Greater),Consumables,Balisse Feather (Greater); Brilliant (Greater)
-Brass Dragon's Breath Potion (Adult),Consumables,Red Dragon's Breath Potion (Adult); Silver Dragon's Breath Potion (Adult); Red Dragon's Breath Potion (Young)
-Brass Dragon's Breath Potion (Wyrm),Consumables,Red Dragon's Breath Potion (Wyrm); Silver Dragon's Breath Potion (Wyrm); Red Dragon's Breath Potion (Young)
-Brass Dragon's Breath Potion (Young),Consumables,Red Dragon's Breath Potion (Young); Silver Dragon's Breath Potion (Young); Red Dragon's Breath Potion (Wyrm)
-Bronze Dragon's Breath Potion (Adult),Consumables,Red Dragon's Breath Potion (Adult); Silver Dragon's Breath Potion (Adult); Red Dragon's Breath Potion (Young)
-Bronze Dragon's Breath Potion (Wyrm),Consumables,Red Dragon's Breath Potion (Wyrm); Silver Dragon's Breath Potion (Wyrm); Red Dragon's Breath Potion (Young)
-Bronze Dragon's Breath Potion (Young),Consumables,Red Dragon's Breath Potion (Young); Silver Dragon's Breath Potion (Young); Red Dragon's Breath Potion (Wyrm)
-Copper Dragon's Breath Potion (Adult),Consumables,Red Dragon's Breath Potion (Adult); Silver Dragon's Breath Potion (Adult); Red Dragon's Breath Potion (Young)
-Copper Dragon's Breath Potion (Wyrm),Consumables,Red Dragon's Breath Potion (Wyrm); Silver Dragon's Breath Potion (Wyrm); Red Dragon's Breath Potion (Young)
-Copper Dragon's Breath Potion (Young),Consumables,Red Dragon's Breath Potion (Young); Silver Dragon's Breath Potion (Young); Red Dragon's Breath Potion (Wyrm)
-Dragon Throat Scale,Consumables,Dragon Turtle Scale; Dragon Breath Scale
-Faerie Dragon Liqueur (Adult),Consumables,Faerie Dragon Liqueur; Faerie Dragon Liqueur; Faerie Dragonet Liqueur (Greater)
-Faerie Dragon Liqueur (Wyrm),Consumables,Faerie Dragon Liqueur; Faerie Dragon Liqueur; Faerie Dragonet Liqueur (Lesser)
-Faerie Dragon Liqueur (Young),Consumables,Faerie Dragon Liqueur; Faerie Dragon Liqueur; Faerie Dragonet Liqueur (Greater)
-Fearcracker,Consumables,
-Fulus of Concealment,Consumables,Fulu of Concealment
-Gold Dragon's Breath Potion (Adult),Consumables,Red Dragon's Breath Potion (Adult); Silver Dragon's Breath Potion (Adult); Red Dragon's Breath Potion (Young)
-Gold Dragon's Breath Potion (Wyrm),Consumables,Red Dragon's Breath Potion (Wyrm); Silver Dragon's Breath Potion (Wyrm); Red Dragon's Breath Potion (Young)
-Gold Dragon's Breath Potion (Young),Consumables,Red Dragon's Breath Potion (Young); Silver Dragon's Breath Potion (Young); Red Dragon's Breath Potion (Wyrm)
-Greater Swapping Stone,Consumables,
-Green Wyrmling Breath Potion,Consumables,
-Happy Healper,Consumables,
 Heartstone Talisman,Consumables,
-Imbued Grave Dirt,Consumables,
-Javelin of Lightning,Consumables,Trident of Lightning
-Lesser Swapping Stone,Consumables,
 Magnetic Token,Consumables,Magnet Coin; Magnetic Suit
-Major Swapping Stone,Consumables,
-Marvelous Pigment,Consumables,Marvelous Paintbrush
-Moderate Swapping Stone,Consumables,
-Oil of Object Animation,Consumables,Oil of Animation
-Oil of Object Animation (Greater),Consumables,
-Owlbear Claw,Consumables,Bear Claws
-Periscope Viewfinder,Consumables,Periscopic Viewfinder
-Potion of Flying,Consumables,Potion of Leaping; Potion of Flying (Greater); Potion of Flying (Standard)
-Potion of Retaliation (Greater),Consumables,Potion of Fire Retaliation (Greater); Potion of Cold Retaliation (Greater); Potion of Acid Retaliation (Greater)
-Potion of Retaliation (Lesser),Consumables,Potion of Fire Retaliation (Lesser); Potion of Cold Retaliation (Lesser); Potion of Acid Retaliation (Lesser)
-Potion of Retaliation (Major),Consumables,Potion of Fire Retaliation (Major); Potion of Cold Retaliation (Major); Potion of Acid Retaliation (Major)
-Potion of Retaliation (Minor),Consumables,Potion of Fire Retaliation (Minor); Potion of Cold Retaliation (Minor); Potion of Acid Retaliation (Minor)
-Potion of Retaliation (Moderate),Consumables,Potion of Fire Retaliation (Moderate); Potion of Cold Retaliation (Moderate); Potion of Acid Retaliation (Moderate)
-Potion of Tongues,Consumables,Potion of Truespeech
 Prismatic Crystal,Consumables,Prismatic Crystal Shard; Prismatic Dust; Rime Crystal
-Runestone (I),Consumables,Runestone; Grudgestone
-Runestone (II),Consumables,Runestone; Grudgestone
-Runestone (III),Consumables,Runestone
-Runestone (IV),Consumables,Runestone; Grudgestone
-Runestone (V),Consumables,Runestone; Grudgestone
-Runestone (VI),Consumables,Runestone; Grudgestone
-Runestone (VII),Consumables,Runestone
-Salve of Slipperiness,Consumables,
 Stone and Mortar,Consumables,
 Tree Sap,Consumables,
 Tree Sap (Greater),Consumables,Ready (Greater); Dread (Greater); Trueshape Bomb (Greater)
 Venom Pouch,Consumables,
 Venom Pouch (Greater),Consumables,
 Venom Pouch (Major),Consumables,
-White Dragon's Breath Potion (Adult),Consumables,Red Dragon's Breath Potion (Adult); Silver Dragon's Breath Potion (Adult); Red Dragon's Breath Potion (Young)
-White Dragon's Breath Potion (Wyrm),Consumables,Red Dragon's Breath Potion (Wyrm); Silver Dragon's Breath Potion (Wyrm); Red Dragon's Breath Potion (Young)
-White Dragon's Breath Potion (Young),Consumables,Red Dragon's Breath Potion (Young); Silver Dragon's Breath Potion (Young); Red Dragon's Breath Potion (Wyrm)
-Wooden Nickle,Consumables,Wooden Nickel
-Elemental Fragment - Air Fragment,Consumables,Elemental Fragment (Greater); Elemental Fragment; Elemental Fragment (Major)
-Elemental Fragment - Earth Fragment,Consumables,Elemental Fragment (Greater); Elemental Fragment
-Elemental Fragment - Fire Fragment,Consumables,Elemental Fragment (Greater); Elemental Fragment
-Elemental Fragment - Metal Fragment,Consumables,Elemental Fragment (Major); Elemental Fragment (Greater); Elemental Fragment
-Elemental Fragment - Water Fragment,Consumables,Elemental Fragment (Greater); Elemental Fragment
-Elemental Fragment - Wood Fragment,Consumables,Elemental Fragment (Greater); Elemental Fragment
-Elemental Fragment - Air (Greater),Consumables,Elemental Fragment (Greater); Elemental Fragment (Major); Elemental Fragment
-Elemental Fragment - Earth (Greater),Consumables,Elemental Fragment (Greater); Elemental Fragment (Major); Elemental Fragment
-Elemental Fragment - Fire (Greater),Consumables,Elemental Fragment (Greater); Elemental Fragment (Major); Elemental Fragment
-Elemental Fragment - Metal (Greater),Consumables,Elemental Fragment (Greater); Elemental Fragment (Major); Elemental Fragment
-Elemental Fragment - Water (Greater),Consumables,Elemental Fragment (Greater); Elemental Fragment (Major); Elemental Fragment
-Elemental Fragment - Wood (Greater),Consumables,Elemental Fragment (Greater); Elemental Ammunition (Greater); Elemental Fragment (Major)
-Elemental Fragment - Air (Major),Consumables,Elemental Fragment (Major); Elemental Fragment (Greater); Elemental Fragment
-Elemental Fragment - Earth (Major),Consumables,Elemental Fragment (Major); Elemental Fragment (Greater); Elemental Fragment
-Elemental Fragment - Fire (Major),Consumables,Elemental Fragment (Major); Elemental Fragment (Greater); Elemental Fragment
-Elemental Fragment - Metal (Major),Consumables,Elemental Fragment (Major); Elemental Fragment
-Elemental Fragment - Water (Major),Consumables,Elemental Fragment (Major); Elemental Fragment (Greater); Elemental Fragment
-Elemental Fragment - Wood (Major),Consumables,Elemental Fragment (Major); Elemental Fragment; Elemental Fragment (Greater)
-Elemental Gem - Transparent,Consumables,
-Elemental Gem - Light Brown,Consumables,
-Elemental Gem - Reddish Orange,Consumables,
-Elemental Gem - Blue-Green,Consumables,Elemental Gem
-Dragonclaw Scutcheon - Adamantine,Consumables,Dragonclaw Scutcheon
-Dragonclaw Scutcheon - Conspirator,Consumables,Dragonclaw Scutcheon
-Dragonclaw Scutcheon - Horned,Consumables,Dragonclaw Scutcheon
-Dragonclaw Scutcheon - Diabolic,Consumables,Dragonclaw Scutcheon
-Dragonclaw Scutcheon - Empyreal,Consumables,Dragonclaw Scutcheon
-Dragonclaw Scutcheon - Fortune,Consumables,Dragonclaw Scutcheon
-Dragonclaw Scutcheon - Mirage,Consumables,Dragonclaw Scutcheon
-Dragonclaw Scutcheon - Omen,Consumables,Dragonclaw Scutcheon
-Dragontooth Trophy - Adamantine,Consumables,Dragontooth Trophy
-Dragontooth Trophy - Conspirator,Consumables,Dragontooth Trophy
-Dragontooth Trophy - Horned,Consumables,Dragontooth Trophy
-Dragontooth Trophy - Diabolic,Consumables,Dragontooth Trophy
-Dragontooth Trophy - Empyreal,Consumables,Dragontooth Trophy
-Dragontooth Trophy - Fortune,Consumables,Dragontooth Trophy
-Dragontooth Trophy - Mirage,Consumables,Dragontooth Trophy
-Dragontooth Trophy - Omen,Consumables,Dragontooth Trophy
-Draconic Toxin Bottle,Cursed,
-Golden Rod Momento,Cursed,Golden Rod Memento
-Horn of the Aoyin,Cursed,
-Ring of Truths,Cursed,Ring of Truth
-Piercing,Damage_Type,Piercing Wind; Piercing Horn; Sky-Piercing Bow
-Slashing,Damage_Type,Sling; Slashing Claws
-Bludgeoning,Damage_Type,
-Acid,Damage_Type,
-Cold,Damage_Type,
-Electricity,Damage_Type,
-Fire,Damage_Type,Fire Poi; Fire Box
-Sonic,Damage_Type,
-Vitality,Damage_Type,
-Void,Damage_Type,
-Force,Damage_Type,
-Spirit,Damage_Type,Spirit Fan; Spirit Trap; Spirit Bulb
-Mental,Damage_Type,
-Poison,Damage_Type,Poison Ring; Poison Base; Piton
-Bleed,Damage_Type,
-Formula - 1,Formula,
-Formula - 10,Formula,
-Formula - 11,Formula,
-Formula - 12,Formula,
-Formula - 13,Formula,
-Formula - 14,Formula,
-Formula - 15,Formula,
-Formula - 16,Formula,
-Formula - 17,Formula,
-Formula - 18,Formula,
-Formula - 19,Formula,
-Formula - 2,Formula,
-Formula - 20,Formula,
-Formula - 3,Formula,
-Formula - 4,Formula,
-Formula - 5,Formula,
-Formula - 6,Formula,
-Formula - 7,Formula,
-Formula - 8,Formula,
-Formula - 9,Formula,
-Instructions for Lasting Agony,Grimoire,
-Tyrant's Writ,Grimoire,Tyrant's Writs
-Astrolabe of Falling Stars,Held_Items,Astrolabe of the Falling Stars; Blade of Fallen Stars
-Broom of Flying,Held_Items,
-Busine of Divine Reinforcement,Held_Items,Busine of Divine Reinforcements
-Cipher of the Elemental Planes,Held_Items,Cipher of Elemental Planes
-Everburning Torch,Held_Items,Everburning Coal
-Ganjay Book,Held_Items,
-Horn of Fog,Held_Items,
-Levithan's Prism,Held_Items,
-Light Writer (Metal Plates per 10),Held_Items,Light Writer Plates
-Darkwood Branch,Materials,Duskwood Branch; Peachwood Branch
-Darkwood Lumber,Materials,Duskwood Lumber; Peachwood Lumber
-Dragonhide (Black),Materials,Dragonhide; dragonhide armor
-Dragonhide (Blue),Materials,Dragonhide; Dragon Bile
-Dragonhide (Brass),Materials,Dragonhide; dragonhide armor; Dragon Handwraps
-Dragonhide (Bronze),Materials,dragonhide armor; Dragonhide
-Dragonhide (Copper),Materials,Dragonhide
-Dragonhide (Gold),Materials,Dragonhide; dragonhide armor
-Dragonhide (Green),Materials,Dragonhide; Dragon Teeth (Green); dragonhide armor
-Dragonhide (High-Grade Black),Materials,
-Dragonhide (High-Grade Blue),Materials,
-Dragonhide (High-Grade Brass),Materials,
-Dragonhide (High-Grade Bronze),Materials,
-Dragonhide (High-Grade Copper),Materials,
-Dragonhide (High-Grade Gold),Materials,
-Dragonhide (High-Grade Green),Materials,
-Dragonhide (High-Grade Red),Materials,
-Dragonhide (High-Grade Silver),Materials,
-Dragonhide (High-Grade White),Materials,
-Dragonhide (Red),Materials,Dragonhide; dragonhide armor
-Dragonhide (Silver),Materials,Dragonhide
-Dragonhide (White),Materials,Dragonhide
-Mithral Chunk,Materials,
-Mithral Ingot,Materials,
-Silver Chunk,Materials,Dawnsilver Chunk
-Silver Ingot,Materials,Dawnsilver Ingot; Silencing Shot
-Warpglass Chunk,Materials,
-Warpglass Ingot,Materials,
-Alchemist's Tools - Expanded (Level 3),Mundane,Alchemist's Lab (Expanded)
-Arrows (10),Mundane,Arrows
-Astrolabe (Standard),Mundane,
-Barding (Heavy; Large),Mundane,
-Barding (Heavy; Small or Medium),Mundane,Light Barding (Small or Medium); Heavy Barding (Small or Medium)
-Barding (Light; Large),Mundane,
-Barding (Light; Small or Medium),Mundane,Light Barding (Small or Medium); Heavy Barding (Small or Medium)
-Belt Pouch,Mundane,
-Blocks,Mundane,
-Blowgun darts (10),Mundane,Blowgun Darts
-Bludgeon Arrows (10),Mundane,
-Book of Translation (Standard),Mundane,Book of Translation (Advanced)
-"Book, Common, Hard Bound",Mundane,
-"Book, Common, Soft Bound",Mundane,
-"Book, Rare, Hard Bound",Mundane,
-"Book, Rare, Soft Bound",Mundane,
-"Book, Uncommon, Hard Bound",Mundane,
-"Book, Uncommon, Soft Bound",Mundane,
 Bowstring (5),Mundane,
 "Case, crossbow bolt",Mundane,
 "Case, map or scroll",Mundane,
@@ -455,105 +108,6 @@ Tuba - Virtuoso (Level 3),Mundane,
 Viol,Mundane,Vial
 Viol - Virtuoso (Level 3),Mundane,
 Wooden Taws (per 10),Mundane,Wooden Taws
-Abyssal Pact,Rituals,
-Angelic Messenger,Rituals,
-Anima Invocation (Modified),Rituals,
-Animate Object,Rituals,Anima Robe
-Arcane Weaving,Rituals,
-Asmodean Wager,Rituals,
-Astral Projection,Rituals,Staff of Protection
-Atone,Rituals,
-Awaken Animal,Rituals,
-Awaken Object,Rituals,
-Awaken Portal,Rituals,
-Bacchanalia,Rituals,
-Bathe In Blood,Rituals,
-Binding Circle,Rituals,Binding Coil; Mind's Light Circlet; Binding Snare
-Blight,Rituals,
-Bonding Meal,Rituals,
-Bountiful Oasis,Rituals,
-Butterfly Bender,Rituals,
-Call Spirit,Rituals,
-Clone,Rituals,
-Collective Memories,Rituals,
-Commune,Rituals,
-Commune With Nature,Rituals,
-Community Repair,Rituals,
-Concealment's Curtain,Rituals,Concealment Coin
-Consecrate,Rituals,
-Construct Mindscape,Rituals,
-Contact Friends,Rituals,
-Control Weather,Rituals,
-Create Demiplane,Rituals,
-Create Skinstitch,Rituals,
-Create Undead,Rituals,
-Daemonic Pact,Rituals,
-Diabolic Pact,Rituals,
-Div Pact,Rituals,
-Dread Ambience,Rituals,
-Elemental Sentinel,Rituals,
-Elemental Servitor,Rituals,Elemental Core
-Empower Ley Line,Rituals,
-Establish Nexus,Rituals,
-Fantastic Facade,Rituals,
-Feast of Supplication,Rituals,
-Fey Abeyance,Rituals,
-Form of the Sandpoint Devil,Rituals,
-Fortifying Brew,Rituals,Fortifying Pebble
-Freedom,Rituals,
-Garden Of Death,Rituals,Tears of Death
-Gathering Call,Rituals,
-Geas,Rituals,
-Guardian's Aegis,Rituals,Guardian Staff
-Heartbond,Rituals,Heartstone
-Heroes' Feast,Rituals,
-Ideal Mimicry,Rituals,
-Imprisonment,Rituals,
-Infernal Pact,Rituals,Infernal Health
-Inveigle,Rituals,
-Lucky Month,Rituals,
-Mind Swap,Rituals,Mind-Swap Potion
-Mindscape Door,Rituals,
-Mosquito Blight,Rituals,
-Mother's Blessing,Rituals,Bort's Blessing
-Mystic Carriage,Rituals,
-Oblivious Explusion,Rituals,
-Owb Pact,Rituals,
-Perfection of Essence,Rituals,
-Phantasmal Custodians,Rituals,
-Planar Displacement,Rituals,
-Planar Servitor,Rituals,
-Plant Growth,Rituals,
-Portrait Of Spite,Rituals,
-Power of the Beasts,Rituals,Pelt of the Beast
-Primal Call,Rituals,Animal Call; Primal Pollen
-Purify Soul Path,Rituals,
-Raga of Remembrance,Rituals,Jug of Fond Remembrance
-Ravenous Reanimation,Rituals,
-Recall Past Life,Rituals,
-Reincarnate,Rituals,
-Rest Eternal,Rituals,
-Resurrect,Rituals,Resurrection Tea
-Rune Trap,Rituals,
-Seed of Mercy,Rituals,Mask of Mercy
-Shadow Double,Rituals,
-Simulacrum,Rituals,
-Sky Signs,Rituals,
-Statuette,Rituals,Warding Statuette
-Supreme Connection,Rituals,
-Tattoo Whispers,Rituals,
-Teleportation Circle,Rituals,
-Terminate Bloodline,Rituals,
-The Unseeing Blade Master,Rituals,
-The World's A Stage,Rituals,
-Unfettered Mark,Rituals,
-Unseen Custodians,Rituals,
-Unseen Heralds,Rituals,
-Vital Singularity,Rituals,
-Ward Domain,Rituals,
-Waters of Prediction,Rituals,
-Wild Allegiance,Rituals,
-Wish,Rituals,
 Aggressive,Runes,
 Anarchic,Runes,
 Axiomatic,Runes,
@@ -587,26 +141,6 @@ Energy-Resistant - Acid (Greater),Runes,Energy-Resistant (Greater); Energy-Resis
 Energy-Resistant - Cold (Greater),Runes,Energy-Resistant (Greater); Energy-Resistant
 Energy-Resistant - Electricity (Greater),Runes,Energy-Resistant (Greater)
 Energy-Resistant - Fire (Greater),Runes,Energy-Resistant (Greater); Energy-Resistant
-Spell scroll (1st level),Scrolls,
-Spell scroll (1st level),Scrolls,
-Spell scroll (2nd level),Scrolls,
-Spell scroll (2nd level),Scrolls,
-Spell scroll (3rd level),Scrolls,
-Spell scroll (3rd level),Scrolls,
-Spell scroll (4th level),Scrolls,
-Spell scroll (4th level),Scrolls,
-Spell scroll (5th level),Scrolls,
-Spell scroll (5th level),Scrolls,
-Spell scroll (6th level),Scrolls,
-Spell scroll (6th level),Scrolls,
-Spell scroll (7th level),Scrolls,
-Spell scroll (7th level),Scrolls,
-Spell scroll (8th level),Scrolls,
-Spell scroll (8th level),Scrolls,
-Spell scroll (9th level),Scrolls,
-Spell scroll (9th level),Scrolls,
-Spell scroll (10th level),Scrolls,
-Spell scroll (10th level),Scrolls,
 Fist Shield,Shield_Basic,Steel Shield; Lion's Shield; Limestone Shield
 Heater Shield,Shield_Basic,Meteor Shield; Hide Shield; dart-shield
 Hoplon,Shield_Basic,
@@ -619,8 +153,6 @@ Tower Shield,Shield_Basic,Steel Shield; Force Shield; Throwing Shield
 Viking Shield,Shield_Basic,Shining Shield
 Darkwood Shield (High-Grade),Shield_Material,Duskwood Shield (High Grade); Duskwood Tower Shield (High Grade); Dawnsilver Shield (High Grade)
 Darkwood Shield (Standard-Grade),Shield_Material,Duskwood Shield (Standard Grade); Duskwood Tower Shield (Standard Grade); Dawnsilver Shield (Standard Grade)
-Djezet Shield (High-Grade),Shield_Material,Keep Stone Shield (High Grade); Dawnsilver Shield (High Grade); Adamantine Shield (High Grade)
-Djezet Shield (Standard-Grade),Shield_Material,Dawnsilver Shield (Standard Grade); Adamantine Shield (Standard Grade); Duskwood Shield (Standard Grade)
 Dragonhide Shield (High-Grade),Shield_Material,Dawnsilver Shield (High Grade); Cold Iron Shield (high Grade); Duskwood Shield (High Grade)
 Dragonhide Shield (Standard-Grade),Shield_Material,Dawnsilver Shield (Standard Grade); Cold Iron Shield (Standard Grade); Duskwood Shield (Standard Grade)
 Mithral Shield (High-Grade),Shield_Material,Inubrix Shield (High Grade); Abysium Shield (High Grade); Dawnsilver Shield (High Grade)
@@ -843,8 +375,6 @@ Monkey Fist,Weapon_Basic,Monkey's Fist; Monkey Pin
 Rungu,Weapon_Basic,
 Darkwood Weapon (High-Grade),Weapon_Material,Duskwood Weapon (High Grade); Duskwood Armor (High Grade); Dawnsilver Weapon (High Grade)
 Darkwood Weapon (Standard-Grade),Weapon_Material,Duskwood Weapon (Standard Grade); Duskwood Armor (Standard Grade); Dawnsilver Weapon (Standard Grade)
-Djezet Weapon (High-Grade),Weapon_Material,Keep Stone Weapon (High Grade); Dawnsilver Weapon (High Grade); Adamantine Weapon (High Grade)
-Djezet Weapon (Standard-Grade),Weapon_Material,Dawnsilver Weapon (Standard Grade); Adamantine Weapon (Standard Grade); Duskwood Weapon (Standard Grade)
 Mithral Weapon (High-Grade),Weapon_Material,Inubrix Weapon (High Grade); Abysium Weapon (High Grade); Dawnsilver Weapon (High Grade)
 Mithral Weapon (Standard-Grade),Weapon_Material,Inubrix Weapon (Standard Grade); Abysium Weapon (Standard Grade); Dawnsilver Weapon (Standard Grade)
 Noqual Weapon (High-Grade),Weapon_Material,Inubrix Weapon (High Grade); Cold Iron Weapon (High Grade); Abysium Weapon (High Grade)
