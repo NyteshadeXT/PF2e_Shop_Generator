@@ -24,7 +24,7 @@ Acid Flask (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipm
 Acid Flask (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\acid-flask-moderate.md,Alchemical_Items,"source: vault='gmcore', db='playercore2'; page: vault='244', db='283'"
 Acid Spitter,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\acid-spitter.md,Snares,"traits: vault='acid, clockwork, consumable, mechanical, snare, trap', db='Acid, Clockwork, Consumable, Mechanical, Snare, Trap, Uncommon'"
 Acrobat's Staff,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\acrobats-staff.md,Specific_Magic_Weapons,"traits: vault='fortune, magical, monk, parry, reach, trip', db='Fortune, Magical, Transmutation'"
-Adamantine Armor High (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\adamantine-armor-high-grade.md,Armor_Material,"source: vault='gmcore', db='corerulebook'; page: vault='228', db='555'"
+Adamantine Armor (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\adamantine-armor-high-grade.md,Armor_Material,"source: vault='gmcore', db='corerulebook'; page: vault='228', db='555'"
 Adamantine Armor (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\adamantine-armor-standard-grade.md,Armor_Material,"source: vault='gmcore', db='corerulebook'; page: vault='228', db='555'"
 Adamantine Chunk,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\adamantine-chunk.md,Materials,"level: vault='8', db='8.0'; source: vault='gmcore', db='corerulebook'; page: vault='253', db='578'; traits: vault='precious', db='Uncommon, Precious'"
 Adamantine Ingot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\adamantine-ingot.md,Materials,"level: vault='8', db='8.0'; source: vault='gmcore', db='corerulebook'; page: vault='253', db='578'; traits: vault='precious', db='Uncommon, Precious'"
@@ -44,15 +44,19 @@ Adventurer's Pack,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipme
 Adze,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\Adze.md,Weapon_Basic,"traits: vault='forceful, tripkee, sweep', db='Forceful, Sweep, Tripkee'"
 Aeon Stone (Agate Ellipsoid),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-agate-ellipsoid.md,Worn_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aeon Stone (Amber Sphere),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-amber-sphere.md,Worn_Items,"rarity: vault='rare', db='Uncommon'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
+Aeon Stone (Amplifying),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-amplifying.md,Worn_Items,
 Aeon Stone (Azure Briolette),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-azure-briolette.md,Worn_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aeon Stone (Black Disc),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-black-disc.md,Worn_Items,"rarity: vault='rare', db='Uncommon'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aeon Stone (Black Pearl),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-black-pearl.md,Worn_Items,"source: vault='gmcore', db='worldguide'; page: vault='284', db='63'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aeon Stone (Clear Quartz Octagon),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-clear-quartz-octagon.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
+Aeon Stone (Consumed),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-consumed.md,Worn_Items,
 Aeon Stone (Cymophane Cabochon),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-cymophane-cabochon.md,Worn_Items,"rarity: vault='uncommon', db='Common'; traits: vault='earth, invested, magical', db='Earth'"
+Aeon Stone (Delaying),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-delaying.md,Worn_Items,
 Aeon Stone (Dusty Rose Prism),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-dusty-rose-prism.md,Worn_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aeon Stone (Gold Nodule),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-gold-nodule.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aeon Stone (Lavender and Green Ellipsoid),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-lavender-and-green-ellipsoid.md,Worn_Items,"page: vault='604', db='64'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aeon Stone (Mottled Ellipsoid),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-mottled-ellipsoid.md,Worn_Items,"rarity: vault='rare', db='Uncommon'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
+Aeon Stone (Nourishing),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-nourishing.md,Worn_Items,
 Aeon Stone (Olivine Pendeloque),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-olivine-pendeloque.md,Worn_Items,"rarity: vault='uncommon', db='Common'; traits: vault='earth, invested, magical', db='Earth'"
 Aeon Stone (Pale Lavender Ellipsoid),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-pale-lavender-ellipsoid.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aeon Stone (Pale Orange Rhomboid),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-pale-orange-rhomboid.md,Worn_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
@@ -63,9 +67,14 @@ Aeon Stone (Polished Pebble),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Build
 Aeon Stone (Rainbow Prism),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-rainbow-prism.md,Worn_Items,"rarity: vault='rare', db='Uncommon'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aeon Stone (Western Star),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aeon-stone-western-star.md,Worn_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Aerial Cloak,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aerial-cloak.md,Worn_Items,
+Aether Marbles (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aether-marbles-greater.md,Alchemical_Items,"traits: vault='bomb, consumable, force, splash', db='Bomb, Consumable, Force, Splash, Uncommon'"
+Aether Marbles (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aether-marbles-lesser.md,Alchemical_Items,"traits: vault='bomb, consumable, force, splash', db='Bomb, Consumable, Force, Splash, Uncommon'"
+Aether Marbles (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\aether-marbles-moderate.md,Alchemical_Items,"traits: vault='bomb, consumable, force, splash', db='Bomb, Consumable, Force, Splash, Uncommon'"
 Aim-Aiding,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\Aim-Aiding.md,Runes,"traits: vault='magical', db='Magical, Transmutation'"
 Air Bladder,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\air-bladder.md,Mundane,"level: vault='0', db='0.0'"
 Aklys,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\Aklys.md,Weapon_Basic,"rarity: vault='uncommon', db='Rare'; traits: vault='tethered, thrown-20, trip', db='Ranged Trip, Tethered, Thrown 20 feet, Trip'"
+Alacritous Horseshoes (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\alacritous-horseshoes-greater.md,C_C_Structure,
+Alacritous Horseshoes,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\alacritous-horseshoes.md,C_C_Structure,
 Alarm Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\alarm-snare.md,Snares,
 Alchemical Atomizer,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\alchemical-atomizer.md,Alchemical_Items,"traits: vault='alchemical', db='Alchemical, Rare'"
 Alchemical Chart (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\alchemical-chart-greater.md,Alchemical_Items,
@@ -105,6 +114,7 @@ Amphisbaena Handwraps,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equ
 Amphisbaena Spittle,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\amphisbaena-spittle.md,Consumables,
 Amulet of the Hellcat,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\amulet-of-the-hellcat.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Uncommon'"
 Amulet of the Third Eye,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\amulet-of-the-third-eye.md,Worn_Items,"page: vault='102', db='12'; traits: vault='apex, invested, magical', db='Apex, Divination, Invested, Magical'"
+Anarchic,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\anarchic.md,Runes,"level: vault='8', db='11'; source: vault='corerulebookhomebrewadjustment', db='corerulebook'; traits: vault='chaotic, magical', db='Chaotic, Evocation, Magical'"
 Anathema Fulu,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\anathema-fulu.md,Consumables,"traits: vault='consumable, fulu, magical', db='Abjuration, Consumable, Fulu, Magical'"
 Ancestral Echoing,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\ancestral-echoing.md,Runes,"traits: vault='dwarf, magical, saggorak', db='Dwarf, Evocation, Magical, Rare, Saggorak'"
 Ancestral Geometry,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\ancestral-geometry.md,Tattoos,"traits: vault='invested, magical, tattoo', db='Abjuration, Invested, Magical, Tattoo, Uncommon'"
@@ -117,6 +127,7 @@ Anglerfish Lantern,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipm
 Animal Bed,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\animal-bed.md,Mundane,"level: vault='0', db='0.0'"
 Animal Blind,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\animal-blind.md,Mundane,"level: vault='0', db='0.0'; source: vault='sourcepathfinderhowlofthewild', db='howlofthewild'"
 Animal Call,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\animal-call.md,Mundane,"level: vault='0', db='0.0'"
+Animal Nip (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\animal-nip-greater.md,Consumables,
 Animal Nip (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\animal-nip-lesser.md,Consumables,
 Animal Nip (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\animal-nip-moderate.md,Consumables,
 Animal Pheromones (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\animal-pheromones-greater.md,Alchemical_Items,
@@ -164,6 +175,10 @@ Arachnid Harness (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Buildin
 Arachnid Harness,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\arachnid-harness.md,Specific_Magic_Armor,"traits: vault='invested, magical', db='Invested, Magical, Transmutation'"
 Arachnolute,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\Arachnolute.md,Held_Items,"traits: vault='magical', db='Magical, Uncommon'"
 Arbalest,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\Arbalest.md,Weapon_Basic,
+Arbor Vine Wine (Aged),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\arbor-wine-aged.md,Alchemical_Items,
+Arbor Vine Wine,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\arbor-wine.md,Alchemical_Items,
+Arboreal Boots (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\arboreal-boots-greater.md,Worn_Items,
+Arboreal Boots,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\arboreal-boots.md,Worn_Items,
 Arcane Scroll Case of Simplicity,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\arcane-scroll-case-of-simplicity.md,Held_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Archaic Wayfinder,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\archaic-wayfinder.md,Worn_Items,"page: vault='297', db='17'; traits: vault='invested, magical', db='Evocation, Invested, Magical, Uncommon'"
 Architect's Pattern Book,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\architects-pattern-book.md,Grimoire,"traits: vault='grimoire, magical', db='Conjuration, Grimoire, Magical, Uncommon'"
@@ -208,6 +223,8 @@ Assassin's Skin,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment
 Assisting,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\Assisting.md,Runes,"traits: vault='magical', db='Magical, Transmutation'"
 Astringent Venom,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\astringent-venom.md,Alchemical_Items,
 Astrolabe (Mariner's),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\astrolabe-mariners.md,Mundane,"level: vault='3', db='3.0'; source: vault='pathfindersocietyguide', db='188theywatchedthestars'; page: vault='34', db='79'"
+Astrolabe of Falling Stars,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\astrolabe-of-falling-stars.md,Held_Items,"traits: vault='magical', db='Evocation, Magical, Uncommon'"
+Astrolabe (Standard),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\astrolabe-standard.md,Mundane,"level: vault='2', db='2.0'; source: vault='pathfindersocietyguide', db='188theywatchedthestars'; page: vault='34', db='79'"
 Atlatl,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\Atlatl.md,Weapon_Basic,
 Atmospheric Breathing Suit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\atmospheric-breathing-suit.md,Mundane,"level: vault='3', db='0.0'"
 Atmospheric Staff (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\atmospheric-staff-greater.md,Staff_Wand,"traits: vault='air, magical, staff, two-hand-d8', db='Air, Magical, Staff, Uncommon'"
@@ -221,6 +238,7 @@ Authorized,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\Au
 Autumn's Embrace,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\autumns-embrace.md,Specific_Magic_Armor,"traits: vault='invested, laminar, magical', db='Conjuration, Invested, Magical'"
 Avalanche Boots,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\avalanche-boots.md,Worn_Items,"page: vault='102', db='12'; traits: vault='apex, invested, magical', db='Apex, Invested, Magical, Transmutation'"
 Avalanche of Stones Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\avalanche-of-stones-snare.md,Snares,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='consumable, mechanical, snare, trap', db='Consumable, Mechanical, Snare, Trap, Uncommon'"
+Axiomatic,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\axiomatic.md,Runes,"level: vault='8', db='11'; source: vault='corerulebookhomebrewadjustment', db='corerulebook'; traits: vault='order, magical', db='Evocation, Lawful, Magical'"
 Azarim,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\Azarim.md,Specific_Magic_Weapons,"source: vault='adventurecrownofthekoboldking', db='crownofthekoboldking'; traits: vault='deadly-d8, disarm, divine, finesse, holy, intelligent, magical', db='Divine, Evocation, Intelligent, Unique'"
 Azure Lily Pollen,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\azure-lily-pollen.md,Alchemical_Items,"level: vault='10', db='1'; source: vault='kingmaker', db='kingmakeradventurepath'; traits: vault='alchemical, consumable, inhaled, poison', db='Alchemical, Consumable, Inhaled, Poison, Rare'"
 Azure Worm Repellent,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\A\azure-worm-repellent.md,Alchemical_Items,"traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
@@ -240,6 +258,10 @@ Balisse Feather (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building
 Balisse Feather,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\balisse-feather.md,Consumables,
 Ball,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\Ball.md,Mundane,"level: vault='0', db='0.0'; source: vault='sourcepathfinderlostomensthegrandbazaar', db='grandbazaar'"
 Bandalore,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\Bandalore.md,Mundane,"level: vault='0', db='0.0'"
+Bandolier,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bandolier.md,Mundane,"level: vault='0', db='0.0'"
+Bands of Force (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bands-of-force-greater.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; page: vault='286', db='67'; traits: vault='force, invested, magical', db='Abjuration, Invested, Magical'"
+Bands of Force (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bands-of-force-major.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; page: vault='286', db='67'; traits: vault='force, invested, magical', db='Abjuration, Invested, Magical'"
+Bands of Force,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bands-of-force.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; page: vault='286', db='67'"
 Bane Oil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bane-oil.md,Consumables,"traits: vault='consumable, magical, oil', db='Consumable, Divination, Magical, Oil, Uncommon'"
 Bane,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\Bane.md,Runes,"page: vault='180', db='18'; traits: vault='divination, magical', db='Divination, Magical, Uncommon'"
 Bangles of Crowns,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bangles-of-crowns.md,Worn_Items,"traits: vault='apex, invested, magical', db='Apex, Enchantment, Invested, Magical, Rare'"
@@ -277,7 +299,13 @@ Beguiling Crown,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment
 Belladonna,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\Belladonna.md,Alchemical_Items,
 Bellflower Toolbelt,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bellflower-toolbelt.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Rare, Transmutation'"
 Belt of Good Health,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\belt-of-good-health.md,Worn_Items,"source: vault='beginnerbox', db='beginnerboxgamemastersguide'; traits: vault='magical', db='Invested, Magical, Necromancy'"
+Belt of Long Life,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\belt-of-long-life.md,Worn_Items,"traits: vault='apex, invested, magical', db='Apex, Invested, Magical, Transmutation'"
 Belt of the Five Kings,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\belt-of-the-five-kings.md,Worn_Items,"page: vault='606', db='66'; traits: vault='invested, magical', db='Enchantment, Invested, Magical, Uncommon'"
+Belt Pouch,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\belt-pouch.md,Mundane,
+Bendy-Arm Mutagen (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bendy-arm-mutagen-greater.md,Alchemical_Items,
+Bendy-Arm Mutagen (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bendy-arm-mutagen-lesser.md,Alchemical_Items,
+Bendy-Arm Mutagen (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bendy-arm-mutagen-major.md,Alchemical_Items,
+Bendy-Arm Mutagen (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bendy-arm-mutagen-moderate.md,Alchemical_Items,
 Berserker's Cloak (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\berserkers-cloak-greater.md,Worn_Items,
 Berserker's Cloak,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\berserkers-cloak.md,Worn_Items,
 Bestial Mutagen (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bestial-mutagen-greater.md,Alchemical_Items,
@@ -375,6 +403,7 @@ Blood Sight Elixir (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Buil
 Bloodbane (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bloodbane-greater.md,Runes,"traits: vault='dwarf, magical', db='Dwarf, Evocation, Magical, Uncommon'"
 Bloodbane,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\Bloodbane.md,Runes,"traits: vault='dwarf, evocation, magical', db='Dwarf, Evocation, Magical, Uncommon'"
 Bloodburn Censer,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bloodburn-censer.md,Held_Items,"traits: vault='censer, fire, magical, poison', db='Censer, Fire, Magical, Poision'"
+Bloodeye Coffee,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bloodeye-coffee.md,Alchemical_Items,
 Bloodgorger Scythe,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bloodgorger-scythe.md,Specific_Magic_Weapons,"traits: vault='deadly-d10, magical, trip', db='Magical, Uncommon'"
 Bloodhammer Reserve Black Label,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bloodhammer-reserve-black-label.md,Consumables,"traits: vault='consumable, magical, polymorph, potion', db='Consumable, Magical, Polymorph, Potion, Transmutation, Uncommon'"
 Bloodhammer Reserve Select,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bloodhammer-reserve-select.md,Consumables,"traits: vault='consumable, magical, polymorph, potion', db='Consumable, Magical, Polymorph, Potion, Transmutation, Uncommon'"
@@ -403,8 +432,13 @@ Bomber's Eye Elixir (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Buil
 Bomber's Eye Elixir (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bombers-eye-elixir-lesser.md,Alchemical_Items,"source: vault='gmcore', db='playercore2'"
 Bomber's Saddle,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bombers-saddle.md,C_C_Structure,"traits: vault='companion, invested, magical', db='Companion, Invested, Magical, Uncommon'"
 Bone Dreadnought Plate,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bone-dreadnought-plate.md,Alchemical_Items,"traits: vault='alchemical, bulwark, entrench-ranged, ponderous', db='Alchemical'"
+Bonmuan Swapping Stone (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bonmuan-swapping-stone-greater.md,Consumables,"traits: vault='consumable, magical', db='Conjuration, Consumable, Magical, Teleportation, Uncommon'"
+Bonmuan Swapping Stone (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bonmuan-swapping-stone-lesser.md,Consumables,"traits: vault='consumable, magical', db='Conjuration, Consumable, Magical, Teleportation, Uncommon'"
+Bonmuan Swapping Stone (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bonmuan-swapping-stone-major.md,Consumables,"traits: vault='consumable, magical', db='Conjuration, Consumable, Magical, Teleportation, Uncommon'"
+Bonmuan Swapping Stone (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bonmuan-swapping-stone-moderate.md,Consumables,"traits: vault='consumable, magical', db='Conjuration, Consumable, Magical, Teleportation, Uncommon'"
 Book of Lingering Blaze,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\book-of-lingering-blaze.md,Grimoire,"traits: vault='grimoire, magical', db='Evocation, Grimoire, Magical'"
 Book of Translation (Advanced),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\book-of-translation-advanced.md,Mundane,"level: vault='5', db='5.0'; source: vault='pathfindersocietyguide', db='pfsguide'"
+Book of Translation (Standard),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\book-of-translation-standard.md,Mundane,"level: vault='2', db='2.0'; source: vault='pathfindersocietyguide', db='pfsguide'"
 Book of Warding Prayers,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\book-of-warding-prayers.md,Grimoire,"traits: vault='divine, grimoire', db='Divine, Grimoire, Transmutation'"
 Bookthief Brew,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bookthief-brew.md,Alchemical_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
 Boom Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\boom-snare.md,Snares,"traits: vault='consumable, mechanical, snare, trap', db='Consumable, Mechanical, Snare, Trap, Uncommon'"
@@ -450,6 +484,7 @@ Bracers of Devotion,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equip
 Bracers of Hammers,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bracers-of-hammers.md,Worn_Items,"traits: vault='apex, invested, magical', db='Apex, Invested, Magical, Rare, Transmutation'"
 Bracers of Missile Deflection (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bracers-of-missile-deflection-greater.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; page: vault='286', db='67'; traits: vault='invested, magical', db='Abjuration, Invested, Magical'"
 Bracers of Missile Deflection,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bracers-of-missile-deflection.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; page: vault='286', db='67'; traits: vault='invested, magical', db='Abjuration, Invested, Magical'"
+Bracers of Strength,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bracers-of-strength.md,Worn_Items,
 Branch of the Great Sugi,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\branch-of-the-great-sugi.md,Held_Items,"traits: vault='disarm, finesse, magical, nonlethal, reach, trip', db='Magical, Necromancy, Rare'"
 Brass Ear,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\brass-ear.md,Mundane,"level: vault='0', db='0.0'"
 Bravery Baldric (Fleet),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\bravery-baldric-fleet.md,Worn_Items,
@@ -504,6 +539,7 @@ Buoyancy Vest,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B
 Burning Badger Guts Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\burning-badger-guts-snare.md,Snares,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='consumable, fire, mechanical, snare, trap', db='Consumable, Fire, Mechanical, Snare, Trap, Uncommon'"
 Burnished Plating,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\burnished-plating.md,Adjustments,"level: vault='1', db='1.0'; source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='adjustment', db='Adjustment, Uncommon'"
 Burr Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\burr-shield.md,Specific_Magic_Shields,"traits: vault='magical', db='Magical, Necromancy'"
+Busine of Divine Reinforcement,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\busine-of-divine-reinforcement.md,Held_Items,"traits: vault='divine, magical', db='Conjuration, Divine, Good, Magical, Uncommon'"
 Butchering Axe,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\butchering-axe.md,Weapon_Basic,"rarity: vault='uncommon', db='Rare'; source: vault='thegrandbazaar', db='grandbazaar'"
 Butterfly Sword,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\butterfly-sword.md,Weapon_Basic,"rarity: vault='uncommon', db='Rare'; source: vault='166despairondangerisland', db='treasurevault'; page: vault='76', db='26'; traits: vault='agile, disarm, finesse, monk, parry, twin', db='Agile, Concealable, Disarm, Finesse, Monk, Parry, Twin'"
 Buugeng,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\B\Buugeng.md,Weapon_Basic,"rarity: vault='uncommon', db='Rare'"
@@ -555,6 +591,8 @@ Carver-cutter (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\E
 Carver-cutter (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\carver-cutter-major.md,Specific_Magic_Weapons,"traits: vault='magical, sweep, wood', db='Magical, Wood'"
 Carver-cutter (True),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\carver-cutter-true.md,Specific_Magic_Weapons,"traits: vault='magical, sweep, wood', db='Magical, Wood'"
 Carver-Cutter,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\Carver-cutter.md,Specific_Magic_Weapons,"traits: vault='magical, sweep, wood', db='Magical, Wood'"
+Case (Crossbow Bolt),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\case-crossbow-bolt.md,Mundane,
+Case (Map or Scroll),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\case-map-or-scroll.md,Mundane,
 Cassisian Helmet,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cassisian-helmet.md,Worn_Items,"traits: vault='invested, magical', db='Abjuration, Invested, Magical'"
 Caster's Targe,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\casters-targe.md,Shield_Basic,"page: vault='20', db='2'"
 Catch Pole,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\catch-pole.md,Mundane,"level: vault='0', db='0.0'; source: vault='howlofthewind', db='howlofthewild'"
@@ -591,6 +629,7 @@ Chameleon Suit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\
 Channel Protection Amulet,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\channel-protection-amulet.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; page: vault='286', db='68'; traits: vault='invested, magical', db='Abjuration, Invested, Magical, Uncommon'"
 Chaos Collar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\chaos-collar.md,C_C_Structure,"traits: vault='companion, invested, primal', db='Companion, Invested, Primal, Transmutation'"
 Chaos Falcon Feather,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\chaos-falcon-feather.md,Consumables,
+Charlatan's Cape,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\charlatans-cape.md,Worn_Items,
 Charlatan's Gloves (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\charlatans-gloves-greater.md,Worn_Items,
 Charlatan's Gloves,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\charlatans-gloves.md,Worn_Items,
 Charm of the Ordinary,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\charm-of-the-ordinary.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Transmutation, Uncommon'"
@@ -625,7 +664,7 @@ Claw Blade,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cl
 Clay,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\Clay.md,Mundane,"level: vault='0', db='0.0'"
 Climbing Bolt,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\climbing-bolt.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical', db='Conjuration, Consumable, Magical'"
 Climbing Kit (Extreme),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\climbing-kit-extreme.md,Mundane,"level: vault='3', db='3.0'"
-climbing-kit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\climbing-kit.md,Mundane,"level: vault='0', db='0.0'"
+Climbing Kit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\climbing-kit.md,Mundane,"level: vault='0', db='0.0'"
 Clinging Bubbles (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clinging-bubbles-greater.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
 Clinging Bubbles (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clinging-bubbles-lesser.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
 Clinging Bubbles (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clinging-bubbles-moderate.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
@@ -633,6 +672,8 @@ Clinging Ooze Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equip
 Cloak of Devouring Thorns,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloak-of-devouring-thorns.md,Worn_Items,"page: vault='187', db='8'; traits: vault='invested, primal', db='Invested, Primal, Rare, Transmutation'"
 Cloak of Feline Rest,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloak-of-feline-rest.md,Worn_Items,"traits: vault='invested, magical', db='Enchantment, Invested, Magical'"
 Cloak of Gnawing Leaves,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloak-of-gnawing-leaves.md,Worn_Items,"page: vault='187', db='8'; traits: vault='invested, primal', db='Invested, Primal, Rare, Transmutation'"
+Cloak of Illusions (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloak-of-illusions-greater.md,Worn_Items,"traits: vault='invested, occult', db='Invested, Magical'"
+Cloak of Illusions,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloak-of-illusions.md,Worn_Items,"traits: vault='invested, occult', db='Invested, Magical'"
 Cloak of Immolation,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloak-of-immolation.md,Cursed,"source: vault='gmcore', db='gamemasteryguide'; page: vault='306', db='91'; traits: vault='cursed, invested, magical', db='Rare, Cursed, Evocation, Invested, Magical'"
 Cloak of Repute (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloak-of-repute-greater.md,Worn_Items,"traits: vault='invested, magical', db='Enchantment, Invested, Magical'"
 Cloak of Repute (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloak-of-repute-major.md,Worn_Items,"traits: vault='invested, magical', db='Enchantment, Invested, Magical'"
@@ -669,10 +710,12 @@ Cloister Robe (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equ
 Cloister Robe (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloister-robe-moderate.md,Worn_Items,"traits: vault='divine, invested', db='Abjuration, Divine, Invested'"
 Cloning Potion,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloning-potion.md,Consumables,"traits: vault='consumable, magical, potion', db='Conjuration, Consumable, Magical, Potion, Rare'"
 Cloth of Nullification,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloth-of-nullification.md,Held_Items,"traits: vault='magical', db='Magical, Rare'"
+Clothing (Cold Weather),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clothing-cold-weather.md,Mundane,"level: vault='0', db='0.0'"
 Clothing (Desert),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clothing-desert.md,Mundane,"level: vault='0', db='0.0'; source: vault='playercore', db='howlofthewild'; page: vault='287', db='112'"
 Clothing (Fine),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clothing-fine.md,Mundane,"level: vault='0', db='0.0'"
 Clothing (High-Fashion Fine),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clothing-high-fashion-fine.md,Mundane,"level: vault='3', db='3.0'"
 Clothing (Ordinary),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clothing-ordinary.md,Mundane,"level: vault='0', db='0.0'"
+Clothing (Tear Away),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clothing-tear-away.md,Mundane,
 Cloud Buns (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloud-buns-greater.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Uncommon'"
 Cloud Buns,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cloud-buns.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Uncommon'"
 Clown Monarch,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\clown-monarch.md,Alchemical_Items,
@@ -762,6 +805,7 @@ Cooperative Waffles (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Buil
 Cooperative Waffles,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cooperative-waffles.md,Alchemical_Items,
 Copper Penny,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\copper-penny.md,Consumables,"traits: vault='consumable, magical, talisman', db='Divine, Evocation, Magical, Talisman, Uncommon'"
 Coral Armor,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\coral-armor.md,Armor_Basic,"level: vault='0', db='0.0'; page: vault='10', db='1'"
+Cordelia's Construct Key (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cordelias-construct-key-greater.md,Worn_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='invested, magical', db='Conjuration, Invested, Magical, Transmutation, Uncommon'"
 Cordelia's Construct Key,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\cordelias-construct-key.md,Worn_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='invested, magical', db='Conjuration, Invested, Magical, Transmutation, Uncommon'"
 Coronet of Stars,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\coronet-of-stars.md,Worn_Items,"traits: vault='apex, invested, magical', db='Apex, Invested, Magical, Necromancy, Rare'"
 Corpse Compass,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\corpse-compass.md,Held_Items,"traits: vault='magical', db='Divination, Magical, Necromancy, Uncommon'"
@@ -794,6 +838,7 @@ Crossbow,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\Cros
 Crowbar (Levered),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\crowbar-(levered).md,Mundane,"level: vault='3', db='3.0'"
 Crowbar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\Crowbar.md,Mundane,
 Crown of Insight,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\crown-of-insight.md,Tattoos,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='invested, magical, tattoo', db='Abjuration, Invested, Magical, Tattoo, Uncommon'"
+Crown of Intellect,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\crown-of-intellect.md,Worn_Items,
 Crown of the Companion,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\crown-of-the-companion.md,Worn_Items,"traits: vault='healing, invested, magical, vitality', db='Healing, Invested, Magical, Necromancy, Positive, Uncommon'"
 Crown of the Fire Eater (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\crown-of-the-fire-eater-greater.md,Worn_Items,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='invested, magical', db='Evocation, Invested, Magical, Uncommon'"
 Crown of the Fire Eater (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\C\crown-of-the-fire-eater-major.md,Worn_Items,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='invested, magical', db='Evocation, Invested, Magical, Uncommon'"
@@ -843,11 +888,17 @@ dart,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\Dart.md,
 Dawnlight (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dawnlight-greater.md,Held_Items,"traits: vault='divine', db='Divine, Evocation, Uncommon'"
 Dawnlight (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dawnlight-major.md,Held_Items,"traits: vault='divine', db='Divine, Evocation, Uncommon'"
 dawnlight,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\Dawnlight.md,Held_Items,"traits: vault='divine', db='Divine, Evocation, Uncommon'"
+Dawnsilver Armor (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dawnsilver-armor-high-grade.md,Armor_Material,
+Dawnsilver Armor (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dawnsilver-armor-standard-grade.md,Armor_Material,
+Dawnsilver Weapon (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dawnsilver-weapon-high-grade.md,Weapon_Material,"source: vault='gmcore', db='corerulebook'; page: vault='240', db='599'"
+Dawnsilver Weapon (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dawnsilver-weapon-standard-grade.md,Weapon_Material,"source: vault='gmcore', db='corerulebook'; page: vault='240', db='599'"
 Day Goggles,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\day-goggles.md,Mundane,"level: vault='2', db='2.0'"
 Daylight Vapor,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\daylight-vapor.md,Alchemical_Items,"traits: vault='consumable, divine, inhaled, poison', db='Consumable, Divine, Inhaled, Poison, Uncommon'"
 Dazing Coil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dazing-coil.md,Consumables,"source: vault='gmcore', db='corerulebook'; page: vault='263', db='566'; traits: vault='consumable, magical, talisman', db='Consumable, Enchantment, Magical, Talisman'"
 Dazzling Rosary (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dazzling-rosary-greater.md,Consumables,
 Dazzling Rosary,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dazzling-rosary.md,Consumables,
+Deadlock Mint (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\deadlock-mint-greater.md,Consumables,
+Deadlock Mint,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\deadlock-mint.md,Consumables,
 Deadly Slashing Claws,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\deadly-slashing-claws.md,Grafts,
 Deadweight Mutagen (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\deadweight-mutagen-greater.md,Alchemical_Items,
 Deadweight Mutagen (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\deadweight-mutagen-lesser.md,Alchemical_Items,
@@ -898,6 +949,7 @@ Detonating Gears Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Eq
 Devil's Bargain,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\devils-bargain.md,Specific_Magic_Armor,"traits: vault='invested, magical', db='Divination, Evil, Invested, Magical, Uncommon'"
 Devil's Breath Incense,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\devils-breath-incense.md,Consumables,"traits: vault='consumable, divine', db='Abjuration, Consumable, Divine, Uncommon'"
 Devil's Trident,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\devils-trident.md,Specific_Magic_Weapons,"traits: vault='magical, thrown-20', db='Enchantment, Magical, Unique'"
+Devoted Vestments,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\devoted-vestments.md,Worn_Items,
 Diluted Hype,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\diluted-hype.md,Alchemical_Items,"traits: vault='alchemical, consumable, drug, ingested, poison', db='Alchemical, Consumable, Drug, Ingested, Poison, Uncommon'"
 Dimension Shot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dimension-shot.md,Consumables,"traits: vault='consumable, magical', db='Conjuration, Consumable, Magical'"
 Dimensional Knot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dimensional-knot.md,Consumables,
@@ -921,18 +973,26 @@ Diver's Gloves (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building
 Divine Scroll Case of Simplicity,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\divine-scroll-case-of-simplicity.md,Held_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Diviner's Nose Chain,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\diviners-nose-chain.md,Worn_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='magical', db='Divination, Magical, Uncommon'"
 Diving Suit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\diving-suit.md,Mundane,"level: vault='3', db='3.0'; source: vault='thegrandbazaar', db='grandbazaar'"
-Djezet Alloy Ingot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\Djezet Alloy Ingot.md,Materials,
-Djezet Mass,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\Djezet Mass.md,Materials,
+Djezet Alloy Ingot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\djezet-alloy-ingot.md,Materials,"level: vault='0', db='0.0'; traits: vault='precious', db='Rare, Precious'"
+Djezet Armor (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\djezet-armor-high-grade.md,Armor_Material,
+Djezet Armor (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\djezet-armor-standard-grade.md,Armor_Material,
 Djezet Dose,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\djezet-dose.md,Consumables,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='consumable, magical', db='Consumable, Magical, Rare'"
+Djezet Mass,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\djezet-mass.md,Materials,"level: vault='0', db='0.0'; traits: vault='precious', db='Rare, Precious'"
+Djezet Shield (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\djezet-shield-high-grade.md,Shield_Material,"bulk: vault='1', db='L'"
+Djezet Shield (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\djezet-shield-standard-grade.md,Shield_Material,
+Djezet Weapon (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\djezet-weapon-high-grade.md,Weapon_Material,
+Djezet Weapon (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\djezet-weapon-standard-grade.md,Weapon_Material,
 Doctrine of Blissful Eternity,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\doctrine-of-blissful-eternity.md,Grimoire,"traits: vault='grimoire, magical', db='Grimoire, Magical, Necromancy, Uncommon'"
 Dog-Bone Knife,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dog-bone-knife.md,Specific_Magic_Weapons,"traits: vault='agile, finesse, magical, thrown-10, versatile-s', db='Abjuration, Magical'"
 Dogslicer,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\Dogslicer.md,Weapon_Basic,"traits: vault='agile, backstabber, finesse, goblin', db='Agile, Backstabber, Finesse, Goblin, Uncommon'"
+Doll (Exquisite surprise),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\doll-exquisite-surprise.md,Mundane,"level: vault='2', db='2.0'; source: vault='npccore', db='grandbazaar'"
 Doll,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\Doll.md,Mundane,"source: vault='thegrandbazaar', db='grandbazaar'"
 Donchak,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\Donchak.md,Weapon_Basic,"rarity: vault='uncommon', db='Rare'; traits: vault='hampering, reach, tethered, thrown-20', db='Hampering, Reach, Reload 1, Tethered, Thrown 20 ft.'"
 Doubling Rings (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\doubling-rings-greater.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; page: vault='289', db='69'; traits: vault='invested, magical', db='Evocation, Invested, Magical'"
 Doubling Rings,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\doubling-rings.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; page: vault='289', db='69'; traits: vault='invested, magical', db='Evocation, Invested, Magical'"
 Draft of Stellar Radiance,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\draft-of-stellar-radiance.md,Consumables,"traits: vault='consumable, light, magical, potion', db='Consumable, Evocation, Light, Magical, Potion, Rare'"
 Dragon Bile,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dragon-bile.md,Alchemical_Items,
+Dragon Breath Scale,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dragon-breath-scale.md,Consumables,
 Dragon Handwraps,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dragon-handwraps.md,Worn_Items,"page: vault='103', db='13'; traits: vault='agile, apex, finesse, invested, magical, nonlethal, unarmed', db='Apex, Invested, Magical, Transmutation'"
 Dragon Pearl,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dragon-pearl.md,Alchemical_Items,"traits: vault='alchemical, consumable', db='Alchemical, Consumable, Rare'"
 Dragon Rune Bracelet,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dragon-rune-bracelet.md,Worn_Items,"traits: vault='focused, invested, magical', db='Enchantment, Focused, Invested, Magical'"
@@ -994,6 +1054,10 @@ Dueling Cape,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\
 Dueling Spear,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dueling-spear.md,Weapon_Basic,"source: vault='thegrandbazaar', db='grandbazaar'"
 Duelist's Beacon,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\duelists-beacon.md,Specific_Magic_Shields,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='light, magical', db='Evocation, Light, Magical, Uncommon'"
 Dupe's Gold Nugget,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dupes-gold-nugget.md,Consumables,"traits: vault='consumable, magical, talisman', db='Consumable, Magical, Talisman, Transmutation, Uncommon'"
+Duskwood Armor (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\duskwood-armor-high-grade.md,Armor_Material,
+Duskwood Armor (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\duskwood-armor-standard-grade.md,Armor_Material,
+Duskwood Weapon (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\duskwood-weapon-high-grade.md,Weapon_Material,"source: vault='gmcore', db='corerulebook'; page: vault='233', db='599'"
+Duskwood Weapon (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\duskwood-weapon-standard-grade.md,Weapon_Material,"source: vault='gmcore', db='corerulebook'; page: vault='240', db='599'"
 Dust of Appearance,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dust-of-appearance.md,Consumables,"page: vault='570', db='57'; traits: vault='consumable, magical', db='Consumable, Divination, Magical'"
 Dust of Corpse Animation (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dust-of-corpse-animation-greater.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Uncommon'"
 Dust of Corpse Animation,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\D\dust-of-corpse-animation.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Uncommon'"
@@ -1063,7 +1127,7 @@ Endless Grimoire (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\
 Endless Grimoire (True),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\endless-grimoire-true.md,Grimoire,"traits: vault='grimoire, magical', db='Divination, Grimoire, Magical'"
 Endless Grimoire,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\endless-grimoire.md,Grimoire,"traits: vault='grimoire, magical', db='Divination, Grimoire, Magical'"
 Energizing Lattice,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\energizing-lattice.md,Specific_Magic_Armor,"page: vault='10', db='15'; traits: vault='invested, light, magical', db='Evocation, Invested, Light, Magical'"
-Energizing Pill,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\energizing-pill.md,Alchemical_Items,
+Energizing Pill,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\energizing-pill.md,Alchemical_Items,"source: vault='199tobloombelowtheweb', db='seasonofghostshardcover'; page: vault='73', db='295'"
 Energizing Tea,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\energizing-tea.md,Consumables,"traits: vault='consumable, magical, potion, tea', db='Consumable, Magical, Potion, Tea, Transmutation, Uncommon'"
 Energizing,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\energizing.md,Runes,"traits: vault='abjuration, magical', db='Abjuration, Magical, Uncommon'"
 Energy-Absorbing (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\energy-absorbing-greater.md,Runes,"source: vault='kingmaker', db='kingmakercompanionguide'; page: vault='104', db='14'; traits: vault='magical', db='Abjuration, Magical, Rare'"
@@ -1100,6 +1164,7 @@ Everyneed Pack (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\
 Everyneed Pack,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\everyneed-pack.md,Worn_Items,"traits: vault='invested, magical', db='Conjuration, Invested, Magical, Uncommon'"
 Everywhen Map,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\everywhen-map.md,Held_Items,"traits: vault='invested, magical', db='Divination, Invested, Magical, Rare'"
 Evil-Reflecting Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\evil-reflecting-shield.md,Specific_Magic_Shields,"traits: vault='magical', db='Abjuration, Magical, Uncommon'"
+Execution Powder,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\execution-powder.md,Alchemical_Items,"rarity: vault='uncommon', db='Common'; traits: vault='alchemical, consumable, divine, injury, poison', db='Alchemical, Consumable, Injury, Poison'"
 Experimental Clothing,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\experimental-clothing.md,Mundane,"level: vault='2', db='2.0'; source: vault='thegrandbazaar', db='grandbazaar'"
 Exploding Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\exploding-shield.md,Specific_Magic_Shields,
 Exploration Lens (Detecting),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\exploration-lens-detecting.md,Held_Items,"traits: vault='invested, magical', db='Divination, Invested, Magical, Uncommon'"
@@ -1113,6 +1178,7 @@ Explosive Missive,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipme
 Expulsion Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\expulsion-snare.md,Snares,"traits: vault='consumable, mechanical, snare, trap', db='Consumable, Mechanical, Rare, Snare, Trap'"
 Exquisite Sword Cane Sheath,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\exquisite-sword-cane-sheath.md,Weapon_Basic,"page: vault='80', db='78'; traits: vault='agile, finesse, parry, twin', db='Agile, Finesse, Parry, Twin (Sword)'"
 Exquisite Sword Cane,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\exquisite-sword-cane.md,Weapon_Basic,"traits: vault='agile, concealable, finesse, parry, twin', db='Agile, Concealable, Finesse, Parry, Twin (Sheath)'"
+Extendable Pincer,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\extendable-pincer.md,Mundane,"level: vault='0', db='0.0'; source: vault='gunsandgears', db='gunsgears'; traits: vault='clockwork', db='Clockwork, Uncommon'"
 Extended Deteriorating Dust,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\extended-deteriorating-dust.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Evocation, Magical, Uncommon'"
 Extending (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\extending-(greater).md,Runes,"source: vault='gmcore', db='secretsofmagic'; page: vault='237', db='184'; traits: vault='magical', db='Magical, Transmutation'"
 Extending,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\Extending.md,Runes,"source: vault='gmcore', db='secretsofmagic'; page: vault='237', db='184'; traits: vault='magical', db='Magical, Transmutation'"
@@ -1128,6 +1194,7 @@ Eye Slash (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipme
 Eye Slash (True),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\eye-slash-true.md,Tattoos,"traits: vault='invested, magical, tattoo', db='Divination, Invested, Magical, Tattoo'"
 Eye Slash,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\eye-slash.md,Tattoos,"traits: vault='invested, magical, tattoo', db='Divination, Invested, Magical, Tattoo'"
 Eyecatcher,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\Eyecatcher.md,Adjustments,"level: vault='1', db='1.0'; traits: vault='adjustment', db='Adjustment, Uncommon'"
+Eyes of the Cat,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\E\eyes-of-the-cat.md,Worn_Items,
 Fade Band,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fade-band.md,Consumables,"source: vault='gmcore', db='corerulebook'; page: vault='264', db='566'"
 Faith Tattoo (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\faith-tattoo-greater.md,Tattoos,
 Faith Tattoo (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\faith-tattoo-major.md,Tattoos,
@@ -1140,6 +1207,7 @@ False-Bottomed Mug,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipm
 False Death Vial (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\false-death-vial-greater.md,Consumables,"traits: vault='consumable, magical, talisman', db='Consumable, Illusion, Magical, Talisman, Uncommon'"
 False Death Vial,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\false-death-vial.md,Consumables,"traits: vault='consumable, magical, talisman', db='Consumable, Illusion, Magical, Talisman, Uncommon'"
 False Death,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\false-death.md,Alchemical_Items,"traits: vault='alchemical, consumable, ingested, poison', db='Alchemical, Consumable, Ingested, Poison, Uncommon'"
+False Flayleaf,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\false-flayleaf.md,Alchemical_Items,
 False Hope,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\false-hope.md,Alchemical_Items,
 False Manacles,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\false-manacles.md,Mundane,"level: vault='0', db='0.0'"
 Familiar Morsel,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\familiar-morsel.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
@@ -1182,6 +1250,7 @@ Fighting Fan,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\
 Fighting Stick,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fighting-stick.md,Weapon_Basic,
 Filcher's Fork,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\filchers-fork.md,Weapon_Basic,"traits: vault='agile, backstabber, deadly-d6, finesse, halfling, thrown-20', db='Agile, Backstabber, Deadly d6, Finesse, Halfling, Thrown 20 ft., Uncommon'"
 Final Rest,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\final-rest.md,Specific_Magic_Weapons,"traits: vault='magical, versatile-p', db='Magical, Necromancy'"
+Fingerprinting Kit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fingerprinting-kit.md,Mundane,"level: vault='3', db='3.0'"
 Fire and Iceberg (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fire-and-iceberg-greater.md,Alchemical_Items,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
 Fire and Iceberg (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fire-and-iceberg-major.md,Alchemical_Items,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
 Fire and Iceberg,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fire-and-iceberg.md,Alchemical_Items,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
@@ -1225,6 +1294,9 @@ Floating Tent (Four-Person),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Buildi
 Floating Tent (Pup),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\floating-tent-pup.md,Mundane,"level: vault='1', db='1.0'"
 Floorbell,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\floorbell.md,Held_Items,"source: vault='adventurepath158sixtyfeetunder', db='158sixtyfeetunder'; traits: vault='abjuration, matical', db='Abjuration, Magical, Uncommon'"
 Flower Press,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\flower-press.md,Mundane,
+Fluid Form Staff (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fluid-form-staff-greater.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Fluid Form Staff (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fluid-form-staff-major.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Fluid Form Staff,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fluid-form-staff.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Flurrying,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\Flurrying.md,Runes,"traits: vault='magical', db='Evocation, Magical'"
 Flying Blade Wheel Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\flying-blade-wheel-snare.md,Snares,
 Flying Talon,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\flying-talon.md,Weapon_Basic,"traits: vault='agile, finesse, kobold, tethered, thrown-10, trip', db='Agile, Finesse, Kobold, Ranged Trip, Tethered, Thrown 10 ft., Trip, Uncommon'"
@@ -1279,6 +1351,7 @@ Fu Water,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fu-w
 Full Plate,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\full-plate.md,Armor_Basic,"level: vault='2', db='2.0'"
 Fulminating Spear,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fulminating-spear.md,Specific_Magic_Weapons,"traits: vault='fire, magical, monk, thrown-20', db='Evocation, Fire, Magical'"
 Fulu Compendium,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fulu-compendium.md,Held_Items,"traits: vault='magical', db='Mental, Necromancy, Uncommon'"
+Fulu of Concealment,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fulu-of-concealment.md,Consumables,
 Fulu of Fire Suppression,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fulu-of-fire-suppression.md,Consumables,"traits: vault='consumable, fulu, magical', db='Abjuration, Consumable, Fulu, Magical'"
 Fulu of Flood Suppression,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fulu-of-flood-suppression.md,Consumables,"traits: vault='consumable, fulu, magical', db='Abjuration, Consumable, Fulu, Magical'"
 Fulu of the Drunken Monkey,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\F\fulu-of-the-drunken-monkey.md,Consumables,"traits: vault='consumable, fulu, magical, talisman', db='Abjuration, Consumable, Fulu, Magical, Talisman'"
@@ -1303,6 +1376,7 @@ Galvanic Chew,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G
 Galvanic Mortal Coil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\galvanic-mortal-coil.md,Held_Items,"traits: vault='magical', db='Magical, Necromancy, Rare'"
 Gambler's Staff,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\gamblers-staff.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Divination, Magical, Staff, Uncommon'"
 Gamepiece Chariot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\gamepiece-chariot.md,Held_Items,"traits: vault='magical', db='Conjuration, Magical, Rare'"
+Ganjay Book,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\ganjay-book.md,Held_Items,"source: vault='pathfindersocietyguide', db='pfsguide'"
 Garrote Bolt,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\garrote-bolt.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Transmutation, Uncommon'"
 Garrote Shot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\garrote-shot.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
 Gate Attenuator (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\gate-attenuator-greater.md,Worn_Items,
@@ -1339,6 +1413,7 @@ Ghost Touch,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\g
 Ghostbane Fulu,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\ghostbane-fulu.md,Consumables,"traits: vault='consumable, fulu, magical, talisman', db='Consumable, Fulu, Magical, Necromancy, Talisman, Transmutation'"
 Ghostcaller's Planchette (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\ghostcallers-planchette-(greater).md,Spellhearts,"traits: vault='magical, spellheart', db='Magical, Necromancy, Spellheart'"
 Ghostcaller's Planchette,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\ghostcallers-planchette.md,Spellhearts,"traits: vault='magical, spellheart', db='Magical, Necromancy, Spellheart'"
+Ghostcracker,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\ghostcracker.md,Consumables,
 Ghostly Portal Paint,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\ghostly-portal-paint.md,Consumables,"traits: vault='consumable, magical, oil', db='Consumable, Magical, Oil, Transmutation, Uncommon'"
 Ghostshot Wrapping,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\ghostshot-wrapping.md,Consumables,
 Ghoul Hide,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\ghoul-hide.md,Specific_Magic_Armor,"traits: vault='invested, magical', db='Invested, Magical, Uncommon'"
@@ -1413,8 +1488,10 @@ Grasp of Droskar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipmen
 Grasping Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grasping-snare.md,Snares,"traits: vault='consumable, mechanical, snare, trap', db='Consumable, Mechanical, Snare, Trap, Uncommon'"
 Grasping Tree,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grasping-tree.md,Snares,"traits: vault='consumable, mechanical, snare, trap', db='Consumable, Mechanical, Snare, Trap, Uncommon'"
 Grave Token,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grave-token.md,Consumables,"traits: vault='catalyst, consumable, magical', db='Catalyst, Consumable, Magical, Uncommon'"
+Gravekeeper Bow,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\gravekeeper-bow.md,Specific_Magic_Weapons,
 Gravemist Taper,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\gravemist-taper.md,Consumables,
 Graveroot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\graveroot.md,Alchemical_Items,"source: vault='gmcore', db='playercore2'"
+Gravetide,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\gravetide.md,Specific_Magic_Weapons,"bulk: vault='L', db='1'"
 Gray Maiden Plate,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\gray-maiden-plate.md,Armor_Basic,"level: vault='2', db='0.0'; source: vault='adventureshadowsatsundown', db='shadowsatsundown'"
 Grease Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grease-snare.md,Snares,"traits: vault='consumable, mechanical, snare, trap', db='Consumable, Mechanical, Rare, Snare, Trap'"
 Greataxe,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\greataxe.md,Weapon_Basic,
@@ -1432,6 +1509,8 @@ Grim Trophy,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\g
 Grimoire of Unknown Necessities,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grimoire-of-unknown-necessities.md,Grimoire,"traits: vault='grimoire, invested, magical', db='Divination, Grimoire, Invested, Magical, Unique'"
 Grindlegrub Steak,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grindlegrub-steak.md,Alchemical_Items,"traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
 Grinning Pugwampi,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grinning-pugwampi.md,Consumables,"rarity: vault='uncommon', db='Common'; source: vault='149againstthescarlettriad', db='treasurevault'; page: vault='77', db='94'; traits: vault='consumable, magical, misfortune, talisman', db='Consumable, Divination, Magical, Talisman'"
+Grisantian Pelt Armor (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grisantian-pelt-armor-high-grade.md,Armor_Material,
+Grisantian Pelt Armor (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grisantian-pelt-armor-standard-grade.md,Armor_Material,
 Grisly Scythe,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grisly-scythe.md,Specific_Magic_Weapons,"source: vault='kingmaker', db='kingmakercompanionguide'; traits: vault='deadly-d10, magical, trip', db='Magical, Necromancy, Rare'"
 Grit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grit.md,Alchemical_Items,
 Grounding Spike,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\grounding-spike.md,Specific_Magic_Weapons,"traits: vault='backswing, finesse, magical, reach, sweep, versatile-b', db='Evocation, Magical'"
@@ -1453,6 +1532,9 @@ Guise of the Smirking Devil (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Charac
 Guise of the Smirking Devil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\G\guise-of-the-smirking-devil.md,Worn_Items,
 Habu's Cudgel,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\habus-cudgel.md,Specific_Magic_Weapons,"traits: vault='magical, thrown-10', db='Magical, Necromancy, Unique'"
 Hag Eye (Frightful),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hag-eye-frightful.md,Worn_Items,"traits: vault='invested, occult, scrying', db='Divination, Invested, Occult, Rare, Scrying'"
+Hag Eye (Oracular),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hag-eye-oracular.md,Worn_Items,"traits: vault='invested, occult, scrying', db='Divination, Invested, Occult, Rare, Scrying'"
+Hag Eye (Smokey),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hag-eye-smokey.md,Worn_Items,"traits: vault='invested, occult, scrying', db='Divination, Invested, Occult, Rare, Scrying'"
+Hag Eye (Stoney),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hag-eye-stoney.md,Worn_Items,"traits: vault='invested, occult, scrying', db='Divination, Invested, Occult, Rare, Scrying'"
 Hag Eye,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hag-eye.md,Worn_Items,"source: vault='monstercore', db='bestiary3'; traits: vault='invested, occult, scrying', db='Divination, Invested, Occult, Rare, Scrying'"
 Hail of Arrows Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hail-of-arrows-snare.md,Snares,
 Hairpin of Blooming Flowers,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hairpin-of-blooming-flowers.md,Held_Items,"page: vault='307', db='73'; traits: vault='invested, magical', db='Evocation, Invested, Magical, Rare'"
@@ -1484,6 +1566,7 @@ Hatchet,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hatch
 Hauling (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hauling-greater.md,Runes,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical', db='Evocation, Magical, Uncommon'"
 Hauling,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hauling.md,Runes,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical', db='Evocation, Magical, Uncommon'"
 Headbands of Translocation,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\headbands-of-translocation.md,Worn_Items,"traits: vault='invested, magical, teleportation', db='Conjuration, Invested, Magical, Teleportation, Uncommon'"
+Headwrap of Wisdom,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\headwrap-of-wisdom.md,Worn_Items,
 Healer's Gel (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\healers-gel-greater.md,Consumables,
 Healer's Gel (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\healers-gel-lesser.md,Consumables,
 Healer's Gel (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\healers-gel-moderate.md,Consumables,
@@ -1509,6 +1592,8 @@ Heartripper Blade,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipme
 Heartstone,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\heartstone.md,Worn_Items,"page: vault='203', db='23'; traits: vault='invested, occult', db='Abjuration, Invested, Occult'"
 Heated Cloak,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\heated-cloak.md,Mundane,"level: vault='5', db='5.0'"
 Heavenly Rolling Flames,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\heavenly-rolling-flames.md,Specific_Magic_Weapons,"traits: vault='agile, disarm, finesse, magical, monk, parry, twin, versatile-p', db='Magical, Uncommon'"
+Heavy Barding (Large),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\heavy-barding-large.md,Mundane,"level: vault='3', db='0.0'"
+Heavy Barding (Small or Medium),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\heavy-barding-small-or-medium.md,Mundane,"level: vault='2', db='2.0'"
 Heavy Crossbow,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\heavy-crossbow.md,Weapon_Basic,"page: vault='280', db='278'"
 Heavy Rondache,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\heavy-rondache.md,Shield_Basic,"level: vault='0', db='0.0'; page: vault='20', db='2'"
 Heckling Tools,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\heckling-tools.md,Cursed,"traits: vault='cursed, intelligent, magical', db='Rare, Cursed, Enchantment, Intelligent, Magical'"
@@ -1526,6 +1611,7 @@ Helmsman's Recourse,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equip
 Hemlock,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hemlock.md,Alchemical_Items,"traits: vault='alchemcial, consumable, ingested, poison', db='Alchemical, Consumable, Ingested, Poison'"
 Herd Mask,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\herd-mask.md,Worn_Items,"traits: vault='invested, magical, teleportation', db='Conjuration, Invested, Magical, Teleportation, Uncommon'"
 Hexing Jar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hexing-jar.md,Worn_Items,"traits: vault='focused, invested, magical', db='Enchantment, Focused, Invested, Magical'"
+Hide Armor,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hide-armor.md,Armor_Basic,
 Hide Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\hide-shield.md,Shield_Basic,"page: vault='20', db='2'"
 High-contrast Goggles,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\high-contrast-goggles.md,Mundane,"level: vault='4', db='0.0'"
 Highhelm Drill Mark I,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\highhelm-drill-mark-i.md,Held_Items,"traits: vault='force, magical', db='Evocation, Force, Magical, Uncommon'"
@@ -1558,6 +1644,7 @@ Hook Sword,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\ho
 Hooked,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\Hooked.md,Runes,"source: vault='kingmaker', db='kingmakercompanionguide'; traits: vault='magical', db='Conjuration, Magical, Rare'"
 Hopeful,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\Hopeful.md,Runes,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical', db='Enchantment, Magical, Uncommon'"
 Horn of Blasting,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\horn-of-blasting.md,Held_Items,"traits: vault='sonic', db='Evocation, Sonic'"
+Horn of the Aoyin,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\horn-of-the-aoyin.md,Cursed,"source: vault='darkarchives', db='darkarchive'; traits: vault='cursed, magical', db='Rare, Cursed, Enchantment, Magical'"
 Horn of the Sun Aurochs,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\horn-of-the-sun-aurochs.md,Held_Items,"source: vault='adventureshadowsatsundown', db='shadowsatsundown'; traits: vault='magical', db='Evocation, Magical, Rare'"
 Horned Lion Amulet,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\horned-lion-amulet.md,Consumables,"traits: vault='consumable, magical, talisman', db='Abjuration, Consumable, Magical, Talisman, Uncommon'"
 Horrid Figurine,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\horrid-figurine.md,Held_Items,"traits: vault='magical', db='Magical, Necromancy'"
@@ -1578,6 +1665,11 @@ Hype,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\H\Hype.md,
 Bandolier,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Harvest Compendium Equipment\B\Bandolier.md,Mundane,
 Andvari's Gift,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Homebrew\A\andvaris-gift.md,Worn_Items,"rarity: vault='unique', db='Common'; traits: vault='cursed, invested, magical', db='Cursed, Divination, Invested, Magical'"
 Flask,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Homebrew\F\flask.md,Mundane,
+Happy Healper (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Homebrew\H\happy-healper-greater.md,Consumables,"source: vault='abyssalbrews', db='abyssalbrew'"
+Happy Healper,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Homebrew\H\happy-healper.md,Consumables,"source: vault='abyssalbrews', db='abyssalbrew'"
+Imbued Grave Dirt,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Homebrew\I\imbued-grave-dirt.md,Consumables,"traits: vault='consumable, vitality, divine, magical', db='Consumable, Divine, Magical, Vitality'"
+Levithan's Prism,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Homebrew\L\levithans-prism.md,Held_Items,"traits: vault='magical, darkness', db='Evocation, Magical, Rare'"
+Rot Lord's Ring,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Homebrew\R\rot-lords-ring.md,Worn_Items,"traits: vault='magical, void, invested', db='Divine, Invested, Magical, Necromancy, Positive, Rare'"
 Vial,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Homebrew\V\vial.md,Mundane,
 Ice Forge,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\ice-forge.md,C_C_Structure,"page: vault='237', db='76'; traits: vault='magical, structure', db='Conjuration, Magical, Rare, Structure'"
 Ice Slick Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\ice-slick-snare.md,Snares,"traits: vault='cold, consumable, mechanical, snare, trap', db='Cold, Consumable, Mechanical, Snare, Trap, Uncommon'"
@@ -1621,6 +1713,13 @@ Inspiring Spotlight,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equip
 Instant Evisceration Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instant-evisceration-snare.md,Snares,
 Instant Fortress,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instant-fortress.md,C_C_Structure,"page: vault='593', db='596'; traits: vault='magical, structure', db='Conjuration, Magical, Structure, Uncommon'"
 Instant Spy,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instant-spy.md,Consumables,"traits: vault='clockwork, consumable, gadget', db='Clockwork, Consumable, Gadget, Uncommon'"
+Instinct Crown (Animal),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instinct-crown-animal.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation'"
+Instinct Crown (Dragon),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instinct-crown-dragon.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation'"
+Instinct Crown (Fury),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instinct-crown-fury.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation'"
+Instinct Crown (Giant),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instinct-crown-giant.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation'"
+Instinct Crown (Spirit),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instinct-crown-spirit.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation'"
+Instinct Crown (Superstition),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instinct-crown-superstition.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation'"
+Instructions for Lasting Agony,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\instructions-for-lasting-agony.md,Grimoire,"source: vault='impossiblemagic', db='secretsofmagic'; page: vault='229', db='163'; traits: vault='grimoire, magical', db='Grimoire, Magical, Necromancy'"
 Inubrix Armor High (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\inubrix-armor-high-grade.md,Armor_Material,"source: vault='thegrandbazaar', db='grandbazaar'"
 Inubrix Armor (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\inubrix-armor-standard-grade.md,Armor_Material,"source: vault='thegrandbazaar', db='grandbazaar'"
 Inubrix Chunk,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\I\inubrix-chunk.md,Materials,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='precious', db='Rare, Precious'"
@@ -1651,7 +1750,7 @@ Jaathoom's Scarf,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipmen
 Jabali's Dice,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\jabalis-dice.md,Held_Items,
 Jack's Tattered Cape,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\jacks-tattered-cape.md,Worn_Items,"traits: vault='illusion, invested, magical', db='Illusion, Invested, Magical, Rare'"
 Jade Bauble,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\jade-bauble.md,Consumables,
-Jade Cat,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\jade-cat.md,Consumables,"source: vault='gmcore', db='corerulebook'; page: vault='265', db='568'; traits: vault='consumable, magical, talisman', db='Abjuration, Consumable, Magical, Talisman'"
+Jade Cat,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\jade-cat.md,Consumables,"page: vault='265', db='269'; traits: vault='consumable, magical, talisman', db='Abjuration, Consumable, Magical, Talisman'"
 Jann's Prism,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\janns-prism.md,Held_Items,
 Jar of Shifting Sands,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\jar-of-shifting-sands.md,Held_Items,"traits: vault='earth, magical', db='Conjuration, Earth, Magical'"
 Javelin,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\javelin.md,Weapon_Basic,
@@ -1666,6 +1765,9 @@ Jolt Coil (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipme
 Jolt Coil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\jolt-coil.md,Spellhearts,"traits: vault='electricity, magical, spellheart', db='Electricity, Evocation, Magical, Spellheart'"
 Journeybread (Power),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\journeybread-power.md,Alchemical_Items,"traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
 Journeybread,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\journeybread.md,Alchemical_Items,"bulk: vault='L', db='0'; traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
+Judgement Thurible (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\judgement-thurible-greater.md,Spellhearts,"traits: vault='magical, spellheart', db='Evocation, Magical, Spellheart'"
+Judgement Thurible (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\judgement-thurible-major.md,Spellhearts,"traits: vault='magical, spellheart', db='Evocation, Magical, Spellheart'"
+Judgement Thurible,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\judgement-thurible.md,Spellhearts,"traits: vault='magical, spellheart', db='Evocation, Magical, Spellheart'"
 Jug of Fond Remembrance,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\jug-of-fond-remembrance.md,Held_Items,"traits: vault='magical', db='Conjuration, Magical'"
 Juggernaut Mutagen (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\juggernaut-mutagen-greater.md,Alchemical_Items,
 Juggernaut Mutagen (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\J\juggernaut-mutagen-lesser.md,Alchemical_Items,
@@ -1694,10 +1796,12 @@ Keep Stone Ingot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipmen
 Keep Stone Shield (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\keep-stone-shield-high-grade.md,Shield_Material,
 Keep Stone Weapon (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\keep-stone-weapon-high-grade.md,Weapon_Material,
 Keymaking Tools,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\keymaking-tools.md,Held_Items,"traits: vault='magical', db='Conjuration, Magical'"
+Khakkhara,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\khakkhara.md,Weapon_Basic,"rarity: vault='uncommon', db='Rare'; traits: vault='shove, two-hand-d10, versatile-p', db='Monk, Shove, Two-Hand d10, Versatile P'"
 Khopesh,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\khopesh.md,Weapon_Basic,
 Kin-Warding,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\kin-warding.md,Runes,"traits: vault='dwarf, magical', db='Abjuration, Dwarf, Magical, Uncommon'"
 King's Sleep,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\kings-sleep.md,Alchemical_Items,
 Kirin Echo Chime,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\kirin-echo-chime.md,Consumables,
+Kite,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\kite.md,Mundane,
 Kizidhar's Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\kizidhars-shield.md,Specific_Magic_Shields,
 Klar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\Klar.md,Shield_Basic,"page: vault='20', db='2'"
 Knapsack of Halflingkind (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\knapsack-of-halflingkind-greater.md,Worn_Items,"traits: vault='extradimensional, healing, invested, magical', db='Conjuration, Extradimensional, Healing, Invested, Magical, Uncommon'"
@@ -1718,6 +1822,7 @@ Kukri,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\Kukri.m
 Kusarigama,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\Kusarigama.md,Weapon_Basic,"rarity: vault='uncommon', db='Rare'; source: vault='166despairondangerisland', db='treasurevault'; page: vault='76', db='27'"
 Kushtaka Relic,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\K\kushtaka-relic.md,Consumables,
 Lacquered Waist Drum,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\lacquered-waist-drum.md,Held_Items,"page: vault='303', db='77'; traits: vault='magical', db='Magical, Uncommon'"
+Ladder (10-foot),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\ladder-10-foot.md,Mundane,
 Lady's Blessing Oil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\ladys-blessing-oil.md,Alchemical_Items,
 Lady's Chalice,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\ladys-chalice.md,Held_Items,"page: vault='200', db='2'; traits: vault='divine', db='Conjuration, Divine, Good, Uncommon'"
 Lady's Knife,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\ladys-knife.md,Specific_Magic_Weapons,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='agile, finesse, magical, thrown-10, versatile-s', db='Conjuration, Magical'"
@@ -1738,6 +1843,7 @@ Leaf Weave,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\le
 Leaper's Elixir (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\leapers-elixir-greater.md,Alchemical_Items,
 Leaper's Elixir (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\leapers-elixir-lesser.md,Alchemical_Items,
 Leash,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\leash.md,Mundane,
+Leather Armor,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\leather-armor.md,Armor_Basic,
 Leather Lamellar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\leather-lamellar.md,Armor_Basic,
 Legerdemain Handkerchief,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\legerdemain-handkerchief.md,Held_Items,"traits: vault='extradimensional, magical', db='Conjuration, Extradimensional, Magical'"
 Leiomano,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\leiomano.md,Weapon_Basic,"rarity: vault='uncommon', db='Rare'"
@@ -1753,6 +1859,7 @@ Library Robes (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\E
 Library Robes (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\library-robes-major.md,Specific_Magic_Armor,"traits: vault='inscribed, invested, magical', db='Invested, Magical, Transmutation'"
 Library Robes (True),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\library-robes-true.md,Specific_Magic_Armor,"traits: vault='inscribed, invested, magical', db='Invested, Magical, Transmutation'"
 Library Robes,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\library-robes.md,Specific_Magic_Armor,"traits: vault='inscribed, invested, magical', db='Invested, Magical, Transmutation'"
+Lich Dust,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\lich-dust.md,Alchemical_Items,"bulk: vault='L', db='0'"
 Lich Soul Cage,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\lich-soul-cage.md,Held_Items,"page: vault='51', db='222'; traits: vault='arcane, void', db='Arcane, Necromancy, Negative, Rare'"
 Life-Boosting Oil (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\life-boosting-oil-greater.md,Consumables,"traits: vault='consumable, healing, magical, oil', db='Consumable, Healing, Magical, Necromancy, Oil, Uncommon'"
 Life-Boosting Oil (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\life-boosting-oil-lesser.md,Consumables,"traits: vault='consumable, healing, magical, oil', db='Consumable, Healing, Magical, Necromancy, Oil, Uncommon'"
@@ -1768,6 +1875,8 @@ Life Shot (True),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipmen
 Lifeblight Residue,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\lifeblight-residue.md,Alchemical_Items,"page: vault='66', db='77'; traits: vault='consumable, divine, injury, poison, virulent', db='Consumable, Divine, Injury, Poison, Uncommon, Virulent'"
 Life's Last Breath,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\lifes-last-breath.md,Specific_Magic_Weapons,"traits: vault='deadly-d8, holy, magical, two-hand-d10', db='Evil, Magical, Necromancy, Unique'"
 Lifting Belt,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\lifting-belt.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; page: vault='292', db='613'; traits: vault='invested, magical', db='Invested, Magical, Transmutation'"
+Light Barding (Large),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\light-barding-large.md,Mundane,
+Light Barding (Small or Medium),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\light-barding-small-or-medium.md,Mundane,
 Light Hammer,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\light-hammer.md,Weapon_Basic,"traits: vault='agile, thrown-20', db='Agile; Thrown 2ft'"
 Light Mace,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\light-mace.md,Weapon_Basic,
 Light Pick,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\light-pick.md,Weapon_Basic,
@@ -1792,6 +1901,8 @@ Liquid Gold,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\l
 Little Love,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\little-love.md,Specific_Magic_Weapons,"traits: vault='agile, finesse, magical, thrown-10, versatile-s', db='Magical, Rare, Transmutation'"
 Liuyedao,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\liuyedao.md,Weapon_Basic,
 Living Leaf Weave,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\living-leaf-weave.md,Alchemical_Items,"traits: vault='alchemical, healing, laminar, plant', db='Alchemical, Healing, Plant'"
+Living Mantle (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\living-mantle-greater.md,Worn_Items,
+Living Mantle,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\living-mantle.md,Worn_Items,
 Loaded Dice,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\loaded-dice.md,Held_Items,"source: vault='thegrandbazaar', db='grandbazaar'"
 Lock (Average),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\lock-average.md,Mundane,"level: vault='3', db='3.0'"
 Lock (Good),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\L\lock-good.md,Mundane,"level: vault='9', db='9.0'"
@@ -1827,6 +1938,17 @@ Maestro's Instrument (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Bui
 Maestro's Instrument (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\maestros-instrument-lesser.md,Held_Items,"source: vault='gmcore', db='corerulebook'; page: vault='275', db='574'; traits: vault='magical', db='Enchantment, Magical'"
 Maestro's Instrument (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\maestros-instrument-moderate.md,Held_Items,"level: vault='10', db='1'; source: vault='gmcore', db='corerulebook'; page: vault='275', db='574'; traits: vault='magical', db='Enchantment, Magical'"
 Mage Bane,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mage-bane.md,Alchemical_Items,"traits: vault='alchemical, consumable, injury, poison', db='Alchemical, Consumable, Injury, Poison, Uncommon'"
+Mage's Hat (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mages-hat-greater.md,Worn_Items,
+Mage's Hat,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mages-hat.md,Worn_Items,
+Magic Wand (1st-Rank Spell),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magic-wand-1st-rank-spell.md,Staff_Wand,"source: vault='gmcore', db='corerulebook'; page: vault='282', db='597'"
+Magic Wand (2nd-Rank Spell),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magic-wand-2nd-rank-spell.md,Staff_Wand,"source: vault='gmcore', db='corerulebook'; page: vault='282', db='597'"
+Magic Wand (3rd-Rank Spell),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magic-wand-3rd-rank-spell.md,Staff_Wand,"source: vault='gmcore', db='corerulebook'"
+Magic Wand (4th-Rank Spell),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magic-wand-4th-rank-spell.md,Staff_Wand,"source: vault='gmcore', db='corerulebook'; page: vault='282', db='597'"
+Magic Wand (5th-Rank Spell),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magic-wand-5th-rank-spell.md,Staff_Wand,"source: vault='gmcore', db='corerulebook'; page: vault='282', db='597'"
+Magic Wand (6th-Rank Spell),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magic-wand-6th-rank-spell.md,Staff_Wand,"source: vault='gmcore', db='corerulebook'; page: vault='282', db='597'"
+Magic Wand (7th-Rank Spell),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magic-wand-7th-rank-spell.md,Staff_Wand,"source: vault='gmcore', db='corerulebook'; page: vault='282', db='597'"
+Magic Wand (8th-Rank Spell),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magic-wand-8th-rank-spell.md,Staff_Wand,"source: vault='gmcore', db='corerulebook'; page: vault='282', db='597'"
+Magic Wand (9th-Rank Spell),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magic-wand-9th-rank-spell.md,Staff_Wand,"source: vault='gmcore', db='corerulebook'; page: vault='282', db='597'"
 Magical Lock Fulu,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magical-lock-fulu.md,Consumables,"page: vault='219', db='16'; traits: vault='consumable, fulu, magical', db='Consumable, Fulu, Magical, Transmutation'"
 Magnet Coin,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magnet-coin.md,Held_Items,"traits: vault='magical, teleportation', db='Conjuration, Magical, Teleportation, Uncommon'"
 Magnetic Construction Set,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magnetic-construction-set.md,Mundane,"level: vault='1', db='1.0'; source: vault='thegrandbazaar', db='grandbazaar'"
@@ -1839,10 +1961,12 @@ Magnifying Glass of Elucidation,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Bu
 Magnifying Glass,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\magnifying-glass.md,Mundane,"level: vault='3', db='3.0'"
 Mail of Luck,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mail-of-luck.md,Specific_Magic_Armor,"traits: vault='invested, magical', db='Divination, Invested, Magical'"
 Main-Gauche,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\main-gauche.md,Weapon_Basic,
+Mala Beads of Foresight,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mala-beads-of-foresight.md,Worn_Items,"page: vault='150', db='15'"
 Malleable Clay,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\malleable-clay.md,Consumables,"traits: vault='magical, talisman', db='Consumable, Divination, Magical, Talisman, Uncommon'"
 Malleable Mixture (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\malleable-mixture-greater.md,Alchemical_Items,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='alchemical, consumable, elixir', db='Alchemical, Consumable, Elixir, Uncommon'"
 Malleable Mixture (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\malleable-mixture-lesser.md,Alchemical_Items,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='alchemical, consumable, elixir', db='Alchemical, Consumable, Elixir, Uncommon'"
 Malleable,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\malleable.md,Runes,
+Malyass Root Paste,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\malyass-root-paste.md,Alchemical_Items,"bulk: vault='L', db='0'"
 Mambele,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mambele.md,Weapon_Basic,"rarity: vault='uncommon', db='Rare'; traits: vault='deadly d8, disarm, thrown 20', db='Deadly d8, Disarm, Thrown 20 ft.'"
 Mamlambo Scale,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mamlambo-scale.md,Specific_Magic_Armor,"traits: vault='invested, magical', db='Invested, Magical, Rare'"
 Mammoth Bow,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mammoth-bow.md,Specific_Magic_Weapons,"traits: vault='deadly-d10, magical, propulsive, volley-50', db='Evocation, Magical, Unique'"
@@ -1858,6 +1982,7 @@ Mantis Embrace (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\
 Mantis Embrace,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mantis-embrace.md,Worn_Items,"source: vault='adventurepreyfordeath', db='preyfordeath'; traits: vault='invested, magical', db='Invested, Magical, Uncommon'"
 Mantis Plate,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mantis-plate.md,Specific_Magic_Armor,"level: vault='13', db='12'; traits: vault='bulwark, invested, magical', db='Invested, Magical, Rare'"
 Mantis Shell,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mantis-shell.md,Armor_Basic,"level: vault='1', db='0.0'; rarity: vault='Uncommon', db='Rare'; traits: vault='adjusted', db='Adjusted Weapon Harness'"
+Mantle of Amazing Health,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mantle-of-amazing-health.md,Worn_Items,"page: vault='104', db='14'; traits: vault='apex, invested, magical', db='Apex, Invested, Magical, Transmutation'"
 Mantle of the Tikbalang,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mantle-of-the-tikbalang.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Uncommon'"
 Marbles,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\marbles.md,Mundane,"source: vault='thegrandbazaar', db='grandbazaar'"
 Mariner's Splint,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mariners-splint.md,Specific_Magic_Armor,"traits: vault='invested, magical', db='Invested, Magical, Uncommon'"
@@ -1878,9 +2003,12 @@ Mask of Uncanny Breath,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Eq
 Mask (Ordinary),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mask-ordinary.md,Mundane,"source: vault='thegrandbazaar', db='grandbazaar'"
 Mask (Plague),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mask-plague.md,Mundane,"level: vault='1', db='1.0'; rarity: vault='Uncommon', db='Common'; source: vault='thegrandbazaar', db='grandbazaar'"
 Mask (Rubber),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mask-rubber.md,Mundane,"level: vault='1', db='1.0'; source: vault='thegrandbazaar', db='grandbazaar'"
+Masquerade Scarf (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\masquerade-scarf-greater.md,Worn_Items,
+Masquerade Scarf,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\masquerade-scarf.md,Worn_Items,
 Master Magus Ring,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\master-magus-ring.md,Worn_Items,"page: vault='150', db='15'; traits: vault='arcane, focused, invested', db='Arcane, Conjuration, Focused, Invested'"
 Matchmaker Fulu,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\matchmaker-fulu.md,Consumables,"page: vault='220', db='16'; traits: vault='consumable, fortune, fulu, magical, talisman', db='Consumable, Enchantment, Fortune, Fulu, Magical, Talisman'"
 Matchstick,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\matchstick.md,Alchemical_Items,"source: vault='gmcore', db='playercore2'; page: vault='251', db='295'"
+Material Component Pouch,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\material-component-pouch.md,Mundane,
 Matsuki's Medicinal Wine,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\matsukis-medicinal-wine.md,Alchemical_Items,"page: vault='295', db='82'; traits: vault='alchemical, consumable, drug, ingested, poison', db='Alchemical, Consumable, Drug, Ingested, Poison, Rare'"
 Mattock of the Titans,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mattock-of-the-titans.md,Specific_Magic_Weapons,"traits: vault='fatal-d12, magical', db='Evocation, Magical'"
 Maul,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\maul.md,Weapon_Basic,
@@ -1927,6 +2055,7 @@ Mindfog Mist,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\
 Mindlock Shot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mindlock-shot.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Enchantment, Magical'"
 Mind's Light Circlet,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\minds-light-circlet.md,Worn_Items,"traits: vault='focused, invested, magical', db='Enchantment, Focused, Invested, Light, Occult'"
 Mindsponge,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\Mindsponge.md,Held_Items,
+Miraculous Paintbrush,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\miraculous-paintbrush.md,Consumables,
 Mirror-Ball Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mirror-ball-snare.md,Snares,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='consumable, mechanical, snare, trap, visual', db='Consumable, Mechanical, Snare, Trap, Uncommon, Visual'"
 Mirror Goggles (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mirror-goggles-(greater).md,Worn_Items,"traits: vault='invested, magical', db='Abjuration, Invested, Magical'"
 Mirror Goggles (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mirror-goggles-(moderate).md,Worn_Items,"traits: vault='invested, magical', db='Abjuration, Invested, Magical'"
@@ -1958,6 +2087,7 @@ Moonlit Spellgun (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Buildi
 Moonsilver Necklace,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\moonsilver-necklace.md,Worn_Items,"traits: vault='magical', db='Invested, Magical, Transmutation, Uncommon'"
 Moonstone Diadem,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\moonstone-diadem.md,Worn_Items,"traits: vault='invested, magical', db='Divination, Invested, Magical, Rare'"
 Morningstar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\Morningstar.md,Weapon_Basic,
+Morphing Weapon,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\morphing-weapon.md,Specific_Magic_Weapons,
 Mortal Chronicle,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mortal-chronicle.md,Tattoos,"traits: vault='invested, magical, tattoo, common', db='Invested, Magical, Tattoo, Transmutation'"
 Mortalis Coin,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mortalis-coin.md,Consumables,"traits: vault='consumable, magical, talisman', db='Auditory, Consumable, Emotion, Enchantment, Linguistic, Magical, Talisman, Visual'"
 Mortar of Hidden Meaning,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\M\mortar-of-hidden-meaning.md,Held_Items,"traits: vault='magical', db='Divination, Magical'"
@@ -1982,6 +2112,7 @@ Naginata,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\N\Nagi
 Nauseating Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\N\nauseating-snare.md,Snares,
 Navaratna of the Solar Ruby,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\N\navaratna-of-the-solar-ruby.md,Worn_Items,"traits: vault='artifact, divine', db='Artifact, Divine, Unique'"
 Navigator's Star,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\N\navigators-star.md,Tattoos,"traits: vault='invested, magical, tattoo', db='Divination, Invested, Magical, Tattoo'"
+Necklace of Allure,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\N\necklace-of-allure.md,Worn_Items,
 Necklace of Fireballs I,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\N\necklace-of-fireballs-i.md,Worn_Items,"traits: vault='invested, magical', db='Evocation, Invested, Magical'"
 Necklace of Fireballs II,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\N\necklace-of-fireballs-ii.md,Worn_Items,"traits: vault='invested, magical', db='Evocation, Invested, Magical'"
 Necklace of Fireballs III,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\N\necklace-of-fireballs-iii.md,Worn_Items,"traits: vault='invested, magical', db='Evocation, Invested, Magical'"
@@ -2042,6 +2173,9 @@ Oak Potion,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\oa
 Oathbow,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\Oathbow.md,Specific_Magic_Weapons,
 Obfuscation Oil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\obfuscation-oil.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, oil', db='Consumable, Illusion, Magical, Oil'"
 Oblivion Essence,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\oblivion-essence.md,Alchemical_Items,"traits: vault='alchemical, consumable, injury, poison', db='Alchemical, Consumable, Injury, Poison, Uncommon'"
+Obsidian Goggles (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\obsidian-goggles-(greater).md,Worn_Items,
+Obsidian Goggles (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\obsidian-goggles-(major).md,Worn_Items,
+Obsidian Goggles,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\obsidian-goggles.md,Worn_Items,
 Occult Scroll Case of Simplicity,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\occult-scroll-case-of-simplicity.md,Held_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Octopus Bottle,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\octopus-bottle.md,Alchemical_Items,"traits: vault='alchemical, consumable, expandable', db='Alchemical, Consumable, Expandable, Uncommon'"
 Octopus Potion (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\octopus-potion-(greater).md,Consumables,
@@ -2049,6 +2183,7 @@ Octopus Potion (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\E
 Octopus Potion (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\octopus-potion-(moderate).md,Consumables,
 Ogre Hook,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\ogre-hook.md,Weapon_Basic,"source: vault='tianxiacharacterguide', db='bestiary'"
 Ogre Spider Filament,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\ogre-spider-filament.md,Consumables,
+Oil (1 pint),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\Oil (1 pint).md,Mundane,
 Oil of Animation,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\oil-of-animation.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, oil', db='Consumable, Magical, Oil, Transmutation, Uncommon'"
 Oil of Corpse Restoration,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\oil-of-corpse-restoration.md,Consumables,"traits: vault='consumable, magical, oil', db='Consumable, Magical, Necromancy, Oil, Uncommon'"
 Oil of Dynamism (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\oil-of-dynamism-(greater).md,Consumables,"traits: vault='consumable, magical, oil', db='Consumable, Magical, Oil, Uncommon'"
@@ -2072,7 +2207,8 @@ Oil of Weightlessness (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Bu
 Oil of Weightlessness,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\oil-of-weightlessness.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, oil', db='Consumable, Magical, Oil, Transmutation'"
 Oilskin Pouch,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\Oilskin Pouch.md,Mundane,
 Oily Button,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\oily-button.md,Consumables,"rarity: vault='Uncommon', db='Common'; source: vault='adventuretheslithering', db='theslithering'; traits: vault='consumable, magical, talisman', db='Consumable, Evocation, Force, Magical, Talisman'"
-Olfactory Obfuscator (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\olfactory-obfuscator-(greater).md,Alchemical_Items,
+Olfactory Obfuscator (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\olfactory-obfuscator-greater.md,Alchemical_Items,
+Olfactory Obfuscator,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\olfactory-obfuscator.md,Alchemical_Items,
 Ommatophoric Mutagen,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\ommatophoric-mutagen.md,Alchemical_Items,"traits: vault='alchemical, consumable, elixir, mutagen, polymorph', db='Alchemical, Consumable, Elixir, Mutagen, Polymorph, Uncommon'"
 Omnidirectional Spear Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\omnidirectional-spear-snare.md,Snares,
 One Hundred Victories,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\one-hundred-victories.md,Tattoos,"traits: vault='invested, magical, tattoo', db='Invested, Magical, Necromancy, Tattoo'"
@@ -2102,6 +2238,7 @@ Owlbear Egg,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\o
 Oxygen Ooze,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\O\oxygen-ooze.md,Alchemical_Items,"traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
 Pacifying,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\Pacifying.md,Runes,
 Pactmaster's Grace,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\pactmasters-grace.md,Worn_Items,"traits: vault='invested, magical', db='Divination, Invested, Magical, Uncommon'"
+Padded Armor,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\Padded Armor.md,Armor_Basic,
 Paint Set,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\Paint Set.md,Mundane,
 Paired (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\paired-(greater).md,Runes,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical, teleportation', db='Conjuration, Magical, Teleportation, Uncommon'"
 Paired (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\paired-(major).md,Runes,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical, teleportation', db='Conjuration, Magical, Teleportation, Uncommon'"
@@ -2137,12 +2274,14 @@ Perfect Droplet (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building
 Perfect Droplet (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\perfect-droplet-(major).md,Spellhearts,"traits: vault='magical, spellheart, water', db='Evocation, Magical, Spellheart, Water'"
 Perfect Droplet,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\perfect-droplet.md,Spellhearts,"traits: vault='magical, spellheart, water', db='Evocation, Magical, Spellheart, Water'"
 Periscope,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\Periscope.md,Mundane,
+Periscopic Viewfinder,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\periscopic-viewfinder.md,Consumables,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='clockwork, consumable, gadget', db='Clockwork, Consumable, Gadget, Rare'"
 Pernicious Spore Bomb (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\pernicious-spore-bomb-(greater).md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable, poison, splash', db='Alchemical, Bomb, Consumable, Poison, Splash, Uncommon'"
 Pernicious Spore Bomb (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\pernicious-spore-bomb-(lesser).md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable, poison, splash', db='Alchemical, Bomb, Consumable, Poison, Splash, Uncommon'"
 Pernicious Spore Bomb (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\pernicious-spore-bomb-(major).md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable, poison, splash', db='Alchemical, Bomb, Consumable, Poison, Splash, Uncommon'"
 Pernicious Spore Bomb (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\pernicious-spore-bomb-(moderate).md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable, poison, splash', db='Alchemical, Bomb, Consumable, Poison, Splash, Uncommon'"
 Persona Mask (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\persona-mask-(greater).md,Worn_Items,"source: vault='gmcore', db='corerulebook'; traits: vault='fortune, invested, magical', db='Fortune, Illusion, Invested, Magical'"
 Persona Mask,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\persona-mask.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; traits: vault='fortune, invested, magical', db='Fortune, Illusion, Invested, Magical'"
+Pesh Paste,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\pesh-paste.md,Alchemical_Items,"traits: vault='alchemcial, consumable, drug, ingested, poison', db='Alchemical, Consumable, Drug, Ingested, Poison'"
 Phalanx Piercer,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\phalanx-piercer.md,Weapon_Basic,"traits: vault='concussive, hobgoblin, propulsive, razing, volley-30', db='Concussive, Hobgoblin, Propulsive, Razing, Volley 30 ft.'"
 Phantasmal Doorknob (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\phantasmal-doorknob-(greater).md,Spellhearts,"traits: vault='emotion, magical, mental, spellheart', db='Emotion, Illusion, Magical, Mental, Spellheart'"
 Phantasmal Doorknob (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\phantasmal-doorknob-(major).md,Spellhearts,"traits: vault='emotion, magical, mental, spellheart', db='Emotion, Illusion, Magical, Mental, Spellheart'"
@@ -2204,7 +2343,9 @@ Poisonous Cloak Type II,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\E
 Poisonous Cloak Type III,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\poisonous-cloak-type-iii.md,Cursed,"traits: vault='cursed, invested, magical', db='Rare, Cursed, Invested, Magical, Transmutation'"
 Poisonous Cloak Type IV,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\poisonous-cloak-type-iv.md,Cursed,"traits: vault='cursed, invested, magical', db='Rare, Cursed, Invested, Magical, Transmutation'"
 Poisonous Dagger,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\poisonous-dagger.md,Specific_Magic_Weapons,"source: vault='beginnerbox', db='beginnerboxgamemastersguide'; traits: vault='agile, finesse, magical, poison, thrown-10, versatile-s', db='Magical, Necromancy, Poison'"
+Polar Travel Kit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\polar-travel-kit.md,Mundane,
 Polarizing Mace,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\polarizing-mace.md,Specific_Magic_Weapons,"traits: vault='agile, finesse, magical, shove', db='Evocation, Magical'"
+Pole (10 Foot),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\pole-ten-foot.md,Mundane,
 Polished Demon Horn (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\polished-demon-horn-(greater).md,Spellhearts,"traits: vault='divine, spellheart', db='Divine, Enchantment, Spellheart, Uncommon'"
 Polished Demon Horn (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\polished-demon-horn-(major).md,Spellhearts,"traits: vault='divine, spellheart', db='Divine, Enchantment, Spellheart, Uncommon'"
 Polished Demon Horn,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\polished-demon-horn.md,Spellhearts,"traits: vault='divine, spellheart', db='Divine, Enchantment, Spellheart, Uncommon'"
@@ -2229,6 +2370,7 @@ Potion of Disguise (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Buildi
 Potion of Disguise (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-disguise-(moderate).md,Consumables,
 Potion of Emergency Escape,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-emergency-escape.md,Consumables,"source: vault='gmcore', db='playercore2'"
 Potion of Flying (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-flying-(greater).md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, potion', db='Consumable, Magical, Potion, Transmutation'"
+Potion of Flying,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-flying.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, potion', db='Consumable, Magical, Potion, Transmutation'"
 Potion of Grounding,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-grounding.md,Consumables,"traits: vault='consumable, electricity, magical, potion', db='Abjuration, Consumable, Electricity, Magical, Potion'"
 Potion of Leaping,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-leaping.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, potion', db='Consumable, Magical, Potion, Transmutation'"
 Potion of Minute Echoes,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-minute-echoes.md,Consumables,"traits: vault='consumable, magical, potion', db='Consumable, Divination, Magical, Potion'"
@@ -2242,6 +2384,7 @@ Potion of Stable Form (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Bu
 Potion of Stable Form,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-stable-form.md,Consumables,"traits: vault='consumable, magical, potion', db='Abjuration, Consumable, Magical, Potion'"
 Potion of Swimming (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-swimming-(greater).md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, potion', db='Consumable, Magical, Potion, Transmutation'"
 Potion of Swimming,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-swimming.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, potion', db='Consumable, Magical, Potion, Transmutation'"
+Potion of Truespeech,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-truespeech.md,Consumables,
 Potion of Undetectability,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-undetectability.md,Consumables,"source: vault='gmcore', db='corerulebook'"
 Potion of Water Breathing,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-of-water-breathing.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, potion', db='Consumable, Magical, Potion, Transmutation'"
 Potion Patch (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-patch-(greater).md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
@@ -2249,6 +2392,7 @@ Potion Patch (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equ
 Potion Patch (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\potion-patch-(moderate).md,Consumables,"traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
 Powder,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\Powder.md,Mundane,
 Powered Full Plate,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\powered-full-plate.md,Alchemical_Items,"traits: vault='alchemical, bulwark', db='Alchemical, Rare'"
+Predator's Claw,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\predators-claw.md,Consumables,
 Predictable Silver Piece,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\predictable-silver-piece.md,Held_Items,
 Presentable (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\presentable-(greater).md,Runes,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical', db='Enchantment, Magical, Uncommon'"
 Presentable,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\Presentable.md,Runes,
@@ -2276,6 +2420,7 @@ Private Workshop,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipmen
 Probing Cane,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\probing-cane.md,Weapon_Basic,"source: vault='thegrandbazaar', db='grandbazaar'"
 Prognostic Veil (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\prognostic-veil-(greater).md,Worn_Items,"traits: vault='focused, invested', db='Divine, Focused, Invested'"
 Prognostic Veil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\prognostic-veil.md,Worn_Items,"traits: vault='focused, invested', db='Divine, Focused, Invested'"
+Propulsive Boots,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\propulsive-boots.md,Worn_Items,
 Psychic Brigandine,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\psychic-brigandine.md,Specific_Magic_Armor,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='invested, magical', db='Abjuration, Invested, Magical, Uncommon'"
 Psychic Colors Elixir,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\psychic-colors-elixir.md,Alchemical_Items,"traits: vault='alchemical, consumable, elixir', db='Alchemical, Consumable, Elixir, Uncommon'"
 Psychic Warding Bracelet,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\psychic-warding-bracelet.md,Consumables,"source: vault='pathfindersocietyguide', db='pfsguide'"
@@ -2289,6 +2434,7 @@ Purifying Spoon (Ladle),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\E
 Purifying Spoon (Tablespoon),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\purifying-spoon-(tablespoon).md,Held_Items,
 Purifying Spoon (Teaspoon),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\purifying-spoon-(teaspoon).md,Held_Items,
 Purple Worm Repellent,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\purple-worm-repellent.md,Alchemical_Items,"traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
+Purple Worm Venom,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\purple-worm-venom.md,Alchemical_Items,"bulk: vault='L', db='0'"
 Putrescent Glob,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\putrescent-glob.md,Consumables,"rarity: vault='Uncommon', db='Common'; source: vault='adventuretheslithering', db='theslithering'; traits: vault='consumable, magical, talisman', db='Consumable, Magical, Morph, Talisman, Transmutation'"
 Puzzle Box (Simple),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\Puzzle Box (Simple).md,Mundane,
 Puzzle Box (Challenging),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\P\puzzle-box-(challenging).md,Mundane,"level: vault='3', db='3.0'; source: vault='thegrandbazaar', db='grandbazaar'"
@@ -2316,11 +2462,14 @@ Quicksilver Mutagen (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Build
 Quicksilver Mutagen (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Q\quicksilver-mutagen-(major).md,Alchemical_Items,
 Quicksilver Mutagen (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Q\quicksilver-mutagen-(moderate).md,Alchemical_Items,
 Quill of Passage,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Q\quill-of-passage.md,Held_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='magical', db='Conjuration, Magical, Uncommon'"
+Quilted Armor,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Q\quilted-armor.md,Armor_Basic,"level: vault='0', db='0.0'"
+Quiver,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Q\quiver.md,Mundane,
 Radiant Lance,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\radiant-lance.md,Specific_Magic_Weapons,"traits: vault='deadly-d8, divine, fire, holy, jousting-d6, light, reach', db='Divine, Evocation, Fire, Good, Light'"
 Radiant Prism (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\radiant-prism-(greater).md,Spellhearts,"traits: vault='magical, spellheart', db='Abjuration, Magical, Spellheart'"
 Radiant Prism (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\radiant-prism-(major).md,Spellhearts,"traits: vault='magical, spellheart', db='Abjuration, Magical, Spellheart'"
 Radiant Prism,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\radiant-prism.md,Spellhearts,"traits: vault='magical, spellheart', db='Abjuration, Magical, Spellheart'"
-Rainbow Vinegar (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rainbow-vinegar-(greater).md,Alchemical_Items,"traits: vault='alchemical, consumable, elixir', db='Alchemical, Consumable, Elixir, Uncommon'"
+Rainbow Vinegar (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rainbow-vinegar-greater.md,Alchemical_Items,"traits: vault='alchemical, consumable, elixir', db='Alchemical, Consumable, Elixir, Uncommon'"
+Rainbow Vinegar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rainbow-vinegar.md,Alchemical_Items,"traits: vault='alchemical, consumable, elixir', db='Alchemical, Consumable, Elixir, Uncommon'"
 Raining Knives Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\raining-knives-snare.md,Snares,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='consumable, mechanical, snare, trap', db='Consumable, Mechanical, Snare, Trap, Uncommon'"
 Rampart Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rampart-shield.md,Specific_Magic_Shields,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical', db='Conjuration, Magical, Uncommon'"
 Ranging Shot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\ranging-shot.md,Consumables,"traits: vault='consumable, magical', db='Consumable, Divination, Magical'"
@@ -2330,6 +2479,7 @@ Rappelling Kit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\
 Rat-Catcher Trident,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rat-catcher-trident.md,Specific_Magic_Weapons,"traits: vault='magical, thrown-20', db='Conjuration, Magical'"
 Ration Tonic (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\ration-tonic-(greater).md,Consumables,
 Ration Tonic,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\ration-tonic.md,Consumables,
+Rations (1 Week),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\Rations (1 Week).md,Mundane,
 Rattling Bolt (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rattling-bolt-(greater).md,Consumables,"level: vault='13', db='16'; traits: vault='arcane, consumable, magical', db='Arcane, Consumable, Evocation, Magical, Uncommon'"
 Rattling Bolt,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rattling-bolt.md,Consumables,"traits: vault='arcane, consumable, magical', db='Arcane, Consumable, Evocation, Magical, Uncommon'"
 Raven Band,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\raven-band.md,Worn_Items,"traits: vault='invested, primal', db='Divination, Invested, Primal, Uncommon'"
@@ -2347,9 +2497,6 @@ Rebounding Breastplate,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Eq
 Recording Rod (Basic),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\recording-rod-(basic).md,Consumables,"traits: vault='consumable, magical, scrying', db='Consumable, Divination, Magical, Scrying, Uncommon'"
 Recording Rod (Reusable),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\recording-rod-(reusable).md,Consumables,"traits: vault='magical, scrying', db='Consumable, Divination, Magical, Scrying, Uncommon'"
 Recovery Bladder,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\recovery-bladder.md,Mundane,"level: vault='3', db='3.0'; source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='consumable', db='Consumable, Rare'"
-Red Dragon's Breath Potion (Adult),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\red-dragons-breath-potion-(adult).md,Consumables,"traits: vault='consumable, fire, magical, potion', db='Consumable, Evocation, Magical, Potion'"
-Red Dragon's Breath Potion (Wyrm),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\red-dragons-breath-potion-(wyrm).md,Consumables,"traits: vault='consumable, fire, magical, potion', db='Consumable, Evocation, Magical, Potion'"
-Red Dragon's Breath Potion (Young),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\red-dragons-breath-potion-(young).md,Consumables,"traits: vault='consumable, fire, magical, potion', db='Consumable, Evocation, Magical, Potion'"
 Red-Handed Missive,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\red-handed-missive.md,Consumables,"traits: vault='consumable, curse, magical, missive', db='Consumable, Curse, Magical, Missive, Transmutation'"
 Red-Rib Gill Mask (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\red-rib-gill-mask-(greater).md,Worn_Items,"traits: vault='alchemical, consumable', db='Alchemical, Consumable, Rare'"
 Red-Rib Gill Mask (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\red-rib-gill-mask-(lesser).md,Worn_Items,"traits: vault='alchemical, consumable', db='Alchemical, Consumable, Rare'"
@@ -2398,6 +2545,9 @@ Retaliation (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equi
 Retaliation (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\retaliation-(major).md,Runes,"traits: vault='magical', db='Evocation, Magical'"
 Retaliation (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\retaliation-(moderate).md,Runes,"traits: vault='magical', db='Evocation, Magical'"
 Retribution Axe,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\retribution-axe.md,Specific_Magic_Weapons,"source: vault='gmcore', db='corerulebook'; traits: vault='magical, sweep', db='Enchantment, Magical'"
+Retrieval Belt (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\retrieval-belt-(greater).md,Worn_Items,
+Retrieval Belt (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\retrieval-belt-(major).md,Worn_Items,
+Retrieval Belt,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\retrieval-belt.md,Worn_Items,
 Retrieval Prism (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\retrieval-prism-(greater).md,Consumables,"level: vault='10', db='1'; traits: vault='consumable, magical, talisman', db='Conjuration, Consumable, Magical, Talisman, Uncommon'"
 Retrieval Prism,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\retrieval-prism.md,Consumables,"traits: vault='consumable, magical, talisman', db='Consumable, Evocation, Magical, Talisman'"
 Returning,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\Returning.md,Runes,
@@ -2464,6 +2614,7 @@ Rooting (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipme
 Rooting (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rooting-(major).md,Runes,
 Rooting (True),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rooting-(true).md,Runes,
 Rooting,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\Rooting.md,Runes,
+Rope (50 Feet),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\Rope (50 Feet).md,Mundane,
 Rope Dart,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rope-dart.md,Weapon_Basic,"traits: vault='disarm, finesse, sweep, tethered, thrown-20, trip', db='Disarm, Finesse, Sweep, Tethered, Thrown 20 ft., Trip'"
 Rope of Climbing (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rope-of-climbing-(greater).md,Held_Items,"traits: vault='magical', db='Magical, Transmutation'"
 Rope of Climbing (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rope-of-climbing-(lesser).md,Held_Items,"traits: vault='magical', db='Magical, Transmutation'"
@@ -2480,6 +2631,8 @@ Ruby String,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\r
 Rune of Sin,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rune-of-sin.md,Tattoos,"traits: vault='arcane, invested, tattoo', db='Arcane, Invested, Tattoo, Uncommon'"
 Runescribed Disk,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\runescribed-disk.md,Consumables,"traits: vault='magical, talisman', db='Abjuration, Consumable, Magical, Talisman, Uncommon'"
 Rust Scrub,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rust-scrub.md,Alchemical_Items,"source: vault='adventurerusthenge', db='rusthenge'; traits: vault='alchemical, consumable', db='Alchemical, Consumable, Uncommon'"
+Rustbringer (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rustbringer-greater.md,Specific_Magic_Weapons,"bulk: vault='Flail', db='1'"
+Rustbringer,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rustbringer.md,Specific_Magic_Weapons,"bulk: vault='Flail', db='1'"
 Rusting Ammunition (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rusting-ammunition-(greater).md,Alchemical_Items,
 Rusting Ammunition (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rusting-ammunition-(moderate).md,Alchemical_Items,
 Rusting Carapace,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\R\rusting-carapace.md,Specific_Magic_Armor,"traits: vault='invested, laminar, magical', db='Evocation, Invested, Magical, Uncommon'"
@@ -2561,6 +2714,8 @@ Sealing Chest (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\E
 Sealing Chest (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\sealing-chest-(lesser).md,Held_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='magical', db='Abjuration, Magical, Uncommon'"
 Sealing Chest (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\sealing-chest-(major).md,Held_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='magical', db='Abjuration, Magical, Uncommon'"
 Sealing Chest (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\sealing-chest-(moderate).md,Held_Items,"source: vault='pathfindersocietyguide', db='pfsguide'; traits: vault='magical', db='Abjuration, Magical, Uncommon'"
+Searing Blade (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\searing-blade-(greater).md,Specific_Magic_Weapons,"traits: vault='fire, magical, versatile-p', db='Fire, Magical'"
+Searing Blade,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\searing-blade.md,Specific_Magic_Weapons,"traits: vault='fire, magical, versatile-p', db='Fire, Magical'"
 Searing Suture (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\searing-suture-(greater).md,Alchemical_Items,"traits: vault='alchemical, consumable, fire', db='Alchemical, Consumable, Fire, Uncommon'"
 Searing Suture (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\searing-suture-(lesser).md,Alchemical_Items,"traits: vault='alchemical, consumable, fire', db='Alchemical, Consumable, Fire, Uncommon'"
 Secret-Keeper's Mask (Blackfingers),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\secret-keepers-mask-(blackfingers).md,Worn_Items,"source: vault='blog', db='gmstoolkitsecretkeepersmaskpg'; traits: vault='invested, magical', db='Divination, Enchantment, Invested, Magical, Rare'"
@@ -2656,16 +2811,24 @@ Silent Bell,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\s
 Silent Heart,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silent-heart.md,Tattoos,"traits: vault='invested, magical, tattoo', db='Invested, Magical, Tattoo, Uncommon'"
 Silhouette Cloak,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silhouette-cloak.md,Worn_Items,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
 Silkspinner's Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silkspinners-shield.md,Specific_Magic_Shields,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='light, magical', db='Conjuration, Magical, Uncommon'"
+Silver Armor (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-armor-high-grade.md,Armor_Material,"source: vault='gmcore', db='corerulebook'; page: vault='229', db='556'"
+Silver Armor (Low Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-armor-low-grade.md,Armor_Material,"source: vault='gmcore', db='corerulebook'; page: vault='229', db='556'"
+Silver Armor (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-armor-standard-grade.md,Armor_Material,"source: vault='gmcore', db='corerulebook'; page: vault='229', db='556'"
+Silver Chunk,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-chunk.md,Materials,"level: vault='2', db='2.0'; source: vault='gmcore', db='corerulebook'; page: vault='254', db='579'"
 Silver Crescent (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-crescent-(greater).md,Alchemical_Items,
 Silver Crescent (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-crescent-(lesser).md,Alchemical_Items,
 Silver Crescent (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-crescent-(moderate).md,Alchemical_Items,
-Silver Dragon's Breath Potion (Adult),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-dragons-breath-potion-(adult).md,Consumables,"traits: vault='cold, consumable, magical, potion', db='Consumable, Evocation, Magical, Potion'"
-Silver Dragon's Breath Potion (Wyrm),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-dragons-breath-potion-(wyrm).md,Consumables,"traits: vault='cold, consumable, magical, potion', db='Consumable, Evocation, Magical, Potion'"
-Silver Dragon's Breath Potion (Young),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-dragons-breath-potion-(young).md,Consumables,"traits: vault='cold, consumable, magical, potion', db='Consumable, Evocation, Magical, Potion'"
-Silver Orb (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-orb-(greater).md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable', db='Alchemical, Bomb, Uncommon'"
-Silver Orb (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-orb-(lesser).md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable', db='Alchemical, Bomb, Uncommon'"
+Silver Ingot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-ingot.md,Materials,"level: vault='2', db='2.0'; source: vault='gmcore', db='corerulebook'; page: vault='254', db='579'"
+Silver Orb (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-orb-greater.md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable', db='Alchemical, Bomb, Uncommon'"
+Silver Orb (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-orb-lesser.md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable', db='Alchemical, Bomb, Uncommon'"
 Silver Salve,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-salve.md,Alchemical_Items,"source: vault='gmcore', db='playercore2'"
+Silver Shield (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-shield-high-grade.md,Shield_Material,"source: vault='gmcore', db='corerulebook'; page: vault='234', db='587'; bulk: vault='1', db='L'"
+Silver Shield (Low Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-shield-low-grade.md,Shield_Material,"source: vault='gmcore', db='corerulebook'; page: vault='234', db='587'"
+Silver Shield (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-shield-standard-grade.md,Shield_Material,"source: vault='gmcore', db='corerulebook'; page: vault='234', db='587'; bulk: vault='1', db='L'"
 Silver Snake Cane,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-snake-cane.md,Held_Items,"traits: vault='magical, metal', db='Magical, Metal, Uncommon'"
+Silver Weapon (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-weapon-high-grade.md,Weapon_Material,"source: vault='gmcore', db='corerulebook'; page: vault='240', db='599'"
+Silver Weapon (Low Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-weapon-low-grade.md,Weapon_Material,"source: vault='gmcore', db='corerulebook'; page: vault='240', db='599'"
+Silver Weapon (Standard Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silver-weapon-standard-grade.md,Weapon_Material,"source: vault='gmcore', db='corerulebook'; page: vault='240', db='599'"
 Silvered Marp Fur,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silvered-marp-fur.md,Consumables,
 Silversoul Bomb (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silversoul-bomb-(greater).md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable, mental, splash', db='Alchemical, Bomb, Consumable, Mental, Rare, Splash'"
 Silversoul Bomb (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\silversoul-bomb-(major).md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable, mental, splash', db='Alchemical, Bomb, Consumable, Mental, Rare, Splash'"
@@ -2744,6 +2907,7 @@ Snagging,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\Snag
 Snake Oil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\snake-oil.md,Alchemical_Items,"source: vault='gmcore', db='playercore2'"
 Snapleaf,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\Snapleaf.md,Consumables,
 Snare Kit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\Snare Kit.md,Mundane,
+Snare Kit (Specialist),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\snare-kit-(specialist).md,Mundane,"level: vault='3', db='3.0'"
 Snarling Badger (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\snarling-badger-(greater).md,Consumables,"traits: vault='consumable, magical, mental, talisman', db='Consumable, Enchantment, Magical, Misfortune, Talisman, Uncommon'"
 Snarling Badger (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\snarling-badger-(lesser).md,Consumables,"traits: vault='consumable, magical, mental, talisman', db='Consumable, Evocation, Magical, Talisman'"
 Snarling Badger (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\snarling-badger-(moderate).md,Consumables,"traits: vault='consumable, magical, mental, talisman', db='Consumable, Evocation, Magical, Talisman'"
@@ -2808,7 +2972,8 @@ Spellcutter,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\S
 Spellender,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\Spellender.md,Specific_Magic_Weapons,
 Spellguard Blade,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spellguard-blade.md,Specific_Magic_Weapons,"traits: vault='agile, disarm, finesse, magical, parry, versatile-s', db='Magical'"
 Spellguard Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spellguard-shield.md,Specific_Magic_Shields,"source: vault='gmcore', db='corerulebook'; traits: vault='magical', db='Abjuration, Magical'"
-Spellsap Grenade (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spellsap-grenade-(greater).md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable', db='Alchemical, Bomb, Consumable, Rare, Splash'"
+Spellsap Grenade (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spellsap-grenade-greater.md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable', db='Alchemical, Bomb, Consumable, Rare, Splash'"
+Spellsap Grenade (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spellsap-grenade-moderate.md,Alchemical_Items,"traits: vault='alchemical, bomb, consumable', db='Alchemical, Bomb, Consumable, Rare, Splash'"
 Spellstrike Ammunition (Type I),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spellstrike-ammunition-(type-i).md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
 Spellstrike Ammunition (Type II),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spellstrike-ammunition-(type-ii).md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
 Spellstrike Ammunition (Type III),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spellstrike-ammunition-(type-iii).md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical', db='Consumable, Magical, Transmutation'"
@@ -2856,6 +3021,9 @@ Spiritual Warhorn (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building
 Spiritual Warhorn (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spiritual-warhorn-(moderate).md,Consumables,"traits: vault='consumable, force, magical', db='Conjuration, Consumable, Force, Magical'"
 Splendid Floodlight,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\splendid-floodlight.md,Held_Items,"traits: vault='illusion, magical', db='Illusion, Magical, Uncommon'"
 Splint Mail,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\splint-mail.md,Armor_Basic,"level: vault='1', db='1.0'"
+Splintering Spear (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\splintering-spear-(greater).md,Specific_Magic_Weapons,"traits: vault='magical, monk, thrown-20, wood', db='Magical, Wood'"
+Splintering Spear (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\splintering-spear-(major).md,Specific_Magic_Weapons,"traits: vault='magical, monk, thrown-20, wood', db='Magical, Wood'"
+Splintering Spear,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\splintering-spear.md,Specific_Magic_Weapons,"traits: vault='magical, monk, thrown-20, wood', db='Magical, Wood'"
 Splithead Bow,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\splithead-bow.md,Specific_Magic_Weapons,"traits: vault='deadly-d10, magical, volley-30', db='Magical, Uncommon'"
 Spore Sap,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\spore-sap.md,Specific_Magic_Weapons,"traits: vault='agile, fungus, magical, nonlethal', db='Evocation, Fungus, Magical'"
 Sportlebore Capsule,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\sportlebore-capsule.md,Alchemical_Items,
@@ -2882,9 +3050,15 @@ Squid Ink Sac,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S
 Staff of Air (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-air-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
 Staff of Air (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-air-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
 Staff of Air,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-air.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
+Staff of Control (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-control-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Control (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-control-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Control,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-control.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of Earth (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-earth-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
 Staff of Earth (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-earth-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
 Staff of Earth,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-earth.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
+Staff of Elemental Power (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-elemental-power-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Elemental Power (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-elemental-power-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Elemental Power,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-elemental-power.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of Final Rest (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-final-rest-(greater).md,Staff_Wand,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical, staff, two-hand-d8', db='Magical, Necromancy, Staff, Uncommon'"
 Staff of Final Rest (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-final-rest-(major).md,Staff_Wand,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical, staff, two-hand-d8', db='Magical, Necromancy, Staff, Uncommon'"
 Staff of Final Rest,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-final-rest.md,Staff_Wand,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='magical, staff, two-hand-d8', db='Magical, Necromancy, Staff, Uncommon'"
@@ -2909,14 +3083,26 @@ Staff of Nature's Cunning,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building
 Staff of Nature's Vengeance (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-natures-vengeance-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
 Staff of Nature's Vengeance (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-natures-vengeance-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
 Staff of Nature's Vengeance,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-natures-vengeance.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
+Staff of Phantasms (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-phantasms-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Phantasms (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-phantasms-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Phantasms,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-phantasms.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of Power,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-power.md,Staff_Wand,"traits: vault='magical, monk, staff, two-hand-d8', db='Evocation, Magical, Rare, Staff'"
+Staff of Protection (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-protection-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Protection (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-protection-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Protection,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-protection.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of Providence (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-providence-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of Providence (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-providence-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of Providence (True),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-providence-(true).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of Providence,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-providence.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of Sieges,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-sieges.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff, Uncommon'"
+Staff of Summoning (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-summoning-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Summoning (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-summoning-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of Summoning,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-summoning.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of the Black Desert (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-black-desert-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Divination, Magical, Staff, Uncommon'"
 Staff of the Black Desert,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-black-desert.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Divination, Magical, Staff, Uncommon'"
+Staff of the Dead (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-dead-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of the Dead (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-dead-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of the Dead,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-dead.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of the Desert Winds (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-desert-winds-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Abjuration, Magical, Staff'"
 Staff of the Desert Winds (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-desert-winds-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Abjuration, Magical, Staff'"
 Staff of the Desert Winds (True),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-desert-winds-(true).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Abjuration, Magical, Staff'"
@@ -2928,6 +3114,9 @@ Staff of the Magi,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipme
 Staff of the Tempest (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-tempest-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of the Tempest (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-tempest-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of the Tempest,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-tempest.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of the Unblinking Eye (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-unblinking-eye-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of the Unblinking Eye (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-unblinking-eye-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
+Staff of the Unblinking Eye,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-the-unblinking-eye.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Magical, Staff'"
 Staff of Water (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-water-(greater).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
 Staff of Water (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-water-(major).md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
 Staff of Water,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\staff-of-water.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
@@ -3006,6 +3195,7 @@ Stormfeather,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\
 Storyteller's Opus,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\storytellers-opus.md,Grimoire,
 Striking Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\striking-snare.md,Snares,
 Striking,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\Striking.md,Runes,
+Studded Leather Armor,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\Studded Leather Armor.md,Armor_Basic,
 Stumbling Fulu,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\stumbling-fulu.md,Consumables,"traits: vault='consumable, fulu, magical', db='Consumable, Fulu, Magical, Transmutation'"
 Stunning Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\stunning-snare.md,Snares,
 Stupor Poison,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\stupor-poison.md,Alchemical_Items,"traits: vault='alchemical, consumable, incapacitation, injury, poison, sleep', db='Alchemical, Consumable, Incapacitation, Injury, Poison, Sleep, Uncommon'"
@@ -3016,6 +3206,8 @@ Sturdy Shield (Minor),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equ
 Sturdy Shield (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\sturdy-shield-(moderate).md,Specific_Magic_Shields,"source: vault='gmcore', db='corerulebook'; traits: vault='magical', db='Abjuration, Magical'"
 Sturdy Shield (Supreme),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\sturdy-shield-(supreme).md,Specific_Magic_Shields,"source: vault='gmcore', db='corerulebook'; traits: vault='magical', db='Abjuration, Magical'"
 Sturdy Shield (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\sturdy-shield-lesser.md,Specific_Magic_Shields,"source: vault='gmcore', db='corerulebook'; page: vault='234', db='588'; traits: vault='magical', db='Abjuration, Magical'"
+Submersible Helm (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\submersible-helm-greater.md,Worn_Items,
+Submersible Helm,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\submersible-helm.md,Worn_Items,
 Subtle Armor,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\subtle-armor.md,Adjustments,"level: vault='1', db='1.0'; traits: vault='adjustment', db='Adjustment, Uncommon'"
 Succubus Kiss,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\succubus-kiss.md,Alchemical_Items,"traits: vault='alchemical, consumable, drug, ingested, poison', db='Alchemical, Consumable, Drug, Ingested, Poison, Rare'"
 Sukgung,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\Sukgung.md,Weapon_Basic,
@@ -3060,6 +3252,7 @@ Swooping Wings,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\
 Sword Cane,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\sword-cane.md,Weapon_Basic,"source: vault='playercore', db='advancedplayersguide'"
 Swordstealer Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\S\Swordstealer Shield.md,Shield_Basic,
 Tablet of Chained Souls,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tablet-of-chained-souls.md,Cursed,"traits: vault='cursed, magical', db='Cursed, Magical, Necromancy'"
+Tack,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tack.md,Mundane,
 Tactician's Helm,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tacticians-helm.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation'"
 Tailor's Boll,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tailors-boll.md,Consumables,
 Tales in Timber (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tales-in-timber-(greater).md,Specific_Magic_Armor,
@@ -3080,6 +3273,8 @@ Talwar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\Talwar
 Tamchal Chakram,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tamchal-chakram.md,Weapon_Basic,"rarity: vault='Uncommon', db='Rare'; traits: vault='agile, deadly-d6, finesse, thrown-20', db='Agile, Deadly d6, Finesse, Thrown 20 feet'"
 Tangle Root Toxin,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tangle-root-toxin.md,Alchemical_Items,
 Tanglefoot Extruder,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tanglefoot-extruder.md,Alchemical_Items,
+Tank (Stationary),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tank-stationary.md,Mundane,"page: vault='101', db='103'"
+Tank (Traveling),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tank-traveling.md,Mundane,"page: vault='101', db='103'"
 Taper of Sanctification,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\taper-of-sanctification.md,Consumables,"traits: vault='consumable, divine', db='Consumable, Divine, Uncommon'"
 Tar Rocket Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tar-rocket-snare.md,Snares,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='consumable, mechanical, snare, trap', db='Consumable, Mechanical, Snare, Trap, Uncommon'"
 Tarantula Ampoule,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tarantula-ampoule.md,Alchemical_Items,"traits: vault='alchemical, consumable, expandable', db='Alchemical, Consumable, Expandable, Uncommon'"
@@ -3093,9 +3288,12 @@ Tatzlwyrm's Gasp,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipmen
 Taw Launcher,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\taw-launcher.md,Weapon_Basic,"rarity: vault='Uncommon', db='Rare'; source: vault='ancestryguide', db='treasurevault'; traits: vault='conrasu, deadly-d10, modular', db='Conrasu, Deadly d10, Modular (B, P, or S)'"
 Tears of Death,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tears-of-death.md,Alchemical_Items,"source: vault='gmcore', db='playercore2'"
 Tekko-Kagi,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\Tekko-Kagi.md,Weapon_Basic,"rarity: vault='Uncommon', db='Rare'"
+Telekinetic Converters,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\telekinetic-converters.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Rare, Transmutation'"
 Temple Sword,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\temple-sword.md,Weapon_Basic,"rarity: vault='Uncommon', db='Common'; traits: vault='monk, trip', db='Monk, Trip, Uncommon'"
 Tengu Gale Blade,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tengu-gale-blade.md,Weapon_Basic,"traits: vault='agile, disarm, finesse, tengu', db='Agile, Disarm, Finesse, Tengu, Uncommon'"
-Tent (Pavilion),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tent-(pavilion).md,Mundane,"level: vault='2', db='2.0'"
+Tent (Four-Person),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tent-four-person.md,Mundane,"level: vault='2', db='0.0'"
+Tent (Pavilion),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tent-pavilion.md,Mundane,"level: vault='2', db='2.0'"
+Tent (Pup),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tent-pup.md,Mundane,"level: vault='2', db='0.0'"
 Tentacle Potion (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tentacle-potion-(greater).md,Consumables,"traits: vault='consumable, magical, potion', db='Consumable, Magical, Potion, Transmutation'"
 Tentacle Potion (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tentacle-potion-(lesser).md,Consumables,"traits: vault='consumable, magical, potion', db='Consumable, Magical, Potion, Transmutation'"
 Tentacle Potion (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tentacle-potion-(moderate).md,Consumables,"traits: vault='consumable, magical, potion', db='Consumable, Magical, Potion, Transmutation'"
@@ -3104,13 +3302,18 @@ Terror Spores,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T
 Tetsubo,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\Tetsubo.md,Weapon_Basic,"rarity: vault='Uncommon', db='Rare'"
 Thawing Candle,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thawing-candle.md,Consumables,
 The Hollow Star,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\the-hollow-star.md,Held_Items,"traits: vault='magical', db='Chaotic, Conjuration, Magical, Unique'"
+The Old Mage Deck,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\the-old-mage-deck.md,Mundane,
 Theatrical Mutagen (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\theatrical-mutagen-(greater).md,Alchemical_Items,
 Theatrical Mutagen (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\theatrical-mutagen-(lesser).md,Alchemical_Items,
 Theatrical Mutagen (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\theatrical-mutagen-(major).md,Alchemical_Items,
 Theatrical Mutagen (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\theatrical-mutagen-(moderate).md,Alchemical_Items,
 Therapeutic Snap Peas,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\therapeutic-snap-peas.md,Consumables,"traits: vault='consumable, magical, plant, wood, uncommon', db='Consumable, Magical, Plant, Uncommon, Wood'"
-Thieves' Toolkit (Infiltrator),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thieves-toolkit-(infiltrator).md,Mundane,"level: vault='3', db='3.0'"
-Thieves' Toolkit (Infiltrator Picks),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thieves-toolkit-(infiltrator-picks).md,Mundane,"level: vault='3', db='3.0'"
+Thieves' Toolkit (Infiltrator Picks),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thieves-toolkit-infiltrator-picks.md,Mundane,"level: vault='3', db='3.0'"
+Thieves' Toolkit (Infiltrator),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thieves-toolkit-infiltrator.md,Mundane,"level: vault='3', db='3.0'"
+Thieves' Toolkit (Replacement Picks),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thieves-toolkit-replacement-picks.md,Mundane,"level: vault='0', db='0.0'"
+Thieves' Toolkit,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thieves-toolkit.md,Mundane,
+Thieves' Tools (Concealable Picks),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thieves-tools-concealable-picks.md,Mundane,"level: vault='4', db='4.0'; source: vault='pathfindersocietyguide', db='pfsguide'"
+Thieves' Tools (Concealable),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thieves-tools-concealable.md,Mundane,"level: vault='4', db='4.0'; source: vault='pathfindersocietyguide', db='pfsguide'"
 Third Eye,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\third-eye.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; traits: vault='invested, magical', db='Divination, Invested, Magical'"
 Thorn Triad (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thorn-triad-(greater).md,Spellhearts,
 Thorn Triad (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\thorn-triad-(major).md,Spellhearts,
@@ -3169,12 +3372,15 @@ Tome of Restorative Cleansing (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Chara
 Tome of Restorative Cleansing (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tome-of-restorative-cleansing-(moderate).md,Grimoire,"traits: vault='grimoire, magical', db='Grimoire, Magical, Necromancy'"
 Tome of Scintillating Sleet,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tome-of-scintillating-sleet.md,Grimoire,"traits: vault='cold, grimoire, primal', db='Cold, Evocation, Grimoire, Primal'"
 Tonfa,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\Tonfa.md,Weapon_Basic,"rarity: vault='Uncommon', db='Rare'; source: vault='thegrandbazaar', db='grandbazaar'"
+Tool (Long),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tool-long.md,Mundane,
+Tool (Short),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tool-short.md,Mundane,"bulk: vault='1', db='L'"
 Tooth and Claw Tattoo (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tooth-and-claw-tattoo-(greater).md,Tattoos,"traits: vault='invested, magical, tattoo', db='Invested, Magical, Tattoo, Transmutation'"
 Tooth and Claw Tattoo (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tooth-and-claw-tattoo-(major).md,Tattoos,"traits: vault='invested, magical, tattoo', db='Invested, Magical, Tattoo, Transmutation'"
 Tooth and Claw Tattoo,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tooth-and-claw-tattoo.md,Tattoos,"traits: vault='invested, magical, tattoo', db='Invested, Magical, Tattoo, Transmutation'"
 Toothwort Extract,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\toothwort-extract.md,Alchemical_Items,
 Topology Protoplasm,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\topology-protoplasm.md,Consumables,"traits: vault='consumable, magical, oil', db='Consumable, Magical, Oil, Transmutation'"
 Torag's Silver Anvil,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\torags-silver-anvil.md,Specific_Magic_Weapons,"traits: vault='backswing, disarm, divine, magical, reach, trip', db='Divine, Magical, Transmutation'"
+Torch,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\torch.md,Mundane,
 Tornado Trompo,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tornado-trompo.md,Held_Items,"source: vault='blog', db='celebratinghispanicheritagemonth'; traits: vault='air, magical', db='Air, Evocation, Magical'"
 Torrent Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\torrent-snare.md,Snares,"traits: vault='consumable, magical, snare, trap', db='Consumable, Mechanical, Snare, Trap, Uncommon'"
 Torrent Spellgun (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\torrent-spellgun-(greater).md,Consumables,"traits: vault='consumable, magical, spellgun, water', db='Attack, Consumable, Evocation, Magical, Spellgun, Water'"
@@ -3183,20 +3389,25 @@ Torrent Spellgun (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\
 Torrent Spellgun (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\torrent-spellgun-(moderate).md,Consumables,"traits: vault='consumable, magical, spellgun, water', db='Attack, Consumable, Evocation, Magical, Spellgun, Water'"
 Toxic Blood,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\toxic-blood.md,Grafts,
 Toxic Effluence,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\toxic-effluence.md,Alchemical_Items,"traits: vault='alchemical, consumable, contact, poison', db='Alchemical, Consumable, Contact, Poison, Rare'"
-Toy Carriage (Windup),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\toy-carriage-(windup).md,Mundane,"level: vault='2', db='2.0'; source: vault='thegrandbazaar', db='grandbazaar'"
+Toy Carriage (Windup),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\toy-carriage-windup.md,Mundane,"level: vault='2', db='2.0'; source: vault='thegrandbazaar', db='grandbazaar'"
+Toy Carriage,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\toy-carriage.md,Mundane,"level: vault='2', db='0.0'; source: vault='thegrandbazaar', db='grandbazaar'"
 Tracker's Goggles (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trackers-goggles-(greater).md,Worn_Items,"source: vault='gmcore', db='corerulebook'; traits: vault='invested, magical', db='Divination, Invested, Magical'"
 Tracker's Goggles,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trackers-goggles.md,Worn_Items,"source: vault='gmcore', db='corerulebook'; traits: vault='invested, magical', db='Divination, Invested, Magical'"
 Tracker's Stew,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trackers-stew.md,Alchemical_Items,
 Tracking Fulu,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tracking-fulu.md,Consumables,"traits: vault='consumable, fulu, magical', db='Abjuration, Consumable, Fulu, Magical'"
+Tracking Tag,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tracking-tag.md,Mundane,
 Trackless (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trackless-(greater).md,Runes,"traits: vault='magical', db='Abjuration, Magical'"
 Trackless,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\Trackless.md,Runes,"traits: vault='magical', db='Abjuration, Magical'"
 Tradecraft Tattoo (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tradecraft-tattoo-(greater).md,Tattoos,"traits: vault='invested, magical, tattoo', db='Conjuration, Invested, Magical, Tattoo'"
 Tradecraft Tattoo,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tradecraft-tattoo.md,Tattoos,"traits: vault='invested, magical, tattoo', db='Conjuration, Invested, Magical, Tattoo'"
+Traitor's Ring,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\traitors-ring.md,Mundane,"source: vault='darkarchives', db='darkarchive'"
 Transposition Ammunition (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\transposition-ammunition-(greater).md,Consumables,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='consumable, magical, teleportation', db='Conjuration, Consumable, Magical, Teleportation, Uncommon'"
 Transposition Ammunition,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\transposition-ammunition.md,Consumables,"source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='consumable, magical, teleportation', db='Conjuration, Consumable, Magical, Teleportation, Uncommon'"
 Traveler's Any-Tool,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\travelers-any-tool.md,Held_Items,"source: vault='gmcore', db='corerulebook'; traits: vault='magical', db='Magical, Transmutation'"
 Traveler's Cloak,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\travelers-cloak.md,Mundane,"level: vault='1', db='1.0'"
 Traveler's Fulu,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\travelers-fulu.md,Consumables,"traits: vault='consumable, fulu, magical, talisman', db='Consumable, Divination, Fulu, Magical, Rare, Talisman'"
+Treats (Standard),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\treats-standard.md,Mundane,
+Treats (Unique),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\treats-unique.md,Mundane,
 Tri-bladed Katar,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tri-bladed-katar.md,Weapon_Basic,"source: vault='tianxiacharacterguide', db='grandbazaar'"
 Triangular Teeth,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\triangular-teeth.md,Tattoos,"traits: vault='invested, magical, tattoo', db='Abjuration, Invested, Magical, Tattoo'"
 Trickster's Mandolin (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tricksters-mandolin-(greater).md,Staff_Wand,
@@ -3204,6 +3415,7 @@ Trickster's Mandolin (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Build
 Trickster's Mandolin,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tricksters-mandolin.md,Staff_Wand,
 Tricky Liniment,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tricky-liniment.md,Consumables,
 Tricky Pick,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tricky-pick.md,Weapon_Basic,"traits: vault='backstabber, fatal-d10, kobold, modular', db='Backstabber, Fatal d10, Kobold, Modular (B, P, or S), Uncommon'"
+Trident of Lightning,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trident-of-lightning.md,Consumables,"source: vault='gmcore', db='corerulebook'"
 Trident,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\Trident.md,Weapon_Basic,
 Trinity Geode (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trinity-geode-(greater).md,Spellhearts,"traits: vault='earth, magical, spellheart', db='Earth, Evocation, Magical, Spellheart'"
 Trinity Geode (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trinity-geode-(major).md,Spellhearts,"traits: vault='earth, magical, spellheart', db='Earth, Evocation, Magical, Spellheart'"
@@ -3222,6 +3434,7 @@ True Name Amulet (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Buildi
 Trueshape Bomb (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trueshape-bomb-(greater).md,Alchemical_Items,
 Trueshape Bomb,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trueshape-bomb.md,Alchemical_Items,
 Truesight Potion,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\truesight-potion.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, potion', db='Consumable, Divination, Magical, Potion'"
+Trundle Wheel,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\trundle-wheel.md,Mundane,
 Truth Potion,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\truth-potion.md,Consumables,"source: vault='gmcore', db='corerulebook'; traits: vault='consumable, magical, mental, potion', db='Consumable, Enchantment, Magical, Mental, Potion, Uncommon'"
 Tubeworm Gland,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tubeworm-gland.md,Grafts,
 Turnabout Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\turnabout-shield.md,Specific_Magic_Shields,"traits: vault='deflecting-physical-ranged, magical', db='Abjuration, Magical'"
@@ -3235,11 +3448,13 @@ Twilight Lantern (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building
 Twilight Lantern (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\twilight-lantern-(major).md,Held_Items,"traits: vault='light, magical', db='Light, Magical, Transmutation, Uncommon'"
 Twilight Lantern (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\twilight-lantern-(moderate).md,Held_Items,"traits: vault='light, magical', db='Light, Magical, Transmutation, Uncommon'"
 Twining Chains,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\twining-chains.md,Adjustments,"level: vault='1', db='1.0'; source: vault='thegrandbazaar', db='grandbazaar'; traits: vault='adjustment', db='Adjustment, Uncommon'"
+Twining Staff,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\twining-staff.md,Specific_Magic_Weapons,"source: vault='gmcore', db='corerulebook'; traits: vault='magical, monk, two-hand-d8', db='Magical, Transmutation'"
 Twisting Gale,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\twisting-gale.md,Specific_Magic_Weapons,"traits: vault='backswing, disarm, force, magical, monk, parry', db='Force, Magical, Uncommon'"
 Twisting Twine (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\twisting-twine-(greater).md,Held_Items,
 Twisting Twine (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\twisting-twine-(lesser).md,Held_Items,
 Twisting Twine (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\twisting-twine-(moderate).md,Held_Items,
 Tyrant Ampoule,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tyrant-ampoule.md,Alchemical_Items,
+Tyrant's Writ,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\T\tyrants-writ.md,Grimoire,"traits: vault='grimoire, magical', db='Grimoire, Magical, Necromancy, Uncommon'"
 Ugly Cute's Gift,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\U\ugly-cutes-gift.md,Specific_Magic_Weapons,"traits: vault='agile, free-hand, magical', db='Magical, Transmutation, Unique'"
 Umbraex Eye,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\U\umbraex-eye.md,Held_Items,"traits: vault='invested, magical', db='Divination, Invested, Magical, Rare'"
 Umbral Wings,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\U\umbral-wings.md,Worn_Items,"traits: vault='invested, magical', db='Invested, Magical, Transmutation, Uncommon'"
@@ -3410,6 +3625,9 @@ Warhammer,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\War
 Warleader's Bulwark (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\warleaders-bulwark-(greater).md,Specific_Magic_Armor,
 Warleader's Bulwark,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\warleaders-bulwark.md,Specific_Magic_Armor,
 Warning Snare,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Warning Snare.md,Snares,
+Warpglass Chunk,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\warpglass-chunk.md,Materials,"level: vault='17', db='0.0'; traits: vault='precious', db='Rare, Precious'"
+Warpglass Ingot,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\warpglass-ingot.md,Materials,"level: vault='17', db='0.0'; traits: vault='precious', db='Rare, Precious'"
+Warpglass Weapon (High Grade),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\warpglass-weapon-high-grade.md,Weapon_Material,
 Warpwobble Poison,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Warpwobble Poison.md,Alchemical_Items,
 Warrior's Training Ring,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Warrior's Training Ring.md,Worn_Items,
 Wasp Guard,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wasp Guard.md,Specific_Magic_Armor,
@@ -3444,6 +3662,7 @@ Whelming Scrimshaw,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipm
 Whip Claw,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Whip Claw.md,Weapon_Basic,
 Whip of Compliance,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Whip of Compliance.md,Specific_Magic_Weapons,
 Whip Tail,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Whip Tail.md,Grafts,
+Whip-Tongue Sling,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Whip-Tongue Sling.md,Specific_Magic_Weapons,
 Whip,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Whip.md,Weapon_Basic,
 Whipstaff,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Whipstaff.md,Weapon_Basic,
 Whirlwind Vial,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Whirlwind Vial.md,Alchemical_Items,
@@ -3463,8 +3682,10 @@ Wind-Up Cart,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\
 Wind-up Wings (Flutterback),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wind-up Wings (Flutterback).md,Mundane,
 Wind-up Wings (Homing),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wind-up Wings (Homing).md,Mundane,
 Winder's Ring,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Winder's Ring.md,Worn_Items,
+Windlass Bolas,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Windlass Bolas.md,Specific_Magic_Weapons,
 Wine of the Blood,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wine of the Blood.md,Consumables,
 Winged (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Winged (Greater).md,Runes,
+Winged Sandals,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Winged Sandals.md,Worn_Items,
 Winged,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Winged.md,Runes,
 Winterstep Elixir (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Winterstep Elixir (Greater).md,Alchemical_Items,
 Winterstep Elixir (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Winterstep Elixir (Lesser).md,Alchemical_Items,
@@ -3477,6 +3698,7 @@ Wisp Chain (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipm
 Wisp Chain (True),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wisp Chain (True).md,Specific_Magic_Armor,
 Wisp Chain,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wisp Chain.md,Specific_Magic_Armor,
 Witch's Finger,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Witch's Finger.md,Alchemical_Items,
+Witchwarg Elixir (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Witchwarg Elixir (Greater).md,Alchemical_Items,
 Witchwarg Elixir (Lesser),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Witchwarg Elixir (Lesser).md,Alchemical_Items,
 Witchwarg Elixir (Moderate),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Witchwarg Elixir (Moderate).md,Alchemical_Items,
 Witchwarg Fur,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Witchwarg Fur.md,Consumables,
@@ -3497,6 +3719,7 @@ Wondrous Figurine (Rubber Bear),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Bu
 Wondrous Figurine (Ruby Hippopotamus),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wondrous Figurine (Ruby Hippopotamus).md,Held_Items,
 "Wondrous Figurine, Stuffed Fox","F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wondrous Figurine, Stuffed Fox.md",Held_Items,
 Wooden Breastplate,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wooden Breastplate.md,Armor_Basic,
+Wooden Nickel,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wooden Nickel.md,Consumables,
 Wooden Shield,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wooden Shield.md,Shield_Basic,
 Wordreaper,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wordreaper.md,Specific_Magic_Weapons,
 Words of Wisdom (Greater),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Words of Wisdom (Greater).md,Tattoos,
@@ -3533,6 +3756,7 @@ Wyrm on the Wing (Major),F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\
 Wyrm on the Wing,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wyrm on the Wing.md,Tattoos,
 Wyvern Poison,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\W\Wyvern Poison.md,Alchemical_Items,
 Yarrow-Root Bandage,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Y\yarrow-root-bandage.md,Alchemical_Items,
+Yellow Musk Vial,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Y\yellow-musk-vial.md,Alchemical_Items,"page: vault='301', db='31'; traits: vault='alchemical, consumable, inhaled, mental, poison', db='Alchemical, Consumable, Inhaled, Mental, Poison, Uncommon'"
 Zealot Staff,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Z\zealot-staff.md,Staff_Wand,"traits: vault='magical, staff, two-hand-d8', db='Evocation, Magical, Staff'"
 Zerk,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Z\Zerk.md,Alchemical_Items,
 Zhuazhi Bang,F:\Obsidian\PF2e-Core-Vault\3-Rules\Character Building\Equipment\Z\zhuazhi-bang.md,Weapon_Basic,"rarity: vault='Uncommon', db='Rare'"
